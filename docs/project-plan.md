@@ -413,7 +413,17 @@ One row per anonymous visitor, stores the visitor's binder appearance and chosen
 
 ## 14. External API / Card Data
 
-PokeFolio uses the **Pokémon TCG API** as its external source for card and set metadata.
+PokeFolio uses the **Pokémon TCG API** (pokemontcg.io) as its external source for card and set metadata. It is free to use, and a free API key has already been obtained via the developer dashboard.
+
+**API details:**
+
+| | |
+|---|---|
+| Base URL | `https://api.pokemontcg.io/v2` |
+| Endpoints used | `GET /sets`, `GET /sets/:id`, `GET /cards`, `GET /cards/:id` |
+| Auth | API key sent via `X-Api-Key` request header |
+| Get a key | `https://dev.pokemontcg.io/dashboard` |
+| Rate limits | 1,000 requests/day, 30/min unauthenticated; higher once authenticated with an API key |
 
 Relevant data may include:
 
@@ -426,7 +436,7 @@ Relevant data may include:
 * Artist
 * Card image URLs
 
-The API is used primarily during the **card catalog import process**. PokeFolio does not query the external API every time a user browses the application.
+The API is used primarily during the **card catalog import process**. PokeFolio does not query the external API every time a user browses the application. Since the free tier's rate limits are modest, the import script authenticates with the API key even during development to avoid hitting the unauthenticated 1,000/day ceiling while iterating on the five-set import.
 
 ```text
 Pokémon TCG API
@@ -448,8 +458,9 @@ Pokémon TCG API
 
 The project will:
 
-* Keep the API key private
-* Store credentials in environment variables
+* Keep the Pokémon TCG API key (from `dev.pokemontcg.io`) private
+* Store credentials in a `.env` file, excluded via `.gitignore`
+* Never expose the key to the frontend or commit it to the repository
 * Follow the Pokémon TCG API Terms of Service
 * Credit the Pokémon TCG API in the README
 * Provide appropriate attribution within the application

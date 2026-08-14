@@ -151,16 +151,29 @@ cards (1) ──< (many) binder_cards
 
 ## External API / Data Pipeline
 
-The Pokémon TCG API is used only during a one-time/occasional **import**
+PokeFolio uses the **Pokémon TCG API** (pokemontcg.io) as its external data
+source. It is free to use, and a free API key has been obtained via its
+developer dashboard. It is used only during a one-time/occasional **import**
 process — not queried live on every user request.
+
+**API details:**
+
+| | |
+|---|---|
+| Base URL | `https://api.pokemontcg.io/v2` |
+| Endpoints used | `/sets`, `/sets/:id`, `/cards`, `/cards/:id` |
+| Auth | API key sent via `X-Api-Key` request header |
+| Get a key | `https://dev.pokemontcg.io/dashboard` |
+| Rate limits | 1,000 requests/day, 30/min unauthenticated; higher once authenticated with an API key |
 
 ```
 Pokémon TCG API → Import Script → PostgreSQL → Express API → React (PokeFolio)
 ```
 
-**Attribution:** API key stored in environment variables and kept private;
-Pokémon TCG API credited in the README and within the application per its
-Terms of Service.
+**Attribution & security:** the API key is stored in a `.env` file, excluded
+from version control via `.gitignore`, and never exposed to the frontend or
+committed to the repository. Pokémon TCG API is credited in the README and
+within the application per its Terms of Service.
 
 ## Planned Express API
 
