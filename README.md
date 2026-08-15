@@ -1,6 +1,6 @@
 # PokeFolio
 
-A customizable digital Pokémon TCG binder for discovering, collecting, organizing, and showcasing the cards you love.
+A customizable digital Pokémon TCG binder that lets Pokémon fans and fellow nerds discover, organize, and showcase the cards they love.
 
 ## Status
 
