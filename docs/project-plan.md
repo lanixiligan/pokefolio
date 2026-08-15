@@ -717,7 +717,7 @@ Preferences are binder-wide and include grid size and appearance settings.
 - Verify the actual PostgreSQL schema with `\dt` and `\d`
 - Confirm all six tables are empty before import
 
-**API data pipeline — implementation in progress**
+**API data pipeline — completed**
 
 - Confirm exact API IDs for the five sets
 - Obtain and securely configure API key
@@ -728,9 +728,43 @@ Preferences are binder-wide and include grid size and appearance settings.
 - Validate full set responses before database writes
 - Import Base and verify card count
 - Import Team Rocket and verify card count
+- Import 151 and verify card count
 - Import Paldean Fates and verify card count
-- Retry/import 151 and Prismatic Evolutions when upstream API access is stable
+- Import Prismatic Evolutions and verify card count
 - Verify final five-set catalog counts and image URLs
+- Verify 5 sets and 817 cards directly in PostgreSQL
+
+**Express REST API — current work**
+
+- Implement `GET /api/sets`
+- Implement `GET /api/sets/:setId`
+- Implement `GET /api/cards`
+- Implement `GET /api/cards/:cardId`
+- Implement anonymous-ID validation middleware
+- Implement `POST /api/binder/initialize`
+- Implement `GET /api/binder`
+- Implement `POST /api/binder/cards`
+- Implement `PATCH /api/binder/cards/:cardId`
+- Implement `DELETE /api/binder/cards/:cardId`
+- Implement `POST /api/binder/spreads`
+- Implement `DELETE /api/binder/spreads/:spreadId`
+- Implement `GET /api/preferences`
+- Implement `PUT /api/preferences`
+
+**Phase 2 verification**
+
+- Verify Express can retrieve sets from PostgreSQL
+- Verify Express can retrieve cards from PostgreSQL
+- Verify invalid requests return appropriate errors
+- Verify anonymous binder initialization
+- Verify add-card persistence
+- Verify remove-card persistence
+- Verify card movement and swap behavior
+- Verify spread creation
+- Verify spread deletion
+- Verify final-spread protection
+- Verify preferences persistence
+- Verify end-to-end backend flow
 
 **Current Phase 2 checkpoint:**
 
@@ -742,66 +776,222 @@ Schema verification         ✅
 API credentials             ✅
 API set/card validation     ✅
 Importer implementation     ✅
-Catalog import              ⏳ Next
-REST API implementation     ⏳
+Catalog import              ✅  (5 sets / 817 cards)
+Express REST API            ⏳ ← current
 Phase 2 verification        ⏳
 ```
 
-First technical milestone:
+### Phase 3 — Explore / Home
+
+- Create Explore route
+- Create PokeFolio header
+- Fetch sets from Express
+- Display five set cards
+- Display set names
+- Display set logos/images
+- Add set-selection interaction
+- Add loading state
+- Add error state
+
+Goal:
 
 ```text
-Pokémon TCG API
+Open PokeFolio
       ↓
-Import / Seed
+See five sets
       ↓
-PostgreSQL
-      ↓
-Express
-      ↓
-Browser
+Click a set
 ```
+
+### Phase 4 — Set Card Browser
+
+Build `/explore/:setId`:
+
+- Display selected set information
+- Load cards belonging to the selected set
+- Display card grid
+- Display card images
+- Implement generalized card search
+- Handle no search results
+- Add loading states
+- Add error states
+- Implement return-to-sets navigation
+
+Must work for **all five sets using the same component**.
+
+### Phase 5 — Card Details
+
+Build `/card/:cardId`:
+
+- Load individual card
+- Display card image, name, set, card number, type
+- Display other minimal identifying information
+- Add "Add to Binder" action
+- Handle card loading/error states
+
+First complete user flow:
+
+```text
+Explore → Select Set → Browse Cards → Select Card → Add to Binder
+```
+
+### Phase 6 — Binder
+
+Build `/binder` — start with the simplest working implementation:
+
+- Initialize the anonymous binder
+- Load saved binder data scoped by `anon_id`
+- Display the current two-page spread
+- Display left and right pages side-by-side
+- Display cards in binder slots
+- Remove cards
+- Add cards to binder
+- Store card positions
+- Update card positions
+- Persist binder state
+- Handle empty binder state
+- Navigate between spreads
+- Add spreads
+- Delete spreads
+- Prevent deletion of the final remaining spread
+
+First binder milestone:
+
+```text
+Add Card
+   ↓
+Card Appears in Binder
+   ↓
+Refresh Browser
+   ↓
+Card Is Still There (same anon_id)
+```
+
+### Phase 7 — Binder Organization
+
+- Implement card repositioning
+- Implement movement to empty slots
+- Implement occupied-slot swapping
+- Implement movement between the left/right pages of a spread
+- Implement movement between different spreads
+- Persist updated positions
+- Add drag-and-drop interaction
+- Add touch-friendly movement where practical
+
+### Phase 8 — Binder Customization
+
+- Grid size selector (2×2, 3×3, 4×4)
+- Apply one grid size across the entire binder
+- Overflow handling when shrinking the grid size (hide, don't delete)
+- Background customization
+- Binder color
+- Accent color
+- Theme presets
+- Save customization settings scoped by `anon_id`
+- Load customization settings from PostgreSQL
+
+The final implementation may use a modal, drawer, side panel, or inline controls, depending on final UI design.
+
+### Phase 9 — Polish & Deployment
+
+**UI/UX**
+
+- Responsive layout
+- Consistent spacing
+- Typography
+- Visual hierarchy
+- Card hover states
+- Navigation improvements
+- Animations where appropriate
+
+**Application states**
+
+- Loading states
+- Empty states
+- API errors
+- Database errors
+- Search with no results
+- Missing card handling
+- Missing/invalid `anon_id` handling
+- Spread add/delete feedback and confirmation
+
+**Testing**
+
+Test the complete flow:
+
+```text
+Open PokeFolio
+      ↓
+Choose Set
+      ↓
+Search/Browse Cards
+      ↓
+Open Card
+      ↓
+Add Card
+      ↓
+Open Binder
+      ↓
+Move/Remove Card
+      ↓
+Navigate Between Spreads
+      ↓
+Add/Delete Spread
+      ↓
+Change Grid Size
+      ↓
+Customize Binder
+      ↓
+Refresh
+      ↓
+Verify Persistence (same browser, no login)
+```
+
+**Deployment**
+
+- Deploy frontend
+- Deploy Express backend
+- Configure production environment variables
+- Configure production PostgreSQL
+- Test deployed application
+- Complete README
+- Add API attribution
+- Clean GitHub repository
+- Remove development leftovers
 
 ## 18. Development Order at a Glance
 
-```
-PHASE 2
-Foundation
-   ↓
-React + Vite
-Express
-PostgreSQL
-Database
-Anonymous-ID plumbing
-API import
-   ↓
+```text
+Phase 1
+└── Planning & Design ✅
 
-PHASE 3
-Explore / Home
-   ↓
+Phase 2
+├── PostgreSQL setup ✅
+├── Database schema ✅
+├── API import ✅
+├── 817 cards ✅
+└── Express REST API ⏳ ← current
 
-PHASE 4
-Set Card Browser
-   ↓
+Phase 3
+└── Explore / Home ⏳
 
-PHASE 5
-Card Details
-   ↓
+Phase 4
+└── Set Card Browser ⏳
 
-PHASE 6
-Binder
-   ↓
+Phase 5
+└── Card Details ⏳
 
-PHASE 7
-Binder Organization
-   ↓
+Phase 6
+└── Binder ⏳
 
-PHASE 8
-Binder Customization (grid size + appearance)
-   ↓
+Phase 7
+└── Binder Organization ⏳
 
-PHASE 9
-Polish + Deployment
+Phase 8
+└── Binder Customization ⏳
 
+Phase 9
+└── Polish & Deployment ⏳
 ```
 
 ---
