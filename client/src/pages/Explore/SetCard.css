@@ -1,0 +1,38 @@
+.set-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.set-card:hover,
+.set-card:focus-visible {
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow);
+  outline: none;
+}
+
+.set-card-logo {
+  max-width: 160px;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+.set-card-name {
+  margin: 8px 0 0;
+  font-size: 20px;
+}
+
+.set-card-series {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+}

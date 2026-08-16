@@ -1,0 +1,21 @@
+.explore {
+  padding: 32px 20px;
+  text-align: center;
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 32px;
+  text-align: left;
+}
+
+.explore-status {
+  margin-top: 32px;
+  color: var(--text);
+}
+
+.explore-error {
+  color: var(--accent);
+}

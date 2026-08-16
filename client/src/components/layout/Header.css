@@ -1,0 +1,13 @@
+.app-header {
+  padding: 24px 20px 0;
+  text-align: center;
+}
+
+.app-header-title {
+  margin: 0;
+}
+
+.app-header-tagline {
+  margin: 8px 0 0;
+  color: var(--text);
+}
