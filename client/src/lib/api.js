@@ -55,6 +55,10 @@ export async function getCardsBySet(setId, search) {
   return apiRequest(`/cards?${params.toString()}`);
 }
 
+export async function getCard(cardId) {
+  return apiRequest(`/cards/${cardId}`);
+}
+
 export async function getBinder() {
   return apiRequest("/binder");
 }
@@ -62,6 +66,13 @@ export async function getBinder() {
 export async function initializeBinder() {
   return apiRequest("/binder/initialize", {
     method: "POST",
+  });
+}
+
+export async function addCardToBinder({ cardId, spreadId, pageSide, position }) {
+  return apiRequest("/binder/cards", {
+    method: "POST",
+    body: JSON.stringify({ cardId, spreadId, pageSide, position }),
   });
 }
 

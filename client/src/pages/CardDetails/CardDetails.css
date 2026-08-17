@@ -1,0 +1,82 @@
+.card-details {
+  padding: 32px 20px;
+  text-align: center;
+}
+
+.card-details-status {
+  margin-top: 32px;
+  color: var(--text);
+}
+
+.card-details-error {
+  color: var(--accent);
+}
+
+.card-details-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 24px;
+  text-align: left;
+}
+
+.card-details-image {
+  max-width: 320px;
+  width: 100%;
+  border-radius: 12px;
+  align-self: flex-start;
+}
+
+.card-details-info {
+  max-width: 360px;
+}
+
+.card-details-info h2 {
+  margin-bottom: 4px;
+}
+
+.card-details-info p {
+  margin: 6px 0;
+  color: var(--text);
+}
+
+.card-details-set {
+  color: var(--text-h) !important;
+  font-weight: 500;
+}
+
+.add-to-binder-button {
+  margin-top: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.add-to-binder-button:hover:not(:disabled),
+.add-to-binder-button:focus-visible:not(:disabled) {
+  border-color: var(--accent-border);
+  outline: none;
+}
+
+.add-to-binder-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.add-to-binder-message {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.add-to-binder-success {
+  color: var(--accent);
+}
+
+.add-to-binder-error {
+  color: var(--accent);
+}

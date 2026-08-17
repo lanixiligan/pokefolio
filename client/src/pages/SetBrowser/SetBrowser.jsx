@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getCardsBySet, getSet } from "../../lib/api";
 import CardTile from "./CardTile";
@@ -17,6 +17,75 @@ function SetBrowser() {
   const [searchTerm, setSearchTerm] = useState("");
   // The search actually applied to the last fetch (updated on submit only).
   const [submittedSearch, setSubmittedSearch] = useState("");
+
+  // Tracks whether we've already restored scroll for the current setId,
+  // so it only happens once per visit (not on every re-render, e.g. search).
+  const hasRestoredScroll = useRef(false);
+
+  useEffect(() => {
+    hasRestoredScroll.current = false;
+  }, [setId]);
+
+  // Continuously save the scroll position for this set while the user scrolls.
+  useEffect(() => {
+    function handleScroll() {
+      sessionStorage.setItem(
+        `set-browser-scroll-${setId}`,
+        String(window.scrollY)
+      );
+    }
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [setId]);
+
+  // Once the set/card content has actually rendered, restore the saved
+  // scroll position (if any) exactly once. Card images load asynchronously,
+  // so the page may not be tall enough to reach the saved position the
+  // instant loading finishes — poll frame-by-frame until it is (or give up
+  // after a bounded number of attempts) rather than scrolling too early.
+  useEffect(() => {
+    if (isLoading || error || hasRestoredScroll.current) {
+      return;
+    }
+
+    const savedScroll = sessionStorage.getItem(
+      `set-browser-scroll-${setId}`
+    );
+
+    if (savedScroll === null) {
+      hasRestoredScroll.current = true;
+      return;
+    }
+
+    const targetScroll = Number(savedScroll);
+    const maxAttempts = 30; // bounded (~0.5s at 60fps), not an arbitrary sleep
+    let attempts = 0;
+    let frameId;
+
+    function tryRestore() {
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
+
+      if (maxScroll >= targetScroll || attempts >= maxAttempts) {
+        window.scrollTo(0, targetScroll);
+        hasRestoredScroll.current = true;
+        return;
+      }
+
+      attempts += 1;
+      frameId = requestAnimationFrame(tryRestore);
+    }
+
+    frameId = requestAnimationFrame(tryRestore);
+
+    return () => {
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+      }
+    };
+  }, [isLoading, error, setId]);
 
   useEffect(() => {
     async function loadSetAndCards() {
