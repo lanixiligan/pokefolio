@@ -143,6 +143,7 @@ app.get("/api/cards", async (req, res) => {
         ? `WHERE ${conditions.join(" AND ")}`
         : "";
 
+    // REPLACE THE EXISTING QUERY HERE
     const result = await pool.query(
       `
         SELECT
@@ -158,7 +159,7 @@ app.get("/api/cards", async (req, res) => {
           image_large_url
         FROM cards
         ${whereClause}
-        ORDER BY set_id, number;
+        ORDER BY set_id, number::integer;
       `,
       values
     );

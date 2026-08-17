@@ -1,0 +1,38 @@
+.card-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.card-tile:hover,
+.card-tile:focus-visible {
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow);
+  outline: none;
+}
+
+.card-tile-image {
+  width: 100%;
+  max-width: 180px;
+  border-radius: 8px;
+}
+
+.card-tile-name {
+  margin: 4px 0 0;
+  font-size: 16px;
+}
+
+.card-tile-meta {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+}

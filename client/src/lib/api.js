@@ -41,6 +41,20 @@ export async function getSets() {
   return apiRequest("/sets");
 }
 
+export async function getSet(setId) {
+  return apiRequest(`/sets/${setId}`);
+}
+
+export async function getCardsBySet(setId, search) {
+  const params = new URLSearchParams({ set: setId });
+
+  if (search) {
+    params.set("search", search);
+  }
+
+  return apiRequest(`/cards?${params.toString()}`);
+}
+
 export async function getBinder() {
   return apiRequest("/binder");
 }

@@ -1,18 +1,21 @@
-import { Link, Navigate, Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes, useParams } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Explore from "./pages/Explore/Explore";
+import SetBrowser from "./pages/SetBrowser/SetBrowser";
 import "./App.css";
 
-// Placeholder for the Set Card Browser screen.
-// Phase 4 will replace this with the real implementation.
-function SetBrowserPlaceholder() {
+// Placeholder for the Card Details screen.
+// Phase 5 will replace this with the real implementation.
+function CardDetailsPlaceholder() {
+  const { cardId } = useParams();
+
   return (
     <section className="explore">
       <Link to="/explore" className="back-link">
         ← Back to Explore
       </Link>
-      <h2>Set Card Browser coming soon</h2>
-      <p>This screen will be built in Phase 4.</p>
+      <h2>Card Details coming soon</h2>
+      <p>Card {cardId} will be shown here in Phase 5.</p>
     </section>
   );
 }
@@ -24,7 +27,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/explore" replace />} />
         <Route path="/explore" element={<Explore />} />
-        <Route path="/explore/:setId" element={<SetBrowserPlaceholder />} />
+        <Route path="/explore/:setId" element={<SetBrowser />} />
+        <Route path="/card/:cardId" element={<CardDetailsPlaceholder />} />
       </Routes>
     </main>
   );
