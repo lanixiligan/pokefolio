@@ -19,6 +19,13 @@
 .binder-slot-empty {
   border: 1px dashed var(--border);
   background: var(--bg);
+  cursor: pointer;
+}
+
+.binder-slot-empty.binder-slot-drag-over {
+  border-style: solid;
+  border-color: var(--accent);
+  background: var(--accent-bg);
 }
 
 .binder-slot-filled {
@@ -28,6 +35,40 @@
   border: 1px solid var(--border);
   background: var(--bg);
   overflow: hidden;
+  cursor: grab;
+}
+
+.binder-slot-filled:active {
+  cursor: grabbing;
+}
+
+.binder-slot-drag-over {
+  border-color: var(--accent);
+  box-shadow: var(--shadow);
+}
+
+.binder-slot-selected {
+  border-color: var(--accent);
+  border-width: 2px;
+}
+
+.binder-slot-moving {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.binder-slot-status {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  margin: 0;
+  padding: 4px;
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 11px;
+  text-align: center;
 }
 
 .binder-slot-image {

@@ -46,6 +46,65 @@
   cursor: not-allowed;
 }
 
+.binder-spread-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.binder-spread-controls button {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.binder-spread-controls button:hover:not(:disabled),
+.binder-spread-controls button:focus-visible:not(:disabled) {
+  border-color: var(--accent-border);
+  outline: none;
+}
+
+.binder-spread-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.binder-selection-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--accent-bg);
+  color: var(--text-h);
+  font-size: 14px;
+}
+
+.binder-selection-banner button {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.binder-selection-banner button:hover,
+.binder-selection-banner button:focus-visible {
+  border-color: var(--accent-border);
+  outline: none;
+}
+
 /* Desktop/tablet: both pages of the current spread side-by-side. */
 .binder-spread {
   display: flex;

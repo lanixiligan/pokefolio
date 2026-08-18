@@ -82,6 +82,28 @@ export async function removeCardFromBinder(cardId) {
   });
 }
 
+// Moves a card to a destination slot. If the destination is already
+// occupied, the backend swaps the two cards instead - the frontend
+// doesn't need to know which will happen ahead of time.
+export async function moveCardInBinder(cardId, { spreadId, pageSide, position }) {
+  return apiRequest(`/binder/cards/${cardId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ spreadId, pageSide, position }),
+  });
+}
+
+export async function createBinderSpread() {
+  return apiRequest("/binder/spreads", {
+    method: "POST",
+  });
+}
+
+export async function deleteBinderSpread(spreadId) {
+  return apiRequest(`/binder/spreads/${spreadId}`, {
+    method: "DELETE",
+  });
+}
+
 export async function getPreferences() {
   return apiRequest("/preferences");
 }
