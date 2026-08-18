@@ -1,0 +1,166 @@
+.customize {
+  margin: 16px 0;
+}
+
+.customize-toggle {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.customize-toggle:hover,
+.customize-toggle:focus-visible {
+  border-color: var(--accent-border);
+  outline: none;
+}
+
+.customize-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--code-bg);
+  text-align: left;
+}
+
+.customize-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.customize-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.customize-swatches {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.customize-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #fff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+}
+
+.customize-swatch:hover,
+.customize-swatch:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 2px;
+}
+
+.customize-swatch-active {
+  border: 2px solid var(--binder-accent, var(--accent));
+}
+
+.customize-field select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 14px;
+  max-width: 200px;
+}
+
+.customize-grid-options {
+  display: flex;
+  gap: 8px;
+}
+
+.customize-grid-option {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.customize-grid-option:hover,
+.customize-grid-option:focus-visible {
+  border-color: var(--accent-border);
+  outline: none;
+}
+
+.customize-grid-option-active {
+  border-color: var(--binder-accent, var(--accent));
+  border-width: 2px;
+  font-weight: 600;
+}
+
+.customize-reflow-notice {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.customize-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.customize-save,
+.customize-reset {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.customize-save {
+  background: var(--binder-accent, var(--accent));
+  color: #fff;
+  border-color: var(--accent-border);
+}
+
+.customize-save:disabled,
+.customize-reset:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.customize-error {
+  margin: 0;
+  color: var(--accent);
+  font-size: 13px;
+}
+
+.customize-success {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .customize-actions {
+    flex-direction: column;
+  }
+}

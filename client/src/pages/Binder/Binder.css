@@ -1,6 +1,27 @@
 .binder {
   padding: 32px 20px;
   text-align: center;
+  /* Falls back to the app's normal background/text tokens until
+     preferences have loaded. */
+  background: var(--binder-background, var(--bg));
+  color: var(--binder-text, var(--text));
+  border-radius: 12px;
+  transition: background-color 0.2s;
+}
+
+/* Small preset-based theme system: each theme only overrides a couple of
+   text/heading tones, layered on top of the background/color/accent the
+   user picked. Not a general theming engine - just a few named presets. */
+.binder[data-binder-theme="midnight"] {
+  --binder-text: #e5e7eb;
+}
+
+.binder[data-binder-theme="sunrise"] {
+  --binder-text: #7c2d12;
+}
+
+.binder h2 {
+  color: var(--binder-text, var(--text-h));
 }
 
 .binder-status {
@@ -37,7 +58,7 @@
 
 .binder-spread-nav button:hover:not(:disabled),
 .binder-spread-nav button:focus-visible:not(:disabled) {
-  border-color: var(--accent-border);
+  border-color: var(--binder-accent, var(--accent-border));
   outline: none;
 }
 
@@ -66,7 +87,7 @@
 
 .binder-spread-controls button:hover:not(:disabled),
 .binder-spread-controls button:focus-visible:not(:disabled) {
-  border-color: var(--accent-border);
+  border-color: var(--binder-accent, var(--accent-border));
   outline: none;
 }
 

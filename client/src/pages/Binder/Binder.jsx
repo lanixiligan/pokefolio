@@ -8,6 +8,7 @@ import {
   removeCardFromBinder,
 } from "../../lib/api";
 import BinderPage from "./BinderPage";
+import Customize from "./Customize";
 import "./Binder.css";
 
 // Scans every spread/page for a card and returns where it currently sits,
@@ -228,8 +229,30 @@ function Binder() {
   const selectedCardPlacement =
     binder && selectedCardId ? findCardPlacement(binder, selectedCardId) : null;
 
+  // Preferences are applied as CSS custom properties scoped to this
+  // <section> only (via inline style, not :root), so customization never
+  // leaks outside the Binder page. Descendant CSS (Binder.css,
+  // BinderPage.css) reads these with fallbacks to the app's normal tokens.
+  const binderStyle = binder
+    ? {
+        "--binder-background": binder.preferences.background,
+        "--binder-color": binder.preferences.binderColor,
+        "--binder-accent": binder.preferences.accentColor,
+      }
+    : undefined;
+
+  async function handlePreferencesSaved() {
+    // Re-fetch the authoritative binder state rather than trusting the
+    // save response alone - this also picks up any grid-size reflow.
+    await refreshBinder();
+  }
+
   return (
-    <section className="binder">
+    <section
+      className="binder"
+      style={binderStyle}
+      data-binder-theme={binder ? binder.preferences.theme : undefined}
+    >
       <h2>Binder</h2>
 
       {isLoading && <p className="binder-status">Loading your binder...</p>}
@@ -238,6 +261,10 @@ function Binder() {
         <p className="binder-status binder-error">
           Something went wrong: {error}
         </p>
+      )}
+
+      {!isLoading && !error && binder && (
+        <Customize preferences={binder.preferences} onSaved={handlePreferencesSaved} />
       )}
 
       {!isLoading && !error && currentSpread && (

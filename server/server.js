@@ -1189,36 +1189,237 @@ app.get("/api/preferences", requireAnonId, async (req, res) => {
   }
 });
 
+// Reassigns every existing binder_cards row to fit a new grid size, without
+// ever deleting or duplicating a card. Must run inside an already-open
+// transaction (BEGIN + advisory lock already acquired by the caller).
+//
+// Ordering is deliberate and matters for correctness:
+//   1. Read every card in deterministic order (spread sort_order -> page
+//      side -> position) BEFORE anything else is touched.
+//   2. Figure out how many spreads the new grid size needs, and create any
+//      additional ones first - never delete anything yet.
+//   3. Defer the constraints that would otherwise collide while many rows
+//      are mid-update.
+//   4. UPDATE every card's spread_id/page_side/position - existing rows,
+//      same ids, never deleted and reinserted.
+//   5. Only now that every card has been moved off of them, delete any
+//      trailing spreads that ended up empty.
+//   6. Renumber remaining spreads' sort_order contiguously.
+//
+// Deleting excess spreads before step 4 would be unsafe: binder_pages and
+// binder_cards both cascade from binder_spreads, so removing a spread that
+// still held cards would destroy those cards.
+async function reflowBinderGrid(client, anonId, newGridSize) {
+  // 1. Read/lock all existing cards in deterministic order.
+  const cardsResult = await client.query(
+    `
+      SELECT bc.id
+      FROM binder_cards bc
+      JOIN binder_spreads bs
+        ON bs.anon_id = bc.anon_id
+        AND bs.id = bc.spread_id
+      WHERE bc.anon_id = $1
+      ORDER BY bs.sort_order, bc.page_side, bc.position
+      FOR UPDATE OF bc;
+    `,
+    [anonId]
+  );
+
+  const orderedCards = cardsResult.rows;
+  const totalCards = orderedCards.length;
+
+  // 2. Calculate exactly how many spreads the new grid size requires.
+  const slotsPerPage = newGridSize * newGridSize;
+  const slotsPerSpread = slotsPerPage * 2;
+  const spreadsNeeded = Math.max(1, Math.ceil(totalCards / slotsPerSpread));
+
+  const spreadsResult = await client.query(
+    `
+      SELECT id, sort_order
+      FROM binder_spreads
+      WHERE anon_id = $1
+      ORDER BY sort_order
+      FOR UPDATE;
+    `,
+    [anonId]
+  );
+
+  const spreads = spreadsResult.rows;
+
+  // Create additional spreads (with both pages) if the new grid needs more
+  // than currently exist. Always appended after the current highest
+  // sort_order, same as the existing "add spread" endpoint.
+  if (spreads.length < spreadsNeeded) {
+    let nextSortOrder =
+      spreads.length > 0
+        ? Math.max(...spreads.map((spread) => spread.sort_order)) + 1
+        : 1;
+
+    while (spreads.length < spreadsNeeded) {
+      const newSpreadResult = await client.query(
+        `
+          INSERT INTO binder_spreads (anon_id, sort_order)
+          VALUES ($1, $2)
+          RETURNING id, sort_order;
+        `,
+        [anonId, nextSortOrder]
+      );
+
+      const newSpread = newSpreadResult.rows[0];
+
+      await client.query(
+        `
+          INSERT INTO binder_pages (anon_id, spread_id, side)
+          VALUES ($1, $2, 1), ($1, $2, 2);
+        `,
+        [anonId, newSpread.id]
+      );
+
+      spreads.push(newSpread);
+      nextSortOrder += 1;
+    }
+  }
+
+  spreads.sort((a, b) => a.sort_order - b.sort_order);
+
+  // 3. Defer the constraints that many mid-reflow row updates would
+  // otherwise transiently violate.
+  await client.query(
+    "SET CONSTRAINTS binder_cards_page_position_key DEFERRED"
+  );
+  await client.query(
+    "SET CONSTRAINTS binder_spreads_anon_id_sort_order_key DEFERRED"
+  );
+
+  // 4. Reassign every existing card to its new spread/page/position via
+  // UPDATE on the existing row - never delete + reinsert.
+  for (let index = 0; index < totalCards; index++) {
+    const spreadIndex = Math.floor(index / slotsPerSpread);
+    const withinSpread = index % slotsPerSpread;
+    const pageSide = withinSpread < slotsPerPage ? 1 : 2;
+    const position =
+      withinSpread < slotsPerPage ? withinSpread : withinSpread - slotsPerPage;
+
+    const targetSpread = spreads[spreadIndex];
+    const card = orderedCards[index];
+
+    await client.query(
+      `
+        UPDATE binder_cards
+        SET spread_id = $1, page_side = $2, position = $3
+        WHERE id = $4;
+      `,
+      [targetSpread.id, pageSide, position, card.id]
+    );
+  }
+
+  // 5. Only now that every card has been moved off of them, remove any
+  // trailing spreads beyond what the new grid size actually needs.
+  const excessSpreads = spreads.slice(spreadsNeeded);
+
+  if (excessSpreads.length > 0) {
+    const excessSpreadIds = excessSpreads.map((spread) => spread.id);
+
+    await client.query(
+      `
+        DELETE FROM binder_spreads
+        WHERE anon_id = $1
+          AND id = ANY($2::bigint[]);
+      `,
+      [anonId, excessSpreadIds]
+    );
+  }
+
+  // 6. Renumber remaining spreads' sort_order contiguously (same pattern
+  // already used by spread deletion).
+  await client.query(
+    `
+      WITH ordered_spreads AS (
+        SELECT
+          id,
+          ROW_NUMBER() OVER (
+            ORDER BY sort_order, id
+          ) AS new_sort_order
+        FROM binder_spreads
+        WHERE anon_id = $1
+      )
+      UPDATE binder_spreads bs
+      SET sort_order = ordered_spreads.new_sort_order
+      FROM ordered_spreads
+      WHERE bs.id = ordered_spreads.id
+        AND bs.anon_id = $1;
+    `,
+    [anonId]
+  );
+}
+
 app.put("/api/preferences", requireAnonId, async (req, res) => {
+  const {
+    background,
+    binderColor,
+    accentColor,
+    theme,
+    gridSize,
+  } = req.body;
+
+  const normalizedGridSize = Number(gridSize);
+
+  if (
+    typeof background !== "string" ||
+    typeof binderColor !== "string" ||
+    typeof accentColor !== "string" ||
+    typeof theme !== "string"
+  ) {
+    return res.status(400).json({
+      error: "Invalid preference values",
+    });
+  }
+
+  if (![2, 3, 4].includes(normalizedGridSize)) {
+    return res.status(400).json({
+      error: "gridSize must be 2, 3, or 4",
+    });
+  }
+
+  const client = await pool.connect();
+
   try {
-    const {
-      background,
-      binderColor,
-      accentColor,
-      theme,
-      gridSize,
-    } = req.body;
+    await client.query("BEGIN");
 
-    const normalizedGridSize = Number(gridSize);
+    await client.query(
+      `
+        SELECT pg_advisory_xact_lock(
+          hashtextextended($1::text, 0)
+        );
+      `,
+      [req.anonId]
+    );
 
-    if (
-      typeof background !== "string" ||
-      typeof binderColor !== "string" ||
-      typeof accentColor !== "string" ||
-      typeof theme !== "string"
-    ) {
-      return res.status(400).json({
-        error: "Invalid preference values",
+    const currentPreferencesResult = await client.query(
+      `
+        SELECT grid_size
+        FROM user_preferences
+        WHERE anon_id = $1
+        FOR UPDATE;
+      `,
+      [req.anonId]
+    );
+
+    if (currentPreferencesResult.rows.length === 0) {
+      await client.query("ROLLBACK");
+
+      return res.status(404).json({
+        error: "Preferences not found",
       });
     }
 
-    if (![2, 3, 4].includes(normalizedGridSize)) {
-      return res.status(400).json({
-        error: "gridSize must be 2, 3, or 4",
-      });
+    const currentGridSize = currentPreferencesResult.rows[0].grid_size;
+
+    if (currentGridSize !== normalizedGridSize) {
+      await reflowBinderGrid(client, req.anonId, normalizedGridSize);
     }
 
-    const result = await pool.query(
+    const updateResult = await client.query(
       `
         UPDATE user_preferences
         SET
@@ -1245,13 +1446,9 @@ app.put("/api/preferences", requireAnonId, async (req, res) => {
       ]
     );
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({
-        error: "Preferences not found",
-      });
-    }
+    await client.query("COMMIT");
 
-    const preferences = result.rows[0];
+    const preferences = updateResult.rows[0];
 
     res.json({
       background: preferences.background,
@@ -1261,11 +1458,15 @@ app.put("/api/preferences", requireAnonId, async (req, res) => {
       gridSize: preferences.grid_size,
     });
   } catch (error) {
+    await client.query("ROLLBACK");
+
     console.error("Failed to update preferences:", error);
 
     res.status(500).json({
       error: "Failed to update preferences",
     });
+  } finally {
+    client.release();
   }
 });
 

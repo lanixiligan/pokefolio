@@ -7,7 +7,11 @@
   min-width: 0;
   padding: 12px;
   border-radius: 8px;
-  background: var(--code-bg);
+  /* The physical "binder" backdrop the cards sit on. Falls back to the
+     app's normal code-block token until preferences have loaded. Card
+     slots below always use --bg (not this color) so cards stay visually
+     distinct from the binder itself. */
+  background: var(--binder-color, var(--code-bg));
 }
 
 .binder-slot {
@@ -24,7 +28,7 @@
 
 .binder-slot-empty.binder-slot-drag-over {
   border-style: solid;
-  border-color: var(--accent);
+  border-color: var(--binder-accent, var(--accent));
   background: var(--accent-bg);
 }
 
@@ -43,12 +47,12 @@
 }
 
 .binder-slot-drag-over {
-  border-color: var(--accent);
+  border-color: var(--binder-accent, var(--accent));
   box-shadow: var(--shadow);
 }
 
 .binder-slot-selected {
-  border-color: var(--accent);
+  border-color: var(--binder-accent, var(--accent));
   border-width: 2px;
 }
 
