@@ -1282,13 +1282,16 @@ async function reflowBinderGrid(client, anonId, newGridSize) {
 
   spreads.sort((a, b) => a.sort_order - b.sort_order);
 
-  // 3. Defer the constraints that many mid-reflow row updates would
-  // otherwise transiently violate.
+  // 3. Defer the constraint that many mid-reflow card-position updates
+  // would otherwise transiently violate. binder_spreads_anon_id_sort_order_key
+  // is intentionally NOT deferred here: it isn't declared DEFERRABLE in the
+  // schema, and it doesn't need to be - reflow only ever renumbers spreads
+  // after removing trailing (highest sort_order) ones, so the surviving
+  // rows' sort_order values are already contiguous by the time the
+  // renumbering statement runs; no two rows ever need to swap through
+  // each other's values.
   await client.query(
     "SET CONSTRAINTS binder_cards_page_position_key DEFERRED"
-  );
-  await client.query(
-    "SET CONSTRAINTS binder_spreads_anon_id_sort_order_key DEFERRED"
   );
 
   // 4. Reassign every existing card to its new spread/page/position via
