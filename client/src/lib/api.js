@@ -76,6 +76,12 @@ export async function addCardToBinder({ cardId, spreadId, pageSide, position }) 
   });
 }
 
+export async function removeCardFromBinder(cardId) {
+  return apiRequest(`/binder/cards/${cardId}`, {
+    method: "DELETE",
+  });
+}
+
 export async function getPreferences() {
   return apiRequest("/preferences");
 }

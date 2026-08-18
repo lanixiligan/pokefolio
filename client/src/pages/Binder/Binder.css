@@ -1,0 +1,63 @@
+.binder {
+  padding: 32px 20px;
+  text-align: center;
+}
+
+.binder-status {
+  margin-top: 32px;
+  color: var(--text);
+}
+
+.binder-error {
+  color: var(--accent);
+}
+
+.binder-spread-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.binder-spread-nav span {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.binder-spread-nav button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  cursor: pointer;
+}
+
+.binder-spread-nav button:hover:not(:disabled),
+.binder-spread-nav button:focus-visible:not(:disabled) {
+  border-color: var(--accent-border);
+  outline: none;
+}
+
+.binder-spread-nav button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Desktop/tablet: both pages of the current spread side-by-side. */
+.binder-spread {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-top: 16px;
+}
+
+/* Mobile: stack the two pages vertically instead of squeezing them
+   side-by-side. CSS-only breakpoint, no JS viewport detection. */
+@media (max-width: 640px) {
+  .binder-spread {
+    flex-direction: column;
+  }
+}
