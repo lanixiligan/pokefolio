@@ -2,35 +2,64 @@
 
 A customizable digital Pokémon TCG binder that lets Pokémon fans and fellow nerds discover, organize, and showcase the cards they love.
 
+> **Student Project — APSI Final Project**
+
+PokeFolio recreates the experience of a physical Pokémon TCG binder as a web application. Instead of focusing on market prices, trading, deck building, or competitive play, the project focuses on the **visual collecting experience**: exploring cards, building a personal binder, organizing cards, and customizing the binder to match the user's taste.
+
 ## Status
 
-🚧 **In Development — Phase 2: Backend & Database Foundation**
+🚧 **In Development — Phase 9: Final Polish, QA & Deployment**
 
-The PostgreSQL database schema and Pokémon TCG catalog import pipeline are implemented and verified. The next major backend milestone is exposing the stored catalog through the Express REST API.
+Phases 1–8 are complete, including the full-stack foundation, card browsing, card details, persistent binder functionality, binder organization, and binder customization with safe grid-size reflow.
 
-## Overview
+## Features
 
-PokeFolio recreates the experience of a physical Pokémon TCG binder as a web application.
+- Explore five curated English Pokémon TCG sets
+- Browse cards within a selected set
+- Search cards by name within the Set Browser
+- View detailed card information
+- Add cards to a personal digital binder
+- Browser-scoped anonymous binder identity — no account required for the MVP
+- Persist binder contents and customization preferences in PostgreSQL
+- Move cards between binder positions
+- Swap cards between occupied positions
+- Move cards across binder pages and spreads
+- Create and delete binder spreads
+- Support 2×2, 3×3, and 4×4 binder layouts
+- Automatically reflow cards when the binder grid size changes
+- Preserve card order and card count during grid reflow
+- Customize binder background, binder color, accent color, and theme
+- Responsive Binder experience for desktop and mobile layouts
 
-Users can explore five curated English Pokémon TCG sets, browse and search cards, view individual card details, and organize selected cards into a personal digital binder.
+## Product Scope
 
-The MVP focuses on the visual experience of discovering, collecting, organizing, and customizing cards.
+PokeFolio intentionally focuses on the collecting and organization experience.
 
-PokeFolio intentionally does **not** include card pricing, trading, deck building, competitive gameplay, or user accounts.
+The current MVP does **not** include:
+
+- Card market pricing
+- Trading
+- Deck building
+- Competitive gameplay
+- User accounts or authentication
+
+These are deliberate scope decisions rather than omitted requirements.
 
 ## Supported Sets
 
-PokeFolio currently supports these five English Pokémon TCG sets:
+PokeFolio currently supports five curated English Pokémon TCG sets:
 
-- **Base** (`base1`)
-- **Team Rocket** (`base5`)
-- **Scarlet & Violet—151** (`sv3pt5`)
-- **Scarlet & Violet—Paldean Fates** (`sv4pt5`)
-- **Scarlet & Violet—Prismatic Evolutions** (`sv8pt5`)
+| Set | API Set ID |
+| --- | --- |
+| Base | `base1` |
+| Team Rocket | `base5` |
+| Scarlet & Violet—151 | `sv3pt5` |
+| Scarlet & Violet—Paldean Fates | `sv4pt5` |
+| Scarlet & Violet—Prismatic Evolutions | `sv8pt5` |
 
-The catalog currently contains **817 imported cards** across these five sets.
+The current imported catalog contains **817 cards** across these five sets.
 
-## Core User Flow
+## User Flow
 
 ```text
 Explore
@@ -50,9 +79,9 @@ Customize Binder
 
 ## Binder
 
-PokeFolio uses a browser-scoped anonymous identity instead of account authentication.
+PokeFolio uses a browser-scoped anonymous UUID instead of account authentication for the MVP.
 
-A binder contains one or more **two-page spreads**:
+Each binder contains one or more two-page spreads:
 
 ```text
 Binder
@@ -65,24 +94,42 @@ Binder
 └── ...
 ```
 
-Users can add additional spreads and delete spreads as long as at least one spread remains.
+Each page can use one of three grid sizes:
 
-Each binder uses one grid size across all pages:
+- **2×2** — 4 cards per page
+- **3×3** — 9 cards per page
+- **4×4** — 16 cards per page
 
-- 2×2
-- 3×3
-- 4×4
+### Grid Reflow
 
-Each page supports a maximum of 16 stored positions. If the grid is reduced, cards outside the visible range are hidden rather than deleted and can reappear when the grid is enlarged.
+Changing the grid size is treated as a **data transformation**, not only a visual CSS change.
 
-An exact card can appear only once within a user's binder.
+When the user changes grid size, PokeFolio:
+
+1. Reads the existing binder cards in deterministic order.
+2. Calculates the required page/spread capacity for the new grid.
+3. Creates additional spreads when necessary.
+4. Reassigns the existing `binder_cards` rows to new positions.
+5. Removes only empty trailing spreads that are no longer required.
+6. Updates the user's grid preference.
+7. Commits the entire operation atomically.
+
+This guarantees that reducing the grid does **not** simply hide cards or strand them outside the visible range.
+
+## Anonymous Binder Identity
+
+The MVP does not require user accounts.
+
+Instead, the browser receives a persistent anonymous UUID that is stored locally and sent to the Express API with binder-related requests. PostgreSQL uses that identifier to associate binder cards, spreads, and preferences with the same browser-scoped binder.
+
+This provides persistent personal binder state without requiring an authentication system for the course MVP.
 
 ## Application Architecture
 
 ```text
 Pokémon TCG API
        ↓
-   Import / Seed
+  Import / Seed
        ↓
    PostgreSQL
        ↓
@@ -90,147 +137,400 @@ Pokémon TCG API
        ↓
  React + Vite
        ↓
-     User
+     Browser
 ```
 
-The Pokémon TCG API is used as the external source for set and card metadata. Imported catalog data is stored in PostgreSQL so normal application browsing does not depend on querying the external API on every request.
+The Pokémon TCG API is used as the external source for set and card metadata during catalog import. Imported data is stored in PostgreSQL so normal application browsing does not depend on querying the external API for every request.
 
 ## Tech Stack
 
-- React
-- Vite
+### Frontend
+
+- React 19
+- Vite 8
+- React Router 7
+- CSS Modules-by-file / component-scoped styles using regular CSS
+- Native browser drag-and-drop for Binder organization
+
+### Backend
+
 - Node.js
-- Express.js
+- Express 5
 - PostgreSQL
+- `pg`
+- `cors`
+- `dotenv`
 
-## Current PostgreSQL Schema
+### Development & Tooling
 
-The current database contains six tables:
+- ESLint
+- Nodemon
+- Git / GitHub
+- Pokémon TCG API
 
-- `sets`
-- `cards`
-- `user_preferences`
-- `binder_spreads`
-- `binder_pages`
-- `binder_cards`
+The current client and server package scripts are defined in `client/package.json` and `server/package.json`. citeturn40file0turn39file0
 
-The schema enforces important binder rules such as:
+## Project Architecture
 
-- one exact card per anonymous binder
-- one card per page position
-- valid left/right page sides
-- valid 4×4 maximum positions
-- spread-to-page-to-placement cascade deletion
+### Frontend Structure
 
-## Pokémon TCG API
-
-PokeFolio uses the Pokémon TCG API as its external source for set and card metadata.
-
-The API key is kept **backend-only** and is stored in `server/.env`.
-
-It is never exposed to the frontend or committed to the repository.
-
-The imported card catalog stores the MVP fields required by PokeFolio, including:
-
-- card ID
-- card name
-- supertype
-- types
-- card number
-- rarity
-- artist
-- small card image URL
-- large card image URL
-
-Gameplay-specific and market-price fields are intentionally excluded from the MVP database.
-
-## API Attribution
-
-PokeFolio will credit the Pokémon TCG API as its external data source and follow the API's applicable terms and attribution requirements.
-
-The API credential itself is private and must never be included in the README, source code, or other public project files.
-
-## Backend Data Pipeline
-
-The catalog import process is designed to be:
-
-- authenticated
-- resumable
-- idempotent
-- retry-aware
-- transactional per set
-- non-destructive toward existing catalog cards
-
-For each supported set, the importer validates the complete API response before committing that set to PostgreSQL.
-
-The current verified catalog totals are:
+The React application is organized around feature/page boundaries rather than one monolithic component tree.
 
 ```text
-Base                     102
-Team Rocket               83
-Scarlet & Violet—151     207
-Paldean Fates            245
-Prismatic Evolutions     180
-──────────────────────────────
-Total                    817
+client/src/
+├── components/
+│   └── layout/
+├── lib/
+│   ├── anonId.js
+│   └── api.js
+├── pages/
+│   ├── Explore/
+│   ├── SetBrowser/
+│   ├── CardDetails/
+│   └── Binder/
+└── App.jsx
 ```
 
-## Project Routes
+The Binder page is composed from dedicated Binder and BinderPage components, with customization kept within the Binder experience rather than using a separate route.
 
-The MVP currently targets four primary routes:
+### Backend Structure
 
 ```text
-/explore
-/explore/:setId
-/card/:cardId
-/binder
+server/
+├── db/
+│   └── migrations/
+├── scripts/
+├── .env.example
+├── server.js
+└── package.json
 ```
 
-Binder customization is integrated into the Binder experience rather than using a separate customization route.
+Binder mutations are handled through Express and PostgreSQL transactions. PostgreSQL remains the source of truth for persisted binder state.
 
-## Development
+## Primary Routes
 
-The project is being developed incrementally.
+| Route | Purpose |
+| --- | --- |
+| `/explore` | Browse the five supported sets |
+| `/explore/:setId` | Browse and search cards in a selected set |
+| `/card/:cardId` | View a card's details and add it to the binder |
+| `/binder` | View, organize, and customize the digital binder |
 
-Current Phase 2 foundation includes:
+## REST API Overview
 
-- React + Vite project setup
-- Express backend setup
-- PostgreSQL database
-- database migrations
-- verified six-table schema
-- Pokémon TCG API integration for catalog import
-- verified five-set catalog import
-- anonymous-browser persistence architecture
-- REST API contract planning
+The application uses Express as the frontend's server-side API boundary.
 
-The next backend milestone is implementing and testing the Express REST API on top of the verified PostgreSQL catalog.
+### Catalog
 
-See [`project-plan.md`](project-plan.md) for the complete development roadmap and architecture decisions.
+```text
+GET  /api/sets
+GET  /api/sets/:id
+GET  /api/cards
+GET  /api/cards/:id
+```
 
-## Local Environment
+`GET /api/cards` supports optional filtering such as set and card-name search.
 
-Development environment variables are stored locally in:
+### Binder
+
+```text
+GET    /api/binder
+POST   /api/binder/initialize
+POST   /api/binder/cards
+PATCH  /api/binder/cards/:cardId
+DELETE /api/binder/cards/:cardId
+```
+
+### Binder Spreads
+
+```text
+POST   /api/binder/spreads
+DELETE /api/binder/spreads/:spreadId
+```
+
+### Preferences
+
+```text
+GET /api/preferences
+PUT /api/preferences
+```
+
+Changing `gridSize` through the preferences endpoint triggers the transactional binder reflow described above.
+
+## Database Architecture
+
+The current PostgreSQL schema contains six primary tables:
+
+```text
+sets
+  ↓
+cards
+
+anonymous user
+  ↓
+user_preferences
+  ↓
+binder_spreads
+  ↓
+binder_pages
+  ↓
+binder_cards
+```
+
+### Tables
+
+| Table | Responsibility |
+| --- | --- |
+| `sets` | Imported Pokémon TCG set metadata |
+| `cards` | Imported card metadata and image URLs |
+| `user_preferences` | Binder appearance and grid preferences |
+| `binder_spreads` | Two-page spread ordering |
+| `binder_pages` | Left/right pages belonging to spreads |
+| `binder_cards` | Card placement within binder pages |
+
+Important database constraints enforce binder integrity, including one exact card per anonymous binder, one card per page position, valid page sides, and cascade relationships between spreads, pages, and placements.
+
+## Pokémon TCG API Integration
+
+PokeFolio uses the Pokémon TCG API as the external source for card and set metadata.
+
+The backend importer stores the catalog in PostgreSQL so that the frontend does not need direct access to the external API.
+
+The imported card records include the MVP data required by PokeFolio:
+
+- Card ID
+- Card name
+- Supertype
+- Type(s)
+- Card number
+- Rarity
+- Artist
+- Small image URL
+- Large image URL
+
+Gameplay-specific and market-pricing fields are intentionally outside the MVP data model.
+
+## API Credentials & Environment Variables
+
+Backend environment variables are kept in:
 
 ```text
 server/.env
 ```
 
-A public template is provided as:
+A public template is provided at:
 
 ```text
 server/.env.example
 ```
 
-Do **not** commit `server/.env`.
+The template currently expects PostgreSQL connection settings and a backend-only Pokémon TCG API key. fileciteturn41file0L1-L6
 
-## Project Documentation
+Example:
 
-- [`project-plan.md`](project-plan.md) — detailed project roadmap and engineering decisions
-- [`proposal.md`](proposal.md) — project proposal and course-facing project definition
+```env
+PGHOST=localhost
+PGPORT=5432
+PGDATABASE=pokefolio
+PGUSER=postgres
+PGPASSWORD=your-local-postgres-password
+POKEMON_TCG_API_KEY=your-pokemon-tcg-api-key
+```
 
-## License / Attribution
+**Never commit `server/.env` or expose the Pokémon TCG API key to the frontend.**
 
-PokeFolio is a student project.
+## Getting Started
 
-Pokémon and Pokémon TCG-related trademarks and content belong to their respective owners. PokeFolio uses the Pokémon TCG API as an external data source and is not an official Pokémon product.
+### Prerequisites
+
+Before running PokeFolio locally, install:
+
+- Node.js
+- PostgreSQL
+- A Pokémon TCG API key
+- Git
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/lanixiligan/pokefolio.git
+cd pokefolio
+```
+
+### 2. Install frontend dependencies
+
+```bash
+cd client
+npm install
+```
+
+### 3. Install backend dependencies
+
+```bash
+cd ../server
+npm install
+```
+
+### 4. Configure the backend environment
+
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+On Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Then update `.env` with your local PostgreSQL credentials and Pokémon TCG API key.
+
+### 5. Prepare the database
+
+The backend provides project scripts for migrations, catalog import, and database checks:
+
+```bash
+npm run migrate
+npm run seed
+npm run db:check
+```
+
+Run the seed/import process only when you actually need to populate or refresh the catalog.
+
+### 6. Start the backend
+
+From `server/`:
+
+```bash
+npm run dev
+```
+
+The development API runs on:
+
+```text
+http://localhost:5000
+```
+
+### 7. Start the frontend
+
+Open a second terminal:
+
+```bash
+cd client
+npm run dev
+```
+
+Then open the Vite development URL shown in the terminal, normally:
+
+```text
+http://localhost:5173
+```
+
+## Development Scripts
+
+### Frontend
+
+From `client/`:
+
+```bash
+npm run dev
+npm run lint
+npm run build
+npm run preview
+```
+
+### Backend
+
+From `server/`:
+
+```bash
+npm run dev
+npm start
+npm run migrate
+npm run seed
+npm run db:check
+```
+
+The available scripts are defined in the current project package files. citeturn40file0turn39file0
+
+## Testing & Quality Checks
+
+Before considering a feature complete, the project uses a combination of manual integration testing and local quality checks.
+
+### Frontend checks
+
+```bash
+npm run lint
+npm run build
+```
+
+### Functional testing
+
+Phase-based testing has covered:
+
+- Route navigation
+- Card search and card detail loading
+- Add-to-Binder behavior
+- Duplicate-card protection
+- Occupied-slot protection
+- Binder persistence
+- Card movement
+- Card swapping
+- Cross-page and cross-spread organization
+- Spread creation/deletion
+- 2×2 / 3×3 / 4×4 layouts
+- Grid-size reflow
+- Customization persistence
+- API failure handling
+- Responsive behavior
+
+The project uses PostgreSQL as the persistence layer during local integration testing rather than relying solely on frontend state.
+
+## Development Status
+
+```text
+Phase 1 — Planning & Design                 ✅
+Phase 2 — Setup & Foundation               ✅
+Phase 3 — Explore / Home                   ✅
+Phase 4 — Set Card Browser                 ✅
+Phase 5 — Card Details                     ✅
+Phase 6 — Binder Foundation                ✅
+Phase 7 — Binder Organization              ✅
+Phase 8 — Binder Customization             ✅
+Phase 9 — Final Polish, QA & Deployment    🚧
+```
+
+See [`project-plan.md`](project-plan.md) for the detailed roadmap, architecture decisions, and implementation milestones.
+
+## Documentation
+
+- [`project-plan.md`](project-plan.md) — detailed roadmap, architecture decisions, and phase planning
+- [`proposal.md`](proposal.md) — course-facing project proposal and definition
+
+## Design Principles
+
+PokeFolio is intentionally built around a few core engineering principles:
+
+- **PostgreSQL as the source of truth** for persistent binder state
+- **RESTful separation of concerns** between React, Express, and PostgreSQL
+- **Small, focused data model** rather than a large feature-heavy schema
+- **No direct external API dependency during normal card browsing**
+- **Minimal frontend state** where server data can remain authoritative
+- **Incremental development and phase-based testing**
+- **Scoped complexity** appropriate for an academic final project while still following production-oriented engineering practices
+
+## API Attribution
+
+PokeFolio uses the Pokémon TCG API as an external data source for card and set metadata.
+
+The project is not affiliated with or endorsed by The Pokémon Company, Nintendo, Game Freak, or Creatures Inc.
+
+API credentials are private backend configuration and should never be included in public source files or documentation.
+
+## License & Disclaimer
+
+PokeFolio is a student project created for academic purposes.
+
+Pokémon and Pokémon TCG-related names, trademarks, artwork, and other intellectual property belong to their respective owners. PokeFolio is an independent educational project and is not an official Pokémon product.
