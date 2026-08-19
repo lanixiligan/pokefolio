@@ -1,6 +1,6 @@
 # PokeFolio
 
-A customizable digital Pokémon TCG binder that lets Pokémon fans and fellow nerds discover, organize, and showcase the cards they love.
+A customizable digital Pokémon TCG binder for discovering, collecting, organizing, and showcasing the cards you love.
 
 > **Student Project — APSI Final Project**
 
@@ -126,21 +126,36 @@ This provides persistent personal binder state without requiring an authenticati
 
 ## Application Architecture
 
-```text
-Pokémon TCG API
-       ↓
-  Import / Seed
-       ↓
-   PostgreSQL
-       ↓
- Express REST API
-       ↓
- React + Vite
-       ↓
-     Browser
+PokeFolio uses a layered architecture that separates external catalog ingestion, persistent application data, the REST API, and the React client.
+
+```mermaid
+flowchart LR
+  subgraph external [External]
+    PTG["Pokémon TCG API"]
+  end
+
+  subgraph backend [server/]
+    Import["import-cards.js<br/>Catalog Import"]
+    PG[("PostgreSQL<br/>Application Database")]
+    Express["Express REST API<br/>server.js"]
+  end
+
+  subgraph frontend [client/]
+    React["React + Vite"]
+    API["lib/api.js<br/>REST Client"]
+    Anon["lib/anonId.js<br/>Anonymous Identity"]
+  end
+
+  PTG -->|Set & card metadata| Import
+  Import -->|Import / Seed| PG
+  PG <--> |SQL| Express
+  React --> API -->|HTTP / REST| Express
+  Anon -->|X-Anon-Id| API
 ```
 
 The Pokémon TCG API is used as the external source for set and card metadata during catalog import. Imported data is stored in PostgreSQL so normal application browsing does not depend on querying the external API for every request.
+
+The frontend communicates with Express through the shared `lib/api.js` REST client. The browser-scoped anonymous identifier from `lib/anonId.js` is included with binder-related requests so PostgreSQL can associate cards, spreads, and preferences with the same browser-scoped binder without requiring an authentication system for the MVP.
 
 ## Tech Stack
 
