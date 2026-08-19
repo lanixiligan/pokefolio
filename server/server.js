@@ -1477,6 +1477,6 @@ app.put("/api/preferences", requireAnonId, async (req, res) => {
 // Start Server
 // -----------------------------------------------------------------------------
 
-app.listen(PORT, () => {
-  console.log(`PokeFolio API running on http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`PokeFolio API running on port ${PORT}`);
 });
