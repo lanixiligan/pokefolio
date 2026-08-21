@@ -1,14 +1,39 @@
 .explore {
-  padding: 32px 20px;
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 48px 20px 64px;
   text-align: center;
+  box-sizing: border-box;
+}
+
+.explore-intro {
+  margin-bottom: 40px;
+}
+
+.explore-heading {
+  font-size: 32px;
+}
+
+.explore-subheading {
+  margin-top: 8px;
+  color: var(--text);
+  font-size: 16px;
 }
 
 .explore-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
-  margin-top: 32px;
   text-align: left;
+}
+
+/* When the set count is odd, center the trailing card instead of
+   letting it stretch across one column of the 2-column grid. */
+.explore-grid .set-card-centered {
+  grid-column: 1 / -1;
+  max-width: calc(50% - 10px);
+  margin: 0 auto;
 }
 
 .explore-status {
@@ -17,5 +42,19 @@
 }
 
 .explore-error {
-  color: var(--accent);
+  color: var(--color-secondary);
+}
+
+@media (max-width: 640px) {
+  .explore {
+    padding: 32px 16px 48px;
+  }
+
+  .explore-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .explore-grid .set-card-centered {
+    max-width: 100%;
+  }
 }

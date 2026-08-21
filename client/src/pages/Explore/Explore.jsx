@@ -35,8 +35,12 @@ function Explore() {
 
   return (
     <section className="explore">
-      <h2>Explore Sets</h2>
-      <p>Choose a set to browse its cards.</p>
+      <div className="explore-intro">
+        <h2 className="explore-heading">Explore Your Collection</h2>
+        <p className="explore-subheading">
+          Discover sets and build your personal binder.
+        </p>
+      </div>
 
       {isLoading && <p className="explore-status">Loading sets...</p>}
 
@@ -52,9 +56,19 @@ function Explore() {
 
       {!isLoading && !error && sets.length > 0 && (
         <div className="explore-grid">
-          {sets.map((set) => (
-            <SetCard key={set.id} set={set} onSelect={handleSelectSet} />
-          ))}
+          {sets.map((set, index) => {
+            const isLastOdd =
+              sets.length % 2 !== 0 && index === sets.length - 1;
+
+            return (
+              <SetCard
+                key={set.id}
+                set={set}
+                onSelect={handleSelectSet}
+                className={isLastOdd ? "set-card-centered" : undefined}
+              />
+            );
+          })}
         </div>
       )}
     </section>
