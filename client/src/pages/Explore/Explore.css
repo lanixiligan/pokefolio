@@ -2,23 +2,30 @@
   width: 100%;
   max-width: 880px;
   margin: 0 auto;
-  padding: 48px 20px 64px;
+  padding: var(--space-xl) 20px var(--space-2xl);
   text-align: center;
   box-sizing: border-box;
 }
 
 .explore-intro {
-  margin-bottom: 40px;
+  margin-bottom: var(--space-xl);
 }
 
 .explore-heading {
   font-size: 32px;
+  letter-spacing: -0.64px;
+  margin: 0 0 var(--space-sm);
+
+  @media (max-width: 1024px) {
+    font-size: 26px;
+  }
 }
 
 .explore-subheading {
-  margin-top: 8px;
+  margin: 0;
   color: var(--text);
   font-size: 16px;
+  line-height: 150%;
 }
 
 .explore-grid {
@@ -37,17 +44,17 @@
 }
 
 .explore-status {
-  margin-top: 32px;
+  margin-top: var(--space-lg);
   color: var(--text);
 }
 
 .explore-error {
-  color: var(--color-secondary);
+  color: var(--error);
 }
 
 @media (max-width: 640px) {
   .explore {
-    padding: 32px 16px 48px;
+    padding: var(--space-lg) var(--space-md) var(--space-xl);
   }
 
   .explore-grid {

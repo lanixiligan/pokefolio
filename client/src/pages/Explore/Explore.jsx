@@ -11,6 +11,10 @@ function Explore() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.title = "Explore \u2014 PokeFolio";
+  }, []);
+
+  useEffect(() => {
     async function loadSets() {
       try {
         setIsLoading(true);
@@ -36,7 +40,7 @@ function Explore() {
   return (
     <section className="explore">
       <div className="explore-intro">
-        <h2 className="explore-heading">Explore Your Collection</h2>
+        <h1 className="explore-heading">Explore Your Collection</h1>
         <p className="explore-subheading">
           Discover sets and build your personal binder.
         </p>

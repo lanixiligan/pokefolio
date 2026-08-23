@@ -17,7 +17,7 @@ function SetCard({ set, onSelect, className }) {
       </div>
 
       <div className="set-card-body">
-        <h2 className="set-card-name">{set.name}</h2>
+        <h3 className="set-card-name">{set.name}</h3>
         <p className="set-card-series">{set.series}</p>
       </div>
 

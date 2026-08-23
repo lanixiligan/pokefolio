@@ -24,6 +24,29 @@
   --shadow:
     rgba(0, 0, 0, 0.35) 0 10px 15px -3px, rgba(0, 0, 0, 0.2) 0 4px 6px -2px;
 
+  /* Semantic status colors. Complement the collector palette rather than
+     replacing it. Restrained and legible on dark backgrounds. */
+  --color-success: #2e9e6a;
+  --color-error: #d45454;
+  --color-warning: #d4a034;
+  --success: var(--color-success);
+  --error: var(--color-error);
+  --warning: var(--color-warning);
+
+  /* Spacing scale. A small, reusable vocabulary for consistent spacing.
+     Applied where practical; existing ad-hoc values are not force-migrated. */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+
+  /* Focus ring. Used globally to replace bare `outline: none` with a
+     visible keyboard-focus indicator that meets WCAG 2.4.7. */
+  --focus-ring: 2px solid var(--accent-border);
+  --focus-ring-offset: 2px;
+
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
@@ -84,8 +107,22 @@ h2 {
     font-size: 20px;
   }
 }
+h3 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+  margin: 0;
+}
 p {
   margin: 0;
+}
+
+/* Global focus-visible ring. Interactive elements that previously used
+   `outline: none` should now either rely on this default or override it
+   with an equally visible indicator. */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 code,

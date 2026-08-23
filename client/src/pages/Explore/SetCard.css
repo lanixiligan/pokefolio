@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 15px 16px 12px;
+  padding: 15px var(--space-md) 12px;
   border-radius: 14px;
   border: 1px solid var(--border);
   background: var(--surface);
@@ -21,7 +21,15 @@
   transform: translateY(-2px);
   border-color: var(--accent-border);
   box-shadow: var(--shadow);
-  outline: none;
+}
+
+/* Override the global focus ring with the card's own elevated style so
+   keyboard focus is visible through the border + shadow change. The card
+   already lifts and highlights on focus-visible; adding a separate outline
+   on top would be visually redundant. */
+.set-card:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .set-card-logo-frame {
@@ -29,7 +37,7 @@
   align-items: center;
   justify-content: center;
   height: 70px;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-sm);
 }
 
 .set-card-logo {
@@ -64,7 +72,7 @@
   align-items: center;
   justify-content: space-between;
   margin-top: 10px;
-  padding-top: 8px;
+  padding-top: var(--space-sm);
   border-top: 1px solid var(--border);
   color: var(--text);
   font-size: 12px;
