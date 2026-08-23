@@ -1,90 +1,221 @@
+/* ── Card shell ────────────────────────────────────────────────── */
+
 .set-card {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  padding: 15px var(--space-md) 12px;
-  border-radius: 14px;
+  position: relative;
+  isolation: isolate;
+
+  /* Each card is exactly one-third of the flex row (two 20px gaps).
+     All five cards share this formula — the bottom two center via
+     the parent justify-content: center. */
+  flex: 0 0 calc((100% - 40px) / 3);
+  max-width: calc((100% - 40px) / 3);
+
+  border-radius: 16px;
   border: 1px solid var(--border);
   background: var(--surface);
   cursor: pointer;
   font: inherit;
   text-align: left;
   box-sizing: border-box;
+  overflow: hidden;
+  padding: 0;
   transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
+
+/* ── Holographic foil shimmer ──────────────────────────────────── */
+
+/* TCG-inspired foil effect: a slowly animated palette-toned gradient
+   overlaid on the card face on hover. Derived from the brand blues and
+   mint — no off-palette colors introduced. The animation runs always to
+   avoid a jarring position jump when hovered; opacity alone gates visibility. */
+.set-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    125deg,
+    transparent         0%,
+    rgba(102,163,191,0.18) 20%,
+    rgba(200,223,219,0.12) 40%,
+    rgba(51,104,160,0.16)  60%,
+    rgba(102,163,191,0.10) 80%,
+    transparent         100%
+  );
+  background-size: 400% 400%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: holoShimmer 2.8s ease infinite;
+}
+
+.set-card:hover::before,
+.set-card:focus-visible::before {
+  opacity: 1;
+}
+
+@keyframes holoShimmer {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+/* ── Hover / focus states ──────────────────────────────────────── */
 
 .set-card:hover,
 .set-card:focus-visible {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   border-color: var(--accent-border);
-  box-shadow: var(--shadow);
+  /* Two-layer glow: tight edge highlight + ambient bleed + elevation shadow */
+  box-shadow:
+    0 0 0 1px rgba(102, 163, 191, 0.28),
+    0 0 28px rgba(102, 163, 191, 0.14),
+    var(--shadow);
 }
 
-/* Override the global focus ring with the card's own elevated style so
-   keyboard focus is visible through the border + shadow change. The card
-   already lifts and highlights on focus-visible; adding a separate outline
-   on top would be visually redundant. */
 .set-card:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
 }
 
-.set-card-logo-frame {
+/* ── Image zone ────────────────────────────────────────────────── */
+
+/* Dot-grid pattern: appears through the transparent regions of PNG booster
+   pack artwork, giving cards a textured collector-binder surface. */
+.set-card-image-zone {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle, rgba(102, 163, 191, 0.07) 1px, transparent 1px);
+  background-size: 18px 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 70px;
-  margin-bottom: var(--space-sm);
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
-.set-card-logo {
-  max-width: 100%;
-  max-height: 100%;
+/* Bottom gradient blends artwork into the content surface below.
+   rgba midpoint is hardcoded from --surface (#172235) to allow opacity. */
+.set-card-image-zone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    var(--surface) 0%,
+    rgba(23, 34, 53, 0.72) 28%,
+    transparent    58%
+  );
+  pointer-events: none;
+}
+
+/* Series badge: small frosted pill anchored to the top-left of the artwork
+   area. Provides immediate set classification context without cluttering
+   the content zone. aria-hidden because the series name is also in the
+   text below. */
+.set-card-series-badge {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  z-index: 1;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: rgba(11, 18, 32, 0.72);
+  border: 1px solid rgba(102, 163, 191, 0.32);
+  color: var(--accent-text);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  line-height: 1.5;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  white-space: nowrap;
+}
+
+.set-card-artwork {
+  width: 75%;
+  height: 100%;
   object-fit: contain;
-  transition: transform 0.2s ease;
+  transition: transform 0.35s ease;
+  position: relative;
+  z-index: 0;
 }
 
-.set-card:hover .set-card-logo,
-.set-card:focus-visible .set-card-logo {
-  transform: scale(1.03);
+.set-card:hover .set-card-artwork,
+.set-card:focus-visible .set-card-artwork {
+  transform: scale(1.06);
 }
 
-.set-card-body {
-  text-align: center;
+/* ── Content zone ──────────────────────────────────────────────── */
+
+.set-card-content {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
 .set-card-name {
   margin: 0;
-  font-size: 18px;
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text-mid);
+  line-height: 1.25;
 }
 
-.set-card-series {
-  margin: 2px 0 0;
-  color: var(--color-soft);
-  font-size: 12px;
-}
-
-.set-card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 10px;
-  padding-top: var(--space-sm);
-  border-top: 1px solid var(--border);
+/* Metadata line: series · card count */
+.set-card-meta {
+  margin: 0;
   color: var(--text);
   font-size: 12px;
+  line-height: 1.5;
+}
+
+/* "VIEW SET ›" — brand blue signals interactivity at rest */
+.set-card-cta {
+  margin: 6px 0 0;
+  color: var(--accent-text);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 
 .set-card-arrow {
-  color: var(--accent-hover);
   font-size: 15px;
+  display: inline-block;
   transition: transform 0.2s ease;
 }
 
 .set-card:hover .set-card-arrow,
 .set-card:focus-visible .set-card-arrow {
-  transform: translateX(2px);
+  transform: translateX(3px);
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .set-card {
+    flex: 0 0 calc((100% - 16px) / 2);
+    max-width: calc((100% - 16px) / 2);
+  }
+}
+
+@media (max-width: 480px) {
+  .set-card {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
 }

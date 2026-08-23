@@ -14,7 +14,6 @@
 .app-header-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
   text-decoration: none;
   color: inherit;
   border-radius: 6px;
@@ -25,31 +24,14 @@
   outline-offset: var(--focus-ring-offset);
 }
 
-/* Placeholder mark: a simple initial badge standing in for the final
-   PokeFolio logo/wordmark asset. Swap the span's content for an <img>/
-   <svg> when the final logo is ready - the surrounding layout does not
-   need to change. */
-.app-header-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--accent);
-  color: var(--text-h);
-  font-family: var(--heading);
-  font-size: 16px;
-  font-weight: 600;
-  flex-shrink: 0;
-}
-
+/* Wordmark uses --accent-text (#66A3BF) — the visible brand signal at rest,
+   distinct from the neutral cream used for page headings. */
 .app-header-title {
   font-family: var(--heading);
   font-size: 19px;
   font-weight: 600;
   letter-spacing: -0.2px;
-  color: var(--text-h);
+  color: var(--accent-text);
 }
 
 .app-header-nav {
@@ -58,8 +40,11 @@
   gap: 24px;
 }
 
+/* Nav links use --accent-text at rest so interactive items read as brand
+   elements, not neutral text. Active state steps up to --text-h (cream)
+   anchored by the --accent underline for clear current-page indication. */
 .app-header-link {
-  color: var(--text);
+  color: var(--accent-text);
   text-decoration: none;
   font-size: 15px;
   padding-bottom: 4px;

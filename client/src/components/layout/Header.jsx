@@ -1,16 +1,10 @@
 import { NavLink } from "react-router-dom";
 import "./Header.css";
 
-// The mark below is a temporary placeholder for the PokeFolio brand:
-// a plain initial badge + wordmark. It is intentionally simple so the
-// final logo/wordmark asset can drop in without any header restructuring.
 function Header() {
   return (
     <header className="app-header">
       <NavLink to="/explore" className="app-header-brand">
-        <span className="app-header-logo" aria-hidden="true">
-          P
-        </span>
         <span className="app-header-title">PokeFolio</span>
       </NavLink>
 

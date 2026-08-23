@@ -1,3 +1,5 @@
+/* ── Base card shell ───────────────────────────────────────────── */
+
 .card-tile {
   display: flex;
   flex-direction: column;
@@ -10,8 +12,48 @@
   cursor: pointer;
   font: inherit;
   text-align: center;
-  transition: border-color 0.2s, box-shadow 0.2s;
+
+  /* Reveal transition — opacity and lift.
+     Hover/focus border and shadow transitions are preserved separately
+     so they are not disrupted by the reveal state. */
+  transition:
+    opacity 420ms ease-out,
+    transform 420ms ease-out,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
+
+/* ── Scroll-triggered reveal states ───────────────────────────── */
+
+/* Hidden: initial state before the card enters the viewport.
+   Cards start below their final position and invisible. */
+.card-tile--hidden {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+/* Visible: applied by IntersectionObserver when the card enters the
+   viewport. The CSS transition on .card-tile drives the smooth reveal. */
+.card-tile--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Reduced motion: disable movement and transition entirely.
+   Cards appear immediately at full opacity in their final position. */
+@media (prefers-reduced-motion: reduce) {
+  .card-tile {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card-tile--hidden,
+  .card-tile--visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Hover / focus interactions ────────────────────────────────── */
 
 .card-tile:hover {
   border-color: var(--accent-border);
@@ -24,6 +66,8 @@
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
 }
+
+/* ── Card content ──────────────────────────────────────────────── */
 
 .card-tile-image {
   width: 100%;

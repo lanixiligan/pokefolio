@@ -11,15 +11,33 @@
      SetBrowser, CardDetails) already reference these names, so retheming
      here updates their colors without touching their layout/markup. */
   --bg: var(--color-background);
-  --surface: var(--color-surface);
+
+  /* Elevated surface tone. Derived from the palette for card depth —
+     a step above --bg that reads as a distinct surface without introducing
+     a new brand color. --color-surface retains the original palette value
+     as a reference; --surface is the applied semantic token. */
+  --surface: #172235;
+
   --text: var(--color-soft);
   --text-h: var(--color-cream);
-  --border: rgba(200, 223, 219, 0.16);
+
+  /* Mid-emphasis text: one step below --text-h, for card names (h3) and
+     sub-level headings that should rank below the page h1 hierarchy. */
+  --text-mid: #b8d4d0;
+
+  --border: rgba(200, 223, 219, 0.26);
   --code-bg: var(--color-surface);
   --accent: var(--color-primary);
   --accent-bg: rgba(51, 104, 160, 0.16);
   --accent-border: rgba(102, 163, 191, 0.55);
-  --accent-hover: var(--color-secondary);
+
+  /* --accent-text: the default visible brand signal on interactive elements
+     at rest (wordmark, nav links, labels, arrows). Uses the lighter blue
+     (#66A3BF) which reads clearly against dark surfaces.
+     --accent-hover is kept as a backward-compatible alias. */
+  --accent-text: var(--color-secondary);
+  --accent-hover: var(--accent-text);
+
   --social-bg: rgba(17, 28, 43, 0.5);
   --shadow:
     rgba(0, 0, 0, 0.35) 0 10px 15px -3px, rgba(0, 0, 0, 0.2) 0 4px 6px -2px;

@@ -191,7 +191,7 @@ function SetBrowser() {
             <div className="set-browser-grid">
               {cards.map((card) => (
                 <CardTile
-                  key={card.id}
+                  key={`${card.id}-${submittedSearch}`}
                   card={card}
                   onSelect={handleSelectCard}
                 />
@@ -205,5 +205,7 @@ function SetBrowser() {
 }
 
 export default SetBrowser;
+
+
 
 
