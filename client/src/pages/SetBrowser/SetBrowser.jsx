@@ -23,6 +23,14 @@ function SetBrowser() {
   const hasRestoredScroll = useRef(false);
 
   useEffect(() => {
+    if (set?.name) {
+      document.title = `${set.name} — PokeFolio`;
+    } else {
+      document.title = "Set Browser — PokeFolio";
+    }
+  }, [set]);
+
+  useEffect(() => {
     hasRestoredScroll.current = false;
   }, [setId]);
 
@@ -159,6 +167,7 @@ function SetBrowser() {
             <input
               type="text"
               placeholder="Search cards by name..."
+              aria-label="Search cards by name"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
             />
@@ -196,3 +205,5 @@ function SetBrowser() {
 }
 
 export default SetBrowser;
+
+

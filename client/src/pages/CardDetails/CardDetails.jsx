@@ -57,6 +57,14 @@ function CardDetails() {
   const [addMessage, setAddMessage] = useState("");
 
   useEffect(() => {
+    if (card?.name) {
+      document.title = `${card.name} — PokeFolio`;
+    } else {
+      document.title = "Card Details — PokeFolio";
+    }
+  }, [card]);
+
+  useEffect(() => {
     async function loadCardAndSet() {
       try {
         setIsLoading(true);
@@ -174,3 +182,4 @@ function CardDetails() {
 }
 
 export default CardDetails;
+

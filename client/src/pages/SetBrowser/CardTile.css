@@ -13,11 +13,16 @@
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.card-tile:hover,
+.card-tile:hover {
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow);
+}
+
 .card-tile:focus-visible {
   border-color: var(--accent-border);
   box-shadow: var(--shadow);
-  outline: none;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .card-tile-image {

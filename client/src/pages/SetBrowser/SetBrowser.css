@@ -31,8 +31,16 @@
   padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-h);
   font: inherit;
   min-width: 220px;
+}
+
+.set-browser-search input:focus-visible {
+  border-color: var(--accent-border);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .set-browser-search button {
@@ -45,10 +53,14 @@
   cursor: pointer;
 }
 
-.set-browser-search button:hover,
+.set-browser-search button:hover {
+  border-color: var(--accent-border);
+}
+
 .set-browser-search button:focus-visible {
   border-color: var(--accent-border);
-  outline: none;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .set-browser-grid {
@@ -65,5 +77,5 @@
 }
 
 .set-browser-error {
-  color: var(--accent);
+  color: var(--error);
 }

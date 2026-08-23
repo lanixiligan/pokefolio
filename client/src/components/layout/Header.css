@@ -17,6 +17,12 @@
   gap: 10px;
   text-decoration: none;
   color: inherit;
+  border-radius: 6px;
+}
+
+.app-header-brand:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 /* Placeholder mark: a simple initial badge standing in for the final
@@ -58,12 +64,17 @@
   font-size: 15px;
   padding-bottom: 4px;
   border-bottom: 2px solid transparent;
+  border-radius: 2px;
 }
 
-.app-header-link:hover,
+.app-header-link:hover {
+  color: var(--accent-hover);
+}
+
 .app-header-link:focus-visible {
   color: var(--accent-hover);
-  outline: none;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .app-header-link.is-active {

@@ -30,7 +30,7 @@
 }
 
 .binder-error {
-  color: var(--accent);
+  color: var(--error);
 }
 
 .binder-spread-nav {
@@ -56,10 +56,14 @@
   cursor: pointer;
 }
 
-.binder-spread-nav button:hover:not(:disabled),
+.binder-spread-nav button:hover:not(:disabled) {
+  border-color: var(--binder-accent, var(--accent-border));
+}
+
 .binder-spread-nav button:focus-visible:not(:disabled) {
   border-color: var(--binder-accent, var(--accent-border));
-  outline: none;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .binder-spread-nav button:disabled {
@@ -85,10 +89,14 @@
   cursor: pointer;
 }
 
-.binder-spread-controls button:hover:not(:disabled),
+.binder-spread-controls button:hover:not(:disabled) {
+  border-color: var(--binder-accent, var(--accent-border));
+}
+
 .binder-spread-controls button:focus-visible:not(:disabled) {
   border-color: var(--binder-accent, var(--accent-border));
-  outline: none;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .binder-spread-controls button:disabled {
@@ -120,10 +128,14 @@
   cursor: pointer;
 }
 
-.binder-selection-banner button:hover,
+.binder-selection-banner button:hover {
+  border-color: var(--accent-border);
+}
+
 .binder-selection-banner button:focus-visible {
   border-color: var(--accent-border);
-  outline: none;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 /* Desktop/tablet: both pages of the current spread side-by-side. */

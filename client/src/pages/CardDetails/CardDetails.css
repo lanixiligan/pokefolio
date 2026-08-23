@@ -9,7 +9,7 @@
 }
 
 .card-details-error {
-  color: var(--accent);
+  color: var(--error);
 }
 
 .card-details-content {
@@ -57,10 +57,14 @@
   cursor: pointer;
 }
 
-.add-to-binder-button:hover:not(:disabled),
+.add-to-binder-button:hover:not(:disabled) {
+  border-color: var(--accent-border);
+}
+
 .add-to-binder-button:focus-visible:not(:disabled) {
   border-color: var(--accent-border);
-  outline: none;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .add-to-binder-button:disabled {
@@ -74,9 +78,9 @@
 }
 
 .add-to-binder-success {
-  color: var(--accent);
+  color: var(--success);
 }
 
 .add-to-binder-error {
-  color: var(--accent);
+  color: var(--error);
 }

@@ -95,10 +95,14 @@
   cursor: pointer;
 }
 
-.binder-slot-remove:hover:not(:disabled),
+.binder-slot-remove:hover:not(:disabled) {
+  border-color: var(--accent-border);
+}
+
 .binder-slot-remove:focus-visible:not(:disabled) {
   border-color: var(--accent-border);
-  outline: none;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .binder-slot-remove:disabled {
@@ -115,7 +119,7 @@
   padding: 4px;
   border-radius: 4px;
   background: var(--bg);
-  color: var(--accent);
+  color: var(--error);
   font-size: 10px;
   text-align: center;
 }

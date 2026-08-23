@@ -64,6 +64,10 @@ function Binder() {
   const [deleteSpreadError, setDeleteSpreadError] = useState(null);
 
   useEffect(() => {
+    document.title = "Binder — PokeFolio";
+  }, []);
+
+  useEffect(() => {
     async function loadBinder() {
       try {
         setIsLoading(true);
@@ -274,7 +278,7 @@ function Binder() {
               onClick={handlePreviousSpread}
               disabled={currentSpreadIndex === 0}
             >
-              ← Previous
+              Previous
             </button>
             <span>
               Spread {currentSpreadIndex + 1} of {spreads.length}
@@ -367,3 +371,5 @@ function Binder() {
 }
 
 export default Binder;
+
+
