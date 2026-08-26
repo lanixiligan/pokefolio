@@ -56,7 +56,10 @@ function BinderPage({
   }
 
   return (
-    <div className="binder-page" style={{ "--binder-grid-size": gridSize }}>
+    <div
+      className={`binder-page binder-page-side-${page.side}`}
+      style={{ "--binder-grid-size": gridSize }}
+    >
       {positions.map((position) => {
         const card = cardsByPosition.get(position);
         const isDragOver = dragOverPosition === position;
@@ -110,15 +113,24 @@ function BinderPage({
               alt={card.name}
             />
             <button
+              type="button"
               className="binder-slot-remove"
               onClick={(event) => {
                 event.stopPropagation(); // don't trigger the slot's onClick
                 onRemoveCard(card.id);
               }}
               disabled={isRemoving}
+              aria-label={`Remove ${card.name} from binder`}
+              title={`Remove ${card.name}`}
             >
-              {isRemoving ? "Removing..." : "Remove"}
+              {isRemoving ? "…" : "✕"}
             </button>
+            {isSelected && (
+              <div className="binder-slot-selected-overlay" aria-live="polite">
+                <span className="binder-selected-badge">Selected</span>
+                <span className="binder-selected-hint">Choose destination</span>
+              </div>
+            )}
             {isMoving && <p className="binder-slot-status">Moving...</p>}
             {hasRemoveError && (
               <p className="binder-slot-error">{removeError.message}</p>

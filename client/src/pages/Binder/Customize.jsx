@@ -57,14 +57,27 @@ function Customize({ preferences, onSaved }) {
   return (
     <div className="customize">
       <button
+        type="button"
         className="customize-toggle"
         onClick={() => setIsOpen((open) => !open)}
+        aria-expanded={isOpen}
       >
-        {isOpen ? "Hide customization" : "Customize binder"}
+        {isOpen ? "Close Customize" : "Customize"}
       </button>
 
       {isOpen && (
-        <div className="customize-panel">
+        <div className="customize-panel" role="region" aria-label="Binder customization">
+          <div className="customize-header">
+            <h3 className="customize-title">Binder Appearance</h3>
+            <button
+              type="button"
+              className="customize-close-btn"
+              onClick={() => setIsOpen(false)}
+              aria-label="Close customization panel"
+            >
+              ✕
+            </button>
+          </div>
           <div className="customize-field">
             <span className="customize-label">Background</span>
             <div className="customize-swatches">

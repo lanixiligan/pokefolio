@@ -252,12 +252,10 @@ function Binder() {
   }
 
   return (
-    <section
-      className="binder"
-      style={binderStyle}
-      data-binder-theme={binder ? binder.preferences.theme : undefined}
-    >
-      <h2>Binder</h2>
+    <section className="binder">
+      <div className="binder-header-area">
+        <h2 className="binder-title">Binder</h2>
+      </div>
 
       {isLoading && <p className="binder-status">Loading your binder...</p>}
 
@@ -267,42 +265,8 @@ function Binder() {
         </p>
       )}
 
-      {!isLoading && !error && binder && (
-        <Customize preferences={binder.preferences} onSaved={handlePreferencesSaved} />
-      )}
-
       {!isLoading && !error && currentSpread && (
         <>
-          <div className="binder-spread-nav">
-            <button
-              onClick={handlePreviousSpread}
-              disabled={currentSpreadIndex === 0}
-            >
-              Previous
-            </button>
-            <span>
-              Spread {currentSpreadIndex + 1} of {spreads.length}
-            </span>
-            <button
-              onClick={handleNextSpread}
-              disabled={currentSpreadIndex === spreads.length - 1}
-            >
-              Next →
-            </button>
-          </div>
-
-          <div className="binder-spread-controls">
-            <button onClick={handleCreateSpread} disabled={isCreatingSpread}>
-              {isCreatingSpread ? "Adding..." : "Add spread"}
-            </button>
-            <button
-              onClick={handleDeleteSpread}
-              disabled={isDeletingSpread || spreads.length <= 1}
-            >
-              {isDeletingSpread ? "Deleting..." : "Delete this spread"}
-            </button>
-          </div>
-
           {createSpreadError && (
             <p className="binder-status binder-error">{createSpreadError}</p>
           )}
@@ -310,59 +274,135 @@ function Binder() {
             <p className="binder-status binder-error">{deleteSpreadError}</p>
           )}
 
-          {selectedCardPlacement && (
-            <div className="binder-selection-banner">
-              <span>
-                {selectedCardPlacement.card.name} selected — tap a slot to
-                move it (on this spread or another).
-              </span>
-              <button onClick={() => setSelectedCardId(null)}>Cancel</button>
+          {/* 1. Binder Folio Surface (user-customized background and theme applied here) */}
+          <div
+            className="binder-folio"
+            style={binderStyle}
+            data-binder-theme={binder ? binder.preferences.theme : undefined}
+          >
+            <div className="binder-spread">
+              {currentSpread.pages
+                .filter((page) => page.side === 1)
+                .map((page) => (
+                  <BinderPage
+                    key={page.side}
+                    page={page}
+                    gridSize={binder.preferences.gridSize}
+                    removingCardId={removingCardId}
+                    removeError={removeError}
+                    onRemoveCard={handleRemoveCard}
+                    movingCardId={movingCardId}
+                    moveError={moveError}
+                    selectedCardId={selectedCardId}
+                    onSlotClick={(position, cardIdAtSlot) =>
+                      handleSlotClick(page.side, position, cardIdAtSlot)
+                    }
+                    onSlotDrop={(position, draggedCardId) =>
+                      handleSlotDrop(page.side, position, draggedCardId)
+                    }
+                  />
+                ))}
+              {currentSpread.pages
+                .filter((page) => page.side === 2)
+                .map((page) => (
+                  <BinderPage
+                    key={page.side}
+                    page={page}
+                    gridSize={binder.preferences.gridSize}
+                    removingCardId={removingCardId}
+                    removeError={removeError}
+                    onRemoveCard={handleRemoveCard}
+                    movingCardId={movingCardId}
+                    moveError={moveError}
+                    selectedCardId={selectedCardId}
+                    onSlotClick={(position, cardIdAtSlot) =>
+                      handleSlotClick(page.side, position, cardIdAtSlot)
+                    }
+                    onSlotDrop={(position, draggedCardId) =>
+                      handleSlotDrop(page.side, position, draggedCardId)
+                    }
+                  />
+                ))}
             </div>
-          )}
+          </div>
 
-          <div className="binder-spread">
-            {currentSpread.pages
-              .filter((page) => page.side === 1)
-              .map((page) => (
-                <BinderPage
-                  key={page.side}
-                  page={page}
-                  gridSize={binder.preferences.gridSize}
-                  removingCardId={removingCardId}
-                  removeError={removeError}
-                  onRemoveCard={handleRemoveCard}
-                  movingCardId={movingCardId}
-                  moveError={moveError}
-                  selectedCardId={selectedCardId}
-                  onSlotClick={(position, cardIdAtSlot) =>
-                    handleSlotClick(page.side, position, cardIdAtSlot)
-                  }
-                  onSlotDrop={(position, draggedCardId) =>
-                    handleSlotDrop(page.side, position, draggedCardId)
-                  }
-                />
-              ))}
-            {currentSpread.pages
-              .filter((page) => page.side === 2)
-              .map((page) => (
-                <BinderPage
-                  key={page.side}
-                  page={page}
-                  gridSize={binder.preferences.gridSize}
-                  removingCardId={removingCardId}
-                  removeError={removeError}
-                  onRemoveCard={handleRemoveCard}
-                  movingCardId={movingCardId}
-                  moveError={moveError}
-                  selectedCardId={selectedCardId}
-                  onSlotClick={(position, cardIdAtSlot) =>
-                    handleSlotClick(page.side, position, cardIdAtSlot)
-                  }
-                  onSlotDrop={(position, draggedCardId) =>
-                    handleSlotDrop(page.side, position, draggedCardId)
-                  }
-                />
-              ))}
+          {/* Cross-Spread Move Feedback (shown only when selected card is on a different spread) */}
+          {selectedCardPlacement &&
+            selectedCardPlacement.spreadId !== currentSpread.id && (
+              <div
+                className="binder-cross-spread-banner"
+                role="status"
+                aria-live="polite"
+              >
+                <span className="binder-cross-spread-text">
+                  Moving <strong>{selectedCardPlacement.card.name}</strong> • Tap a destination
+                </span>
+                <button
+                  type="button"
+                  className="binder-cross-spread-cancel"
+                  onClick={() => setSelectedCardId(null)}
+                  aria-label="Cancel moving card"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+
+          {/* 2. Binder Toolbar (positioned below the folio) */}
+          <div className="binder-toolbar">
+            <div className="binder-toolbar-nav">
+              <button
+                type="button"
+                className="binder-nav-btn"
+                onClick={handlePreviousSpread}
+                disabled={currentSpreadIndex === 0}
+                aria-label="Previous spread"
+              >
+                ←
+              </button>
+              <span className="binder-spread-indicator">
+                Spread {currentSpreadIndex + 1} of {spreads.length}
+              </span>
+              <button
+                type="button"
+                className="binder-nav-btn"
+                onClick={handleNextSpread}
+                disabled={currentSpreadIndex === spreads.length - 1}
+                aria-label="Next spread"
+              >
+                →
+              </button>
+            </div>
+
+            <div className="binder-toolbar-actions">
+              <button
+                type="button"
+                className="binder-btn binder-btn-add"
+                onClick={handleCreateSpread}
+                disabled={isCreatingSpread}
+              >
+                {isCreatingSpread ? "Adding..." : "+ Add Spread"}
+              </button>
+
+              <Customize
+                preferences={binder.preferences}
+                onSaved={handlePreferencesSaved}
+              />
+
+              <button
+                type="button"
+                className="binder-btn binder-btn-delete"
+                onClick={handleDeleteSpread}
+                disabled={isDeletingSpread || spreads.length <= 1}
+                title={
+                  spreads.length <= 1
+                    ? "Cannot delete the only spread"
+                    : "Delete current spread"
+                }
+              >
+                {isDeletingSpread ? "Deleting..." : "Delete Spread"}
+              </button>
+            </div>
           </div>
         </>
       )}
