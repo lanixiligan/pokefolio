@@ -9,6 +9,8 @@ import {
 } from "../../lib/api";
 import BinderPage from "./BinderPage";
 import Customize from "./Customize";
+import AddCardPicker from "./AddCardPicker";
+import { useLocation } from "react-router-dom";
 import "./Binder.css";
 
 // Scans every spread/page for a card and returns where it currently sits,
@@ -63,6 +65,15 @@ function Binder() {
   const [isDeletingSpread, setIsDeletingSpread] = useState(false);
   const [deleteSpreadError, setDeleteSpreadError] = useState(null);
 
+  const [activeAddSlot, setActiveAddSlot] = useState(null);
+
+  const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+
+  const [draftPreferences, setDraftPreferences] = useState(null);
+
+  const location = useLocation();
+
   useEffect(() => {
     document.title = "Binder — PokeFolio";
   }, []);
@@ -87,6 +98,32 @@ function Binder() {
 
     loadBinder();
   }, []);
+
+  useEffect(() => {
+    if (binder) {
+      const searchParams = new URLSearchParams(location.search);
+      const spreadParam = searchParams.get("spreadId");
+      if (spreadParam) {
+        const spreadIdNum = Number(spreadParam);
+        if (binder.spreads.some(s => s.id === spreadIdNum)) {
+          setSelectedSpreadId(spreadIdNum);
+        }
+      }
+    }
+  }, [location.search, binder]);
+
+  useEffect(() => {
+    if (!isDeleteConfirmOpen) return;
+
+    function handleKeyDown(e) {
+      if (e.key === "Escape") {
+        setIsDeleteConfirmOpen(false);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isDeleteConfirmOpen]);
 
   const spreads = binder ? binder.spreads : [];
 
@@ -155,6 +192,13 @@ function Binder() {
       // Nothing selected yet: tapping an occupied slot selects it.
       if (cardIdAtSlot) {
         setSelectedCardId(cardIdAtSlot);
+      } else {
+        // Tapping an empty slot opens the Add Card picker
+        setActiveAddSlot({
+          spreadId: currentSpread.id,
+          pageSide,
+          position,
+        });
       }
       return;
     }
@@ -237,12 +281,14 @@ function Binder() {
   // <section> only (via inline style, not :root), so customization never
   // leaks outside the Binder page. Descendant CSS (Binder.css,
   // BinderPage.css) reads these with fallbacks to the app's normal tokens.
-  const binderStyle = binder
+  const activePreferences = isCustomizeOpen && draftPreferences ? draftPreferences : (binder ? binder.preferences : null);
+
+  const binderStyle = activePreferences
     ? {
-        "--binder-background": binder.preferences.background,
-        "--binder-color": binder.preferences.binderColor,
-        "--binder-accent": binder.preferences.accentColor,
-      }
+      "--binder-background": activePreferences.background,
+      "--binder-color": activePreferences.binderColor,
+      "--binder-accent": activePreferences.accentColor,
+    }
     : undefined;
 
   async function handlePreferencesSaved() {
@@ -253,10 +299,50 @@ function Binder() {
 
   return (
     <section className="binder">
-      <div className="binder-header-area">
-        <h2 className="binder-title">Binder</h2>
+      <div className="binder-workspace-header">
+        <div className="binder-title-group">
+          <h2 className="binder-title">Binder</h2>
+          <p className="binder-subtitle">Your personal Pokémon TCG binder</p>
+        </div>
+
+        {binder && (
+          <div className="binder-settings-wrapper">
+            <button
+              className="binder-settings-btn"
+              onClick={() => {
+                if (!isCustomizeOpen) {
+                  setDraftPreferences(binder.preferences);
+                }
+                setIsCustomizeOpen(!isCustomizeOpen);
+              }}
+              aria-expanded={isCustomizeOpen}
+              aria-label="Customize Binder"
+            >
+              ⚙ Customize
+            </button>
+
+            {isCustomizeOpen && (
+              <Customize
+                preferences={binder.preferences}
+                draft={draftPreferences}
+                onDraftChange={setDraftPreferences}
+                onSaved={handlePreferencesSaved}
+                onClose={() => {
+                  setIsCustomizeOpen(false);
+                  setDraftPreferences(null);
+                }}
+                onAddSpread={handleCreateSpread}
+                isCreatingSpread={isCreatingSpread}
+                onDeleteSpread={() => setIsDeleteConfirmOpen(true)}
+                isDeletingSpread={isDeletingSpread}
+                canDeleteSpread={spreads.length > 1}
+              />
+            )}
+          </div>
+        )}
       </div>
 
+      <div className="binder-canvas">
       {isLoading && <p className="binder-status">Loading your binder...</p>}
 
       {!isLoading && error && (
@@ -278,7 +364,7 @@ function Binder() {
           <div
             className="binder-folio"
             style={binderStyle}
-            data-binder-theme={binder ? binder.preferences.theme : undefined}
+            data-binder-theme={activePreferences ? activePreferences.theme : undefined}
           >
             <div className="binder-spread">
               {currentSpread.pages
@@ -287,7 +373,7 @@ function Binder() {
                   <BinderPage
                     key={page.side}
                     page={page}
-                    gridSize={binder.preferences.gridSize}
+                    gridSize={activePreferences.gridSize}
                     removingCardId={removingCardId}
                     removeError={removeError}
                     onRemoveCard={handleRemoveCard}
@@ -308,7 +394,7 @@ function Binder() {
                   <BinderPage
                     key={page.side}
                     page={page}
-                    gridSize={binder.preferences.gridSize}
+                    gridSize={activePreferences.gridSize}
                     removingCardId={removingCardId}
                     removeError={removeError}
                     onRemoveCard={handleRemoveCard}
@@ -348,64 +434,79 @@ function Binder() {
               </div>
             )}
 
-          {/* 2. Binder Toolbar (positioned below the folio) */}
-          <div className="binder-toolbar">
-            <div className="binder-toolbar-nav">
-              <button
-                type="button"
-                className="binder-nav-btn"
-                onClick={handlePreviousSpread}
-                disabled={currentSpreadIndex === 0}
-                aria-label="Previous spread"
-              >
-                ←
-              </button>
-              <span className="binder-spread-indicator">
-                Spread {currentSpreadIndex + 1} of {spreads.length}
-              </span>
-              <button
-                type="button"
-                className="binder-nav-btn"
-                onClick={handleNextSpread}
-                disabled={currentSpreadIndex === spreads.length - 1}
-                aria-label="Next spread"
-              >
-                →
-              </button>
-            </div>
-
-            <div className="binder-toolbar-actions">
-              <button
-                type="button"
-                className="binder-btn binder-btn-add"
-                onClick={handleCreateSpread}
-                disabled={isCreatingSpread}
-              >
-                {isCreatingSpread ? "Adding..." : "+ Add Spread"}
-              </button>
-
-              <Customize
-                preferences={binder.preferences}
-                onSaved={handlePreferencesSaved}
-              />
-
-              <button
-                type="button"
-                className="binder-btn binder-btn-delete"
-                onClick={handleDeleteSpread}
-                disabled={isDeletingSpread || spreads.length <= 1}
-                title={
-                  spreads.length <= 1
-                    ? "Cannot delete the only spread"
-                    : "Delete current spread"
-                }
-              >
-                {isDeletingSpread ? "Deleting..." : "Delete Spread"}
-              </button>
-            </div>
+          {/* 3. Page Turn Controls (positioned below the folio) */}
+          <div className="binder-page-controls">
+            <button
+              type="button"
+              className="binder-page-btn"
+              onClick={handlePreviousSpread}
+              disabled={currentSpreadIndex === 0}
+              aria-label="Previous spread"
+            >
+              ←
+            </button>
+            <span className="binder-page-indicator">
+              {currentSpreadIndex + 1} / {spreads.length}
+            </span>
+            <button
+              type="button"
+              className="binder-page-btn"
+              onClick={handleNextSpread}
+              disabled={currentSpreadIndex === spreads.length - 1}
+              aria-label="Next spread"
+            >
+              →
+            </button>
           </div>
+
+          {activeAddSlot && (
+            <AddCardPicker
+              activeAddSlot={activeAddSlot}
+              onClose={() => setActiveAddSlot(null)}
+              onAddSuccess={() => {
+                setActiveAddSlot(null);
+                refreshBinder();
+              }}
+            />
+          )}
+
+          {isDeleteConfirmOpen && (
+            <div className="binder-delete-confirm-overlay" onClick={() => setIsDeleteConfirmOpen(false)}>
+              <div
+                className="binder-delete-confirm"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="delete-confirm-title"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h3 id="delete-confirm-title">Delete Spread</h3>
+                <p>Are you sure you want to delete the current spread?</p>
+                <p className="binder-delete-warning">This cannot be undone.</p>
+                <div className="binder-delete-actions">
+                  <button
+                    type="button"
+                    className="binder-btn-cancel"
+                    onClick={() => setIsDeleteConfirmOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="binder-btn-confirm-delete"
+                    onClick={() => {
+                      setIsDeleteConfirmOpen(false);
+                      handleDeleteSpread();
+                    }}
+                  >
+                    Delete Spread
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       )}
+      </div>
     </section>
   );
 }

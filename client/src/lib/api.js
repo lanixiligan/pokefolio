@@ -46,14 +46,22 @@ export async function getSet(setId) {
   return apiRequest(`/sets/${setId}`);
 }
 
-export async function getCardsBySet(setId, search) {
-  const params = new URLSearchParams({ set: setId });
+export async function getCards(setId, search) {
+  const params = new URLSearchParams();
+
+  if (setId && setId !== "all") {
+    params.set("set", setId);
+  }
 
   if (search) {
     params.set("search", search);
   }
 
   return apiRequest(`/cards?${params.toString()}`);
+}
+
+export async function getCardsBySet(setId, search) {
+  return getCards(setId, search);
 }
 
 export async function getCard(cardId) {

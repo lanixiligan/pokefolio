@@ -1,22 +1,140 @@
 .binder {
-  padding: 24px 20px 48px;
   text-align: center;
   background: transparent;
   color: var(--text);
   box-sizing: border-box;
 }
 
-.binder-header-area {
-  margin-bottom: 20px;
+.binder-workspace-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.binder-title-group {
+  text-align: left;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
 }
 
 .binder-title {
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 600;
   margin: 0;
   color: var(--text-h);
+  letter-spacing: -0.2px;
+}
+
+.binder-subtitle {
+  font-size: 13px;
+  color: var(--text-mid);
+  margin: 0;
+  font-weight: 500;
+}
+
+.binder-canvas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
+  min-height: calc(100vh - 130px);
+}
+
+/* ==================================================
+   BINDER SETTINGS
+   ================================================== */
+.binder-settings-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.binder-settings-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-h);
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.binder-settings-btn:hover,
+.binder-settings-btn[aria-expanded="true"] {
+  background: rgba(102, 163, 191, 0.1);
+  border-color: var(--accent-border);
+  color: var(--color-cream);
+}
+
+.binder-settings-btn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.binder-settings-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 180px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 100;
+}
+
+.binder-settings-item {
+  background: transparent;
+  border: none;
+  width: 100%;
   text-align: left;
-  letter-spacing: -0.5px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: var(--text-h);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.binder-settings-item:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.binder-settings-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.binder-settings-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+.binder-settings-delete {
+  color: var(--color-error);
+}
+
+.binder-settings-delete:hover:not(:disabled) {
+  background: rgba(212, 84, 84, 0.12);
+  color: #ff7878;
 }
 
 .binder-status {
@@ -36,13 +154,15 @@
    specifically to this folio container, not the entire page.
    ================================================== */
 .binder-folio {
+  position: relative;
   background: var(--binder-background, var(--surface));
   padding: 16px;
   border-radius: 12px;
   border: 1px solid var(--binder-border, var(--border));
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
   box-sizing: border-box;
-  margin-bottom: 16px;
+  /* Ensure folio always fills the canvas width so empty spreads don't collapse */
+  width: 100%;
 }
 
 /* Scoped theme token presets: applies to folio elements */
@@ -155,126 +275,156 @@
 }
 
 /* ==================================================
-   CONSOLIDATED BINDER TOOLBAR (Bottom-positioned)
+   PAGE TURN CONTROLS (Below Folio)
    ================================================== */
-.binder-toolbar {
+.binder-page-controls-wrapper {
+  position: relative;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 10px 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-  box-sizing: border-box;
-}
-
-/* Left: Spread Navigation & Counter */
-.binder-toolbar-nav {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.binder-nav-btn {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  margin-top: 24px;
+  width: 100%;
 }
 
-.binder-nav-btn:hover:not(:disabled) {
+.binder-page-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.binder-page-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: #66A3BF;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: all 0.15s ease;
+}
+
+.binder-page-btn:hover:not(:disabled) {
   border-color: var(--accent-border);
   background: rgba(102, 163, 191, 0.1);
   color: var(--color-cream);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
 }
 
-.binder-nav-btn:focus-visible:not(:disabled) {
-  border-color: var(--accent-border);
+.binder-page-btn:focus-visible:not(:disabled) {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
 }
 
-.binder-nav-btn:disabled {
-  opacity: 0.4;
+.binder-page-btn:disabled {
+  opacity: 0.3;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
-.binder-spread-indicator {
-  color: var(--text-h);
+.binder-page-indicator {
   font-size: 14px;
-  font-weight: 500;
-  padding: 0 4px;
-  white-space: nowrap;
+  font-weight: 600;
+  color: #F2EFE7;
+  letter-spacing: 2px;
+  min-width: 60px;
+  text-align: center;
 }
 
-/* Right: Action Buttons */
-.binder-toolbar-actions {
+/* ==================================================
+   DELETE CONFIRMATION DIALOG
+   ================================================== */
+.binder-delete-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 18, 32, 0.75);
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
 }
 
-.binder-btn {
-  padding: 8px 14px;
+.binder-delete-confirm {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  text-align: left;
+}
+
+.binder-delete-confirm h3 {
+  margin: 0 0 12px;
+  color: var(--text-h);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.binder-delete-confirm p {
+  margin: 0 0 8px;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.binder-delete-warning {
+  color: var(--color-error) !important;
+  font-weight: 500;
+  margin-bottom: 24px !important;
+}
+
+.binder-delete-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.binder-btn-cancel,
+.binder-btn-confirm-delete {
+  padding: 8px 16px;
   border-radius: 8px;
   font: inherit;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  white-space: nowrap;
   transition: all 0.15s ease;
 }
 
-.binder-btn:focus-visible:not(:disabled) {
+.binder-btn-cancel {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.binder-btn-cancel:hover {
+  border-color: var(--text-h);
+  color: var(--text-h);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.binder-btn-confirm-delete {
+  background: var(--color-error);
+  color: #fff;
+  border: 1px solid transparent;
+}
+
+.binder-btn-confirm-delete:hover {
+  background: #ff5050;
+}
+
+.binder-btn-cancel:focus-visible,
+.binder-btn-confirm-delete:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
-}
-
-.binder-btn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-/* Primary positive action */
-.binder-btn-add {
-  background: var(--color-primary);
-  color: #ffffff;
-  border: 1px solid var(--accent-border);
-}
-
-.binder-btn-add:hover:not(:disabled) {
-  background: var(--color-secondary);
-  border-color: var(--color-secondary);
-}
-
-/* Destructive action */
-.binder-btn-delete {
-  background: transparent;
-  color: var(--color-error);
-  border: 1px solid rgba(212, 84, 84, 0.35);
-}
-
-.binder-btn-delete:hover:not(:disabled) {
-  background: rgba(212, 84, 84, 0.12);
-  border-color: var(--color-error);
-  color: #ff7878;
-}
-
-.binder-btn-delete:disabled {
-  border-color: var(--border);
-  color: var(--text);
-  opacity: 0.35;
 }
 
 /* ==================================================
@@ -282,40 +432,40 @@
    ================================================== */
 @media (max-width: 640px) {
   .binder {
-    padding: 16px 12px 32px;
+    padding: 0;
+  }
+  
+  .binder-workspace-header {
+    padding: 16px 20px;
   }
 
-  .binder-title {
-    font-size: 24px;
-    margin-bottom: 12px;
+  .binder-canvas {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 24px 12px 40px;
+    min-height: auto;
+  }
+
+  .binder-status { order: 1; }
+  
+  .binder-page-controls {
+    order: 2;
+    gap: 16px;
+    margin-top: 12px;
+    margin-bottom: 16px;
   }
 
   .binder-folio {
+    order: 3;
     padding: 10px;
     margin-bottom: 12px;
   }
 
-  .binder-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-    padding: 12px;
-  }
+  .binder-cross-spread-banner { order: 5; }
 
-  .binder-toolbar-nav {
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .binder-toolbar-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    width: 100%;
-  }
-
-  .binder-btn-add {
-    grid-column: 1 / -1;
+  .binder-title {
+    font-size: 24px;
   }
 
   .binder-spread {

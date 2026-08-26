@@ -76,7 +76,9 @@ function BinderPage({
               onDragLeave={() => setDragOverPosition(null)}
               onDrop={(event) => handleDrop(event, position)}
               onClick={() => onSlotClick(position, null)}
-            />
+            >
+              <span className="binder-slot-add-icon" aria-hidden="true">+</span>
+            </div>
           );
         }
 
