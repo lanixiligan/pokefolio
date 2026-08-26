@@ -76,3 +76,147 @@
     gap: 12px;
   }
 }
+
+/* ==================================================
+   INITIAL APPLICATION LOADING SCREEN
+   Rendered only on the very first application load on /explore.
+   ================================================== */
+.poke-initial-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.poke-initial-loader.is-fading-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.poke-initial-loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  animation: loaderFadeIn 0.35s ease forwards;
+}
+
+.poke-initial-loader-logo {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 4px;
+}
+
+.poke-initial-logo-icon {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.loader-logo-card-back {
+  fill: rgba(51, 104, 160, 0.35);
+  stroke: var(--color-secondary);
+  stroke-width: 1.75;
+}
+
+.loader-logo-card-line {
+  stroke: var(--color-secondary);
+  stroke-width: 1.5;
+}
+
+.loader-logo-card-core {
+  fill: var(--surface);
+  stroke: var(--color-cream);
+  stroke-width: 1.75;
+}
+
+.poke-initial-loader-brand {
+  font-family: var(--font-display, var(--heading));
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  line-height: 1;
+}
+
+.poke-initial-loader-subtitle {
+  margin: 2px 0 14px;
+  font-family: var(--font-display, var(--sans));
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-soft);
+  letter-spacing: 0.1px;
+}
+
+.poke-initial-loader-line {
+  position: relative;
+  width: 180px;
+  height: 2px;
+  background: rgba(200, 223, 219, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.poke-initial-loader-beam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-primary) 30%,
+    var(--color-secondary) 60%,
+    var(--color-soft) 85%,
+    transparent 100%
+  );
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(51, 104, 160, 0.6);
+  animation: lineSweep 0.85s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes loaderFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lineSweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(240%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poke-initial-loader,
+  .poke-initial-loader.is-fading-out,
+  .poke-initial-loader-content,
+  .poke-initial-loader-beam {
+    animation: none;
+    transition: opacity 0.05s linear;
+    transform: none;
+  }
+
+  .poke-initial-loader-beam {
+    width: 100%;
+    transform: none;
+    background: var(--color-secondary);
+    box-shadow: none;
+  }
+}

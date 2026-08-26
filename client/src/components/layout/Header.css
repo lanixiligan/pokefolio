@@ -3,20 +3,32 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 18px 24px;
+  padding: 12px 24px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   position: sticky;
   top: 0;
   z-index: 100;
+  box-sizing: border-box;
 }
 
 .app-header-brand {
   display: flex;
   align-items: center;
+  gap: 10px;
   text-decoration: none;
   color: inherit;
-  border-radius: 6px;
+  border-radius: 8px;
+  padding: 4px 6px;
+  margin-left: -6px;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.2s ease;
+}
+
+.app-header-brand:hover {
+  transform: translateY(-1.5px) scale(1.02);
+  filter: drop-shadow(0 2px 8px rgba(102, 163, 191, 0.25));
 }
 
 .app-header-brand:focus-visible {
@@ -24,59 +36,167 @@
   outline-offset: var(--focus-ring-offset);
 }
 
-/* Wordmark uses --accent-text (#66A3BF) — the visible brand signal at rest,
-   distinct from the neutral cream used for page headings. */
+/* Replaceable logo container slot for future SVG/PNG logo asset */
+.app-header-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.app-header-brand:hover .app-header-logo {
+  transform: scale(1.04);
+}
+
+.app-header-logo-icon {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.logo-card-back {
+  fill: rgba(51, 104, 160, 0.35);
+  stroke: var(--color-secondary);
+  stroke-width: 1.75;
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}
+
+.app-header-brand:hover .logo-card-back {
+  fill: rgba(51, 104, 160, 0.55);
+  stroke: var(--color-soft);
+}
+
+.logo-card-line {
+  stroke: var(--color-secondary);
+  stroke-width: 1.5;
+  transition: stroke 0.2s ease;
+}
+
+.app-header-brand:hover .logo-card-line {
+  stroke: var(--color-soft);
+}
+
+.logo-card-core {
+  fill: var(--surface);
+  stroke: var(--color-cream);
+  stroke-width: 1.75;
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}
+
+.app-header-brand:hover .logo-card-core {
+  fill: rgba(102, 163, 191, 0.2);
+  stroke: #ffffff;
+}
+
+/* Dual-tone Wordmark with Outfit font */
 .app-header-title {
-  font-family: var(--heading);
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: -0.2px;
-  color: var(--accent-text);
+  font-family: var(--font-display, var(--heading));
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.brand-poke {
+  color: var(--color-cream);
+  transition: color 0.2s ease;
+}
+
+.brand-folio {
+  color: var(--color-secondary);
+  transition: color 0.2s ease;
+}
+
+.app-header-brand:hover .brand-poke {
+  color: #ffffff;
+}
+
+.app-header-brand:hover .brand-folio {
+  color: var(--color-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-header-brand,
+  .app-header-brand:hover,
+  .app-header-logo,
+  .app-header-brand:hover .app-header-logo {
+    transform: none;
+    transition: none;
+  }
 }
 
 .app-header-nav {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 8px;
 }
 
-/* Nav links use --accent-text at rest so interactive items read as brand
-   elements, not neutral text. Active state steps up to --text-h (cream)
-   anchored by the --accent underline for clear current-page indication. */
+/* Segmented Pill Navigation */
 .app-header-link {
   color: var(--accent-text);
   text-decoration: none;
-  font-size: 15px;
-  padding-bottom: 4px;
-  border-bottom: 2px solid transparent;
-  border-radius: 2px;
+  font-family: var(--font-display, var(--sans));
+  font-size: 14px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
 }
 
 .app-header-link:hover {
-  color: var(--accent-hover);
+  color: var(--color-cream);
+  background: rgba(102, 163, 191, 0.12);
 }
 
 .app-header-link:focus-visible {
-  color: var(--accent-hover);
+  color: var(--color-cream);
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
 }
 
 .app-header-link.is-active {
-  color: var(--text-h);
-  border-bottom-color: var(--accent);
+  color: var(--color-cream);
+  background: rgba(51, 104, 160, 0.22);
+  border-color: rgba(102, 163, 191, 0.4);
+  font-weight: 600;
 }
 
 @media (max-width: 480px) {
   .app-header {
-    padding: 14px 16px;
+    padding: 10px 16px;
+  }
+
+  .app-header-brand {
+    gap: 8px;
+    margin-left: -4px;
+  }
+
+  .app-header-logo {
+    width: 22px;
+    height: 22px;
   }
 
   .app-header-title {
-    font-size: 17px;
+    font-size: 18px;
   }
 
   .app-header-nav {
-    gap: 16px;
+    gap: 6px;
+  }
+
+  .app-header-link {
+    padding: 6px 12px;
+    font-size: 13px;
   }
 }
