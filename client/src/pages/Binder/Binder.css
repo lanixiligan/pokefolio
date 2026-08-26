@@ -11,6 +11,8 @@
   justify-content: space-between;
   padding: 10px 32px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  z-index: 10;
 }
 
 .binder-title-group {

@@ -9,7 +9,7 @@ import {
 } from "../../lib/api";
 import BinderPage from "./BinderPage";
 import Customize from "./Customize";
-import AddCardPicker from "./AddCardPicker";
+import AddCardPicker, { getNextAvailableSlot } from "./AddCardPicker";
 import { useLocation } from "react-router-dom";
 import "./Binder.css";
 
@@ -142,6 +142,7 @@ function Binder() {
   async function refreshBinder() {
     const binderData = await getBinder();
     setBinder(binderData);
+    return binderData;
   }
 
   async function handleRemoveCard(cardId) {
@@ -274,6 +275,25 @@ function Binder() {
     }
   }
 
+  async function handleAddCardToggle() {
+    if (activeAddSlot) {
+      setActiveAddSlot(null);
+    } else {
+      if (isCustomizeOpen) {
+        setIsCustomizeOpen(false);
+        setDraftPreferences(null);
+      }
+
+      let initialSlot = getNextAvailableSlot(binder, {
+        spreadId: currentSpread.id,
+        pageSide: 1,
+        position: -1,
+      });
+
+      setActiveAddSlot(initialSlot || "NEW_SPREAD");
+    }
+  }
+
   const selectedCardPlacement =
     binder && selectedCardId ? findCardPlacement(binder, selectedCardId) : null;
 
@@ -309,7 +329,17 @@ function Binder() {
           <div className="binder-settings-wrapper">
             <button
               className="binder-settings-btn"
+              onClick={handleAddCardToggle}
+              aria-expanded={!!activeAddSlot}
+            >
+              + Add Card
+            </button>
+            <button
+              className="binder-settings-btn"
               onClick={() => {
+                if (activeAddSlot) {
+                  setActiveAddSlot(null);
+                }
                 if (!isCustomizeOpen) {
                   setDraftPreferences(binder.preferences);
                 }
@@ -343,7 +373,7 @@ function Binder() {
       </div>
 
       <div className="binder-canvas">
-      {isLoading && <p className="binder-status">Loading your binder...</p>}
+        {isLoading && <p className="binder-status">Loading your binder...</p>}
 
       {!isLoading && error && (
         <p className="binder-status binder-error">
@@ -461,11 +491,23 @@ function Binder() {
 
           {activeAddSlot && (
             <AddCardPicker
+              binder={binder}
               activeAddSlot={activeAddSlot}
+              refreshBinder={refreshBinder}
               onClose={() => setActiveAddSlot(null)}
-              onAddSuccess={() => {
-                setActiveAddSlot(null);
-                refreshBinder();
+              onAddSuccess={(nextSlot) => {
+                if (nextSlot) {
+                  setActiveAddSlot(nextSlot);
+                  if (nextSlot.spreadId !== currentSpread.id) {
+                    const nextSpreadIndex = spreads.findIndex(s => s.id === nextSlot.spreadId);
+                    if (nextSpreadIndex !== -1) {
+                      setCurrentSpreadIndex(nextSpreadIndex);
+                    }
+                  }
+                } else {
+                  setActiveAddSlot(null);
+                  refreshBinder();
+                }
               }}
             />
           )}
