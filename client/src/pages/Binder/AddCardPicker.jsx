@@ -71,6 +71,43 @@ export function getNextAvailableSlot(binder, currentTarget) {
 }
 
 function AddCardPicker({ binder, activeAddSlot, onClose, onAddSuccess, refreshBinder }) {
+  const [layoutState, setLayoutState] = useState({ mode: 'mobile', rect: null });
+
+  useEffect(() => {
+    const updateLayout = () => {
+      if (window.innerWidth <= 640) {
+        setLayoutState({ mode: 'mobile', rect: null });
+        return;
+      }
+      const folio = document.querySelector('.binder-folio');
+      if (folio) {
+        const rect = folio.getBoundingClientRect();
+        // Check if there is enough room to the right of the folio for the panel.
+        // We want at least 320px for the panel + 24px gap = 344px.
+        const availableSpace = window.innerWidth - rect.right;
+        if (availableSpace >= 344) {
+          setLayoutState({ mode: 'desktop', rect });
+        } else {
+          setLayoutState({ mode: 'tablet', rect: null });
+        }
+      }
+    };
+
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+    
+    let observer;
+    if (window.ResizeObserver) {
+      observer = new ResizeObserver(updateLayout);
+      const folio = document.querySelector('.binder-folio');
+      if (folio) observer.observe(folio);
+    }
+    
+    return () => {
+      window.removeEventListener('resize', updateLayout);
+      if (observer) observer.disconnect();
+    };
+  }, []);
   const [sets, setSets] = useState([]);
   const [cards, setCards] = useState([]);
   const [activeSetId, setActiveSetId] = useState("all");
@@ -237,8 +274,34 @@ function AddCardPicker({ binder, activeAddSlot, onClose, onAddSuccess, refreshBi
 
 
 
+  let panelStyle = undefined;
+  if (layoutState.mode === 'desktop' && layoutState.rect) {
+    panelStyle = {
+      position: 'fixed',
+      top: `${layoutState.rect.top}px`,
+      left: `${layoutState.rect.right + 24}px`,
+      height: `${layoutState.rect.height}px`,
+      width: 'auto',
+      maxWidth: '360px',
+      right: '24px' // Ensure it doesn't overflow right edge
+    };
+  } else if (layoutState.mode === 'tablet') {
+    panelStyle = {
+      position: 'fixed',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: '90%',
+      maxWidth: '400px',
+      height: 'auto',
+      maxHeight: '80vh',
+      right: 'auto',
+      bottom: 'auto'
+    };
+  }
+
   return (
-    <div className="add-card-picker" role="region" aria-label="Add Card panel">
+    <div className="add-card-picker" style={panelStyle} role="region" aria-label="Add Card panel">
       <div className="add-card-picker-header">
         <h2 id="add-card-title">Add Card</h2>
         <button className="add-card-picker-close" onClick={onClose} aria-label="Close Add Card">✕</button>

@@ -1,11 +1,11 @@
 .add-card-picker {
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 24px;
-  right: 24px; /* Inside the relative .binder-canvas */
-  width: 320px;
-  max-height: calc(100% - 48px);
+  position: fixed;
+  right: 24px;
+  width: auto;
+  max-width: 360px;
+  /* top, left, and height are driven by JS inline styles on desktop */
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface);

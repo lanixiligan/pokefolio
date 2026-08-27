@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { HexColorPicker, HexColorInput } from "react-colorful";
 import { updatePreferences } from "../../lib/api";
 import "./Customize.css";
@@ -53,6 +53,43 @@ function Customize({
   const [saveError, setSaveError] = useState(null);
   const [activePicker, setActivePicker] = useState(null);
   const [forceCustomMode, setForceCustomMode] = useState(false);
+  const [layoutState, setLayoutState] = useState({ mode: 'mobile', rect: null });
+
+  useEffect(() => {
+    const updateLayout = () => {
+      if (window.innerWidth <= 640) {
+        setLayoutState({ mode: 'mobile', rect: null });
+        return;
+      }
+      const folio = document.querySelector('.binder-folio');
+      if (folio) {
+        const rect = folio.getBoundingClientRect();
+        // Check if there is enough room to the right of the folio for the panel.
+        // We want at least 320px for the panel + 24px gap = 344px.
+        const availableSpace = window.innerWidth - rect.right;
+        if (availableSpace >= 344) {
+          setLayoutState({ mode: 'desktop', rect });
+        } else {
+          setLayoutState({ mode: 'tablet', rect: null });
+        }
+      }
+    };
+
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+    
+    let observer;
+    if (window.ResizeObserver) {
+      observer = new ResizeObserver(updateLayout);
+      const folio = document.querySelector('.binder-folio');
+      if (folio) observer.observe(folio);
+    }
+    
+    return () => {
+      window.removeEventListener('resize', updateLayout);
+      if (observer) observer.disconnect();
+    };
+  }, []);
 
   function handleOpenPicker(pickerName) {
     if (activePicker === pickerName) {
@@ -123,10 +160,36 @@ function Customize({
     }
   }
 
+  let panelStyle = undefined;
+  if (layoutState.mode === 'desktop' && layoutState.rect) {
+    panelStyle = {
+      position: 'fixed',
+      top: `${layoutState.rect.top}px`,
+      left: `${layoutState.rect.right + 24}px`,
+      height: `${layoutState.rect.height}px`,
+      width: 'auto',
+      maxWidth: '360px',
+      right: '24px' // Ensure it doesn't overflow right edge
+    };
+  } else if (layoutState.mode === 'tablet') {
+    panelStyle = {
+      position: 'fixed',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: '90%',
+      maxWidth: '400px',
+      height: 'auto',
+      maxHeight: '80vh',
+      right: 'auto',
+      bottom: 'auto'
+    };
+  }
+
   return (
-    <div className="customize-panel" role="region" aria-label="Binder customization">
+    <div className="customize-panel" style={panelStyle} role="region" aria-label="Binder customization">
       <div className="customize-header">
-        <h3 className="customize-title">Binder Appearance</h3>
+        <h3 className="customize-title">Customize Binder</h3>
         <button
           type="button"
           className="customize-close-btn"
