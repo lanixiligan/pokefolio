@@ -102,19 +102,27 @@
   width: 100%;
   padding: 8px 12px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-family: inherit;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   color: var(--text-h);
   background-color: var(--bg);
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  /* No outline:none here — rely on :focus-visible for keyboard ring */
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
   box-sizing: border-box;
 }
 
+/* Mouse/touch focus: accent border + subtle inner glow */
 .add-card-picker-search:focus {
+  outline: none;
   border-color: var(--accent-border);
   box-shadow: 0 0 0 1px var(--accent-border);
+}
+
+/* Keyboard focus: visible ring on top of the border treatment */
+.add-card-picker-search:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .add-card-picker-filters {

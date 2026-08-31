@@ -6,13 +6,13 @@
   position: relative;
   isolation: isolate;
 
-  /* Each card is exactly one-third of the flex row (two 20px gaps).
+  /* Each card is exactly one-third of the flex row (two 24px gaps).
      All five cards share this formula — the bottom two center via
      the parent justify-content: center. */
-  flex: 0 0 calc((100% - 40px) / 3);
-  max-width: calc((100% - 40px) / 3);
+  flex: 0 0 calc((100% - 48px) / 3);
+  max-width: calc((100% - 48px) / 3);
 
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   background: var(--surface);
   cursor: pointer;
@@ -22,17 +22,16 @@
   overflow: hidden;
   padding: 0;
   transition:
-    transform 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease;
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 /* ── Holographic foil shimmer ──────────────────────────────────── */
 
 /* TCG-inspired foil effect: a slowly animated palette-toned gradient
    overlaid on the card face on hover. Derived from the brand blues and
-   mint — no off-palette colors introduced. The animation runs always to
-   avoid a jarring position jump when hovered; opacity alone gates visibility. */
+   mint — no off-palette colors introduced. */
 .set-card::before {
   content: '';
   position: absolute;
@@ -43,16 +42,16 @@
   background: linear-gradient(
     125deg,
     transparent         0%,
-    rgba(102,163,191,0.18) 20%,
-    rgba(200,223,219,0.12) 40%,
-    rgba(51,104,160,0.16)  60%,
-    rgba(102,163,191,0.10) 80%,
+    rgba(102,163,191,0.15) 20%,
+    rgba(200,223,219,0.08) 40%,
+    rgba(51,104,160,0.12)  60%,
+    rgba(102,163,191,0.08) 80%,
     transparent         100%
   );
-  background-size: 400% 400%;
+  background-size: 300% 300%;
   opacity: 0;
-  transition: opacity 0.3s ease;
-  animation: holoShimmer 2.8s ease infinite;
+  transition: opacity 0.4s ease;
+  animation: holoShimmer 3s linear infinite;
 }
 
 .set-card:hover::before,
@@ -61,22 +60,20 @@
 }
 
 @keyframes holoShimmer {
-  0%   { background-position: 0%   50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0%   50%; }
+  0%   { background-position: 100% 100%; }
+  50%  { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
 }
 
 /* ── Hover / focus states ──────────────────────────────────────── */
 
 .set-card:hover,
 .set-card:focus-visible {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
   border-color: var(--accent-border);
-  /* Two-layer glow: tight edge highlight + ambient bleed + elevation shadow */
   box-shadow:
-    0 0 0 1px rgba(102, 163, 191, 0.28),
-    0 0 28px rgba(102, 163, 191, 0.14),
-    var(--shadow);
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 12px 32px rgba(102, 163, 191, 0.12);
 }
 
 .set-card:focus-visible {
@@ -91,20 +88,20 @@
 .set-card-image-zone {
   position: relative;
   width: 100%;
-  height: 220px;
+  height: 190px;
   background-color: var(--bg);
   background-image:
-    radial-gradient(circle, rgba(102, 163, 191, 0.07) 1px, transparent 1px);
-  background-size: 18px 18px;
+    radial-gradient(circle, rgba(102, 163, 191, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.3);
 }
 
-/* Bottom gradient blends artwork into the content surface below.
-   rgba midpoint is hardcoded from --surface (#172235) to allow opacity. */
+/* Bottom gradient blends artwork into the content surface below. */
 .set-card-image-zone::after {
   content: '';
   position: absolute;
@@ -112,8 +109,8 @@
   background: linear-gradient(
     to top,
     var(--surface) 0%,
-    rgba(23, 34, 53, 0.72) 28%,
-    transparent    58%
+    rgba(23, 34, 53, 0.6) 24%,
+    transparent    60%
   );
   pointer-events: none;
 }
@@ -127,89 +124,113 @@
   top: 10px;
   left: 12px;
   z-index: 1;
-  padding: 3px 9px;
-  border-radius: 20px;
-  background: rgba(11, 18, 32, 0.72);
-  border: 1px solid rgba(102, 163, 191, 0.32);
-  color: var(--accent-text);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(11, 18, 32, 0.85);
+  border: 1px solid rgba(102, 163, 191, 0.35);
+  color: var(--text-h);
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.7px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  line-height: 1.5;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  white-space: nowrap;
+  line-height: 1.2;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .set-card-artwork {
-  width: 75%;
-  height: 100%;
+  width: 70%;
+  max-height: 85%;
   object-fit: contain;
-  transition: transform 0.35s ease;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
   position: relative;
   z-index: 0;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.4));
 }
 
 .set-card:hover .set-card-artwork,
 .set-card:focus-visible .set-card-artwork {
-  transform: scale(1.06);
+  transform: scale(1.08) translateY(-2px);
+  filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.5));
 }
 
 /* ── Content zone ──────────────────────────────────────────────── */
 
 .set-card-content {
-  padding: 14px 16px 16px;
+  padding: 14px 18px 16px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
 }
 
 .set-card-name {
   margin: 0;
-  font-size: 19px;
-  font-weight: 600;
-  color: var(--text-mid);
-  line-height: 1.25;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-h);
+  line-height: 1.2;
+  letter-spacing: -0.3px;
 }
 
 /* Metadata line: series · card count */
 .set-card-meta {
   margin: 0;
-  color: var(--text);
-  font-size: 12px;
+  color: var(--text-mid);
+  font-size: 13px;
   line-height: 1.5;
 }
 
 /* "VIEW SET ›" — brand blue signals interactivity at rest */
 .set-card-cta {
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   color: var(--accent-text);
   font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.4px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
+  transition: color var(--transition-base);
 }
 
 .set-card-arrow {
-  font-size: 15px;
+  font-size: 16px;
   display: inline-block;
-  transition: transform 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.set-card:hover .set-card-cta,
+.set-card:focus-visible .set-card-cta {
+  color: var(--color-cream);
 }
 
 .set-card:hover .set-card-arrow,
 .set-card:focus-visible .set-card-arrow {
-  transform: translateX(3px);
+  transform: translateX(4px);
 }
 
 /* ── Responsive ────────────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .set-card {
+    flex: 0 0 calc((100% - 24px) / 2);
+    max-width: calc((100% - 24px) / 2);
+  }
+}
 
 @media (max-width: 768px) {
   .set-card {
     flex: 0 0 calc((100% - 16px) / 2);
     max-width: calc((100% - 16px) / 2);
+  }
+  
+  .set-card-image-zone {
+    height: 170px;
+  }
+  
+  .set-card-name {
+    font-size: 18px;
   }
 }
 

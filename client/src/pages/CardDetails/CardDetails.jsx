@@ -118,15 +118,19 @@ function CardDetails() {
 
   return (
     <section className="card-details">
-      {card ? (
-        <Link to={`/explore/${card.set_id}`} className="back-link">
-          ← Back to Set
-        </Link>
-      ) : (
-        <Link to="/explore" className="back-link">
-          ← Back to Explore
-        </Link>
-      )}
+      <div className="card-details-nav">
+        {card ? (
+          <Link to={`/explore/${card.set_id}`} className="back-link">
+            <span className="back-link-arrow" aria-hidden="true">←</span>
+            Back to Set
+          </Link>
+        ) : (
+          <Link to="/explore" className="back-link">
+            <span className="back-link-arrow" aria-hidden="true">←</span>
+            Back to Explore
+          </Link>
+        )}
+      </div>
 
       {isLoading && <p className="card-details-status">Loading...</p>}
 
@@ -138,42 +142,85 @@ function CardDetails() {
 
       {!isLoading && !error && card && (
         <div className="card-details-content">
-          <img
-            className="card-details-image"
-            src={card.image_large_url}
-            alt={card.name}
-          />
+          <div className="card-details-hero">
+            <div className="card-details-image-wrapper">
+              <img
+                className="card-details-image"
+                src={card.image_large_url}
+                alt={card.name}
+              />
+            </div>
+          </div>
 
-          <div className="card-details-info">
-            <h2>{card.name}</h2>
-            {set && <p className="card-details-set">{set.name}</p>}
-            <p>Number: {card.number}</p>
-            <p>Supertype: {card.supertype}</p>
-            {card.types && card.types.length > 0 && (
-              <p>Type: {card.types.join(", ")}</p>
-            )}
-            {card.rarity && <p>Rarity: {card.rarity}</p>}
-            {card.artist && <p>Artist: {card.artist}</p>}
+          <div className="card-details-panel">
+            <div className="card-details-header">
+              <h1 className="card-details-name">{card.name}</h1>
+              {set && (
+                <div className="card-details-set-identity">
+                  {set.logo_url && (
+                    <img src={set.logo_url} alt="" className="card-details-set-logo" aria-hidden="true" />
+                  )}
+                  <span className="card-details-set-name">{set.name}</span>
+                </div>
+              )}
+            </div>
 
-            <button
-              className="add-to-binder-button"
-              onClick={handleAddToBinder}
-              disabled={addStatus === "adding"}
-            >
-              {addStatus === "adding" ? "Adding..." : "Add to Binder"}
-            </button>
+            <div className="card-details-metadata">
+              {card.number && (
+                <div className="card-meta-item">
+                  <span className="card-meta-label">Number</span>
+                  <span className="card-meta-value">
+                    {card.number}{set?.total ? ` / ${set.total}` : ''}
+                  </span>
+                </div>
+              )}
+              {card.supertype && (
+                <div className="card-meta-item">
+                  <span className="card-meta-label">Supertype</span>
+                  <span className="card-meta-value">{card.supertype}</span>
+                </div>
+              )}
+              {card.types && card.types.length > 0 && (
+                <div className="card-meta-item">
+                  <span className="card-meta-label">Type</span>
+                  <span className="card-meta-value">{card.types.join(", ")}</span>
+                </div>
+              )}
+              {card.rarity && (
+                <div className="card-meta-item">
+                  <span className="card-meta-label">Rarity</span>
+                  <span className="card-meta-value">{card.rarity}</span>
+                </div>
+              )}
+              {card.artist && (
+                <div className="card-meta-item">
+                  <span className="card-meta-label">Artist</span>
+                  <span className="card-meta-value">{card.artist}</span>
+                </div>
+              )}
+            </div>
 
-            {addStatus === "success" && (
-              <p className="add-to-binder-message add-to-binder-success">
-                {addMessage}
-              </p>
-            )}
+            <div className="card-details-action">
+              <button
+                className="add-to-binder-button"
+                onClick={handleAddToBinder}
+                disabled={addStatus === "adding"}
+              >
+                {addStatus === "adding" ? "Adding..." : "Add to Binder"}
+              </button>
 
-            {addStatus === "error" && (
-              <p className="add-to-binder-message add-to-binder-error">
-                {addMessage}
-              </p>
-            )}
+              {addStatus === "success" && (
+                <p className="add-to-binder-message add-to-binder-success">
+                  {addMessage}
+                </p>
+              )}
+
+              {addStatus === "error" && (
+                <p className="add-to-binder-message add-to-binder-error">
+                  {addMessage}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -182,4 +229,3 @@ function CardDetails() {
 }
 
 export default CardDetails;
-

@@ -225,7 +225,8 @@ function SetBrowser() {
   return (
     <section className="set-browser">
       <Link to="/explore" className="back-link">
-        ← Back to Explore
+        <span className="back-link-arrow" aria-hidden="true">←</span>
+        Back to Explore
       </Link>
 
       {/* ── Set Header ──────────────────────────────────────────────── */}

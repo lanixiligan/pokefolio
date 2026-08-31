@@ -301,14 +301,14 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--surface);
   border: 1px solid var(--border);
-  color: #66A3BF;
+  color: var(--accent-text);
   font-size: 16px;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  transition: all 0.15s ease;
+  transition: all var(--transition-base);
 }
 
 .binder-page-btn:hover:not(:disabled) {
@@ -333,7 +333,7 @@
 .binder-page-indicator {
   font-size: 14px;
   font-weight: 600;
-  color: #F2EFE7;
+  color: var(--text-h);
   letter-spacing: 2px;
   min-width: 60px;
   text-align: center;

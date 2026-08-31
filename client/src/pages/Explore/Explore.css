@@ -2,43 +2,54 @@
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: var(--space-xl) 24px var(--space-2xl);
+  padding: var(--space-lg) 24px var(--space-xl);
   text-align: left;
   box-sizing: border-box;
+  
+  /* Very subtle atmospheric background glow anchored to the top center. 
+     Gives the page a premium, slightly deeper feel without being distracting. */
+  background: radial-gradient(circle at 50% 0%, rgba(51, 104, 160, 0.08) 0%, transparent 65%);
 }
 
 .explore-intro {
-  margin-bottom: var(--space-xl);
+  margin-bottom: 40px;
+  text-align: center;
+  max-width: 600px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Small uppercase eyebrow label — establishes catalog context before the
    main heading. Keeps the collector identity front and center. */
 .explore-kicker {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   color: var(--accent-text);
-  font-size: 11px;
+  font-size: var(--font-size-label);
   font-weight: 600;
-  letter-spacing: 1.8px;
+  letter-spacing: 2px;
   text-transform: uppercase;
 }
 
-/* Scoped heading size: proportional to the card grid at 1126px root width.
-   Global h1 (56px) is too heavy against the 3-column card grid. */
+/* Scoped heading size: proportional to the card grid at 1126px root width. */
 .explore-heading {
-  font-size: 40px;
+  font-size: 44px;
   letter-spacing: -1.2px;
-  margin: 0 0 var(--space-sm);
+  margin: 0 0 12px;
+  color: var(--text-h);
+  font-weight: 600;
 
   @media (max-width: 1024px) {
-    font-size: 32px;
+    font-size: 34px;
   }
 }
 
 .explore-subheading {
   margin: 0;
-  color: var(--text);
-  font-size: 16px;
-  line-height: 150%;
+  color: var(--text-mid);
+  font-size: 17px;
+  line-height: 1.5;
 }
 
 /* Flexbox grid: all cards share the same flex-basis. justify-content: center
@@ -47,12 +58,13 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
+  gap: 24px;
 }
 
 .explore-status {
   margin-top: var(--space-lg);
   color: var(--text);
+  text-align: center;
 }
 
 .explore-error {
@@ -65,6 +77,14 @@
     padding: var(--space-lg) var(--space-md) var(--space-xl);
   }
 
+  .explore-intro {
+    margin-bottom: 40px;
+  }
+
+  .explore-heading {
+    font-size: 32px;
+  }
+
   .explore-grid {
     gap: 16px;
   }
@@ -72,8 +92,18 @@
 
 /* Mobile */
 @media (max-width: 480px) {
+  .explore-intro {
+    text-align: left;
+    align-items: flex-start;
+  }
+  
+  .explore-heading {
+    font-size: 28px;
+    letter-spacing: -0.8px;
+  }
+
   .explore-grid {
-    gap: 12px;
+    gap: 16px;
   }
 }
 
