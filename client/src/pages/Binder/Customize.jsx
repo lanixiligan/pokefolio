@@ -77,14 +77,14 @@ function Customize({
 
     updateLayout();
     window.addEventListener('resize', updateLayout);
-    
+
     let observer;
     if (window.ResizeObserver) {
       observer = new ResizeObserver(updateLayout);
       const folio = document.querySelector('.binder-folio');
       if (folio) observer.observe(folio);
     }
-    
+
     return () => {
       window.removeEventListener('resize', updateLayout);
       if (observer) observer.disconnect();
@@ -328,7 +328,7 @@ function Customize({
             ))}
           </div>
           <p className="customize-reflow-bottom-notice">
-            Changing grid size will rearrange your existing cards to fit the new layout.<br />
+            Changing grid size will arrange your cards to fit the layout.<br />
           </p>
         </div>
 
