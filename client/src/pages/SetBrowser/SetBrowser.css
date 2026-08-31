@@ -1,78 +1,173 @@
+/* ==================================================
+   SET BROWSER — PAGE SHELL
+   Max-width centers content on wide viewports while keeping the card
+   grid comfortably readable. text-align:center applies to header and
+   status messages; the grid overrides with text-align:left.
+   ================================================== */
 .set-browser {
-  padding: 32px 20px;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 28px 24px 64px;
   text-align: center;
+  box-sizing: border-box;
 }
 
+/* ==================================================
+   SET HEADER
+   Stacks logo → text body, centered. Restrained sizing — not a hero.
+   ================================================== */
 .set-browser-header {
-  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 20px;
+  margin-bottom: 28px;
 }
 
 .set-browser-logo {
-  max-width: 220px;
-  max-height: 100px;
+  max-width: 240px;
+  max-height: 108px;
   object-fit: contain;
 }
 
-.set-browser-series,
-.set-browser-totals {
-  margin: 4px 0 0;
-  color: var(--text);
-  font-size: 14px;
+/* Text content block beneath the logo */
+.set-browser-header-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
 }
 
+/* Scoped to avoid fighting the global h2 margin */
+.set-browser-name {
+  margin: 0 0 2px;
+  /* inherits global h2: Outfit, 24px, letter-spacing -0.24px */
+}
+
+.set-browser-series {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+/* Inline row: set symbol icon + release date text */
+.set-browser-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 7px;
+}
+
+/* Small symbol icon — decorative, aria-hidden */
+.set-browser-symbol {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+.set-browser-release {
+  color: var(--text);
+  font-size: 13px;
+}
+
+/* Card count / result count — switches label based on search state */
+.set-browser-count {
+  margin: 5px 0 0;
+  color: var(--accent-text);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* ==================================================
+   LIVE SEARCH
+   Plain div (no form). Input fills available space; Clear button
+   is flex-shrink:0 so it never gets compressed.
+   ================================================== */
 .set-browser-search {
   display: flex;
-  justify-content: center;
+  align-items: center;
   gap: 8px;
-  margin-top: 24px;
+  max-width: 480px;
+  margin: 0 auto 28px;
 }
 
-.set-browser-search input {
-  padding: 8px 12px;
+.set-browser-search-input {
+  flex: 1;
+  min-width: 0; /* prevents flex item from overflowing its container */
+  padding: 9px 14px;
   border-radius: 8px;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text-h);
   font: inherit;
-  min-width: 220px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.set-browser-search input:focus-visible {
+.set-browser-search-input:focus {
+  outline: none;
   border-color: var(--accent-border);
+  box-shadow: 0 0 0 1px rgba(102, 163, 191, 0.35);
+}
+
+.set-browser-search-input:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
 }
 
-/* Search and Clear buttons use --accent-text (#66A3BF) — interactive elements
-   at rest signal interactivity through brand color, not neutral cream. */
-.set-browser-search button {
-  padding: 8px 16px;
+/* Remove the browser-native × cancel button from <input type="search"> */
+.set-browser-search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.set-browser-clear-btn {
+  flex-shrink: 0;
+  padding: 9px 16px;
   border-radius: 8px;
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--accent-text);
   font: inherit;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s ease;
 }
 
-.set-browser-search button:hover {
+.set-browser-clear-btn:hover {
   border-color: var(--accent-border);
 }
 
-.set-browser-search button:focus-visible {
-  border-color: var(--accent-border);
+.set-browser-clear-btn:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
 }
 
+/* ==================================================
+   CARD GRID
+   auto-fill handles column count at every viewport naturally.
+   Preserved from original; margin-top removed (search div provides
+   bottom margin via margin-bottom: 28px above).
+   ================================================== */
 .set-browser-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 16px;
-  margin-top: 32px;
   text-align: left;
 }
 
+/* ==================================================
+   STATUS MESSAGES
+   ================================================== */
 .set-browser-status {
   margin-top: 32px;
   color: var(--text);
@@ -80,4 +175,76 @@
 
 .set-browser-error {
   color: var(--error);
+}
+
+/* ==================================================
+   RESPONSIVE — TABLET (≤ 768px)
+   ================================================== */
+@media (max-width: 768px) {
+  .set-browser {
+    padding: 20px 16px 48px;
+  }
+
+  .set-browser-header {
+    margin-top: 16px;
+    margin-bottom: 20px;
+  }
+
+  .set-browser-logo {
+    max-width: 200px;
+    max-height: 90px;
+  }
+
+  .set-browser-search {
+    max-width: 100%;
+  }
+
+  .set-browser-grid {
+    gap: 14px;
+  }
+}
+
+/* ==================================================
+   RESPONSIVE — MOBILE (≤ 480px)
+   Stack search input and Clear button vertically so neither
+   gets clipped on narrow viewports.
+   ================================================== */
+@media (max-width: 480px) {
+  .set-browser {
+    padding: 16px 12px 40px;
+  }
+
+  .set-browser-header {
+    margin-top: 12px;
+    margin-bottom: 18px;
+    gap: 10px;
+  }
+
+  .set-browser-logo {
+    max-width: 160px;
+    max-height: 72px;
+  }
+
+  .set-browser-name {
+    font-size: 20px;
+  }
+
+  .set-browser-search {
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+
+  .set-browser-search-input {
+    width: 100%;
+  }
+
+  .set-browser-clear-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .set-browser-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
 }
