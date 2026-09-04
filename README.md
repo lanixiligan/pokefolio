@@ -6,11 +6,7 @@ A customizable digital Pokémon TCG binder for discovering, collecting, organizi
 
 PokeFolio recreates the experience of a physical Pokémon TCG binder as a web application. Instead of focusing on market prices, trading, deck building, or competitive play, the project focuses on the **visual collecting experience**: exploring cards, building a personal binder, organizing cards, and customizing the binder to match the user's taste.
 
-## Status
 
-🚧 **In Development — Phase 9: Final Polish, QA & Deployment**
-
-Phases 1–8 are complete, including the full-stack foundation, card browsing, card details, persistent binder functionality, binder organization, and binder customization with safe grid-size reflow.
 
 ## Features
 
@@ -19,7 +15,7 @@ Phases 1–8 are complete, including the full-stack foundation, card browsing, c
 - Search cards by name within the Set Browser
 - View detailed card information
 - Add cards to a personal digital binder
-- Browser-scoped anonymous binder identity — no account required for the MVP
+- Browser-scoped anonymous binder identity — no account required
 - Persist binder contents and customization preferences in PostgreSQL
 - Move cards between binder positions
 - Swap cards between occupied positions
@@ -35,7 +31,7 @@ Phases 1–8 are complete, including the full-stack foundation, card browsing, c
 
 PokeFolio intentionally focuses on the collecting and organization experience.
 
-The current MVP does **not** include:
+The project intentionally does **not** include:
 
 - Card market pricing
 - Trading
@@ -79,7 +75,7 @@ Customize Binder
 
 ## Binder
 
-PokeFolio uses a browser-scoped anonymous UUID instead of account authentication for the MVP.
+PokeFolio uses a browser-scoped anonymous UUID instead of account authentication.
 
 Each binder contains one or more two-page spreads:
 
@@ -118,11 +114,11 @@ This guarantees that reducing the grid does **not** simply hide cards or strand 
 
 ## Anonymous Binder Identity
 
-The MVP does not require user accounts.
+The application does not require user accounts.
 
 Instead, the browser receives a persistent anonymous UUID that is stored locally and sent to the Express API with binder-related requests. PostgreSQL uses that identifier to associate binder cards, spreads, and preferences with the same browser-scoped binder.
 
-This provides persistent personal binder state without requiring an authentication system for the course MVP.
+This provides persistent personal binder state without requiring an authentication system.
 
 ## Application Architecture
 
@@ -155,7 +151,7 @@ flowchart LR
 
 The Pokémon TCG API is used as the external source for set and card metadata during catalog import. Imported data is stored in PostgreSQL so normal application browsing does not depend on querying the external API for every request.
 
-The frontend communicates with Express through the shared `lib/api.js` REST client. The browser-scoped anonymous identifier from `lib/anonId.js` is included with binder-related requests so PostgreSQL can associate cards, spreads, and preferences with the same browser-scoped binder without requiring an authentication system for the MVP.
+The frontend communicates with Express through the shared `lib/api.js` REST client. The browser-scoped anonymous identifier from `lib/anonId.js` is included with binder-related requests so PostgreSQL can associate cards, spreads, and preferences with the same browser-scoped binder.
 
 ## Tech Stack
 
@@ -164,7 +160,7 @@ The frontend communicates with Express through the shared `lib/api.js` REST clie
 - React 19
 - Vite 8
 - React Router 7
-- CSS Modules-by-file / component-scoped styles using regular CSS
+- Component-level standard CSS
 - Native browser drag-and-drop for Binder organization
 
 ### Backend
@@ -183,7 +179,7 @@ The frontend communicates with Express through the shared `lib/api.js` REST clie
 - Git / GitHub
 - Pokémon TCG API
 
-The current client and server package scripts are defined in `client/package.json` and `server/package.json`. citeturn40file0turn39file0
+The current client and server package scripts are defined in `client/package.json` and `server/package.json`.
 
 ## Project Architecture
 
@@ -311,7 +307,7 @@ PokeFolio uses the Pokémon TCG API as the external source for card and set meta
 
 The backend importer stores the catalog in PostgreSQL so that the frontend does not need direct access to the external API.
 
-The imported card records include the MVP data required by PokeFolio:
+The imported card records include the data required by PokeFolio:
 
 - Card ID
 - Card name
@@ -323,7 +319,7 @@ The imported card records include the MVP data required by PokeFolio:
 - Small image URL
 - Large image URL
 
-Gameplay-specific and market-pricing fields are intentionally outside the MVP data model.
+Gameplay-specific and market-pricing fields are intentionally outside the data model.
 
 ## API Credentials & Environment Variables
 
@@ -339,7 +335,7 @@ A public template is provided at:
 server/.env.example
 ```
 
-The template currently expects PostgreSQL connection settings and a backend-only Pokémon TCG API key. fileciteturn41file0L1-L6
+The template currently expects PostgreSQL connection settings and a backend-only Pokémon TCG API key.
 
 Example:
 
@@ -468,7 +464,7 @@ npm run seed
 npm run db:check
 ```
 
-The available scripts are defined in the current project package files. citeturn40file0turn39file0
+The available scripts are defined in the current project package files.
 
 ## Testing & Quality Checks
 
@@ -503,26 +499,17 @@ Phase-based testing has covered:
 
 The project uses PostgreSQL as the persistence layer during local integration testing rather than relying solely on frontend state.
 
-## Development Status
+## Project Status
 
-```text
-Phase 1 — Planning & Design                 ✅
-Phase 2 — Setup & Foundation               ✅
-Phase 3 — Explore / Home                   ✅
-Phase 4 — Set Card Browser                 ✅
-Phase 5 — Card Details                     ✅
-Phase 6 — Binder Foundation                ✅
-Phase 7 — Binder Organization              ✅
-Phase 8 — Binder Customization             ✅
-Phase 9 — Final Polish, QA & Deployment    🚧
-```
+PokeFolio is functionally complete and its core feature set is frozen as an academic final project.
 
-See [`project-plan.md`](project-plan.md) for the detailed roadmap, architecture decisions, and implementation milestones.
+See [`project-plan.md`](docs/project-plan.md) and [`proposal.md`](docs/proposal.md) for the detailed roadmap, architecture decisions, and historical phase planning.
 
 ## Documentation
 
-- [`project-plan.md`](project-plan.md) — detailed roadmap, architecture decisions, and phase planning
-- [`proposal.md`](proposal.md) — course-facing project proposal and definition
+- [`project-plan.md`](docs/project-plan.md) — historical roadmap, architecture decisions, and phase planning
+- [`proposal.md`](docs/proposal.md) — course-facing project proposal and definition
+- [`local-development.md`](docs/local-development.md) — local development scripts and guide
 
 ## Design Principles
 
