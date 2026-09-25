@@ -62,6 +62,7 @@ function SetBrowser() {
   // Declared before the initial-load effect so that isInitialFetch is
   // guaranteed to be true when the load effect and the debounced effect
   // both run in the same commit (effects run in declaration order).
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     hasRestoredScroll.current = false;
     isInitialFetch.current = true;
@@ -70,6 +71,7 @@ function SetBrowser() {
     setSet(null);
     setCards([]);
   }, [setId]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Continuously save the scroll position for this set while the user scrolls.
   useEffect(() => {

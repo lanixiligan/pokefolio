@@ -197,9 +197,9 @@
    ================================================== */
 .custom-color-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
 .custom-color-col {
@@ -210,10 +210,11 @@
 .custom-color-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+  min-width: 0;
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 8px 10px;
+  padding: 6px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -235,21 +236,27 @@
 }
 
 .custom-color-label {
-  font-size: 13px;
+  font-size: 11px;
+  line-height: 1.25;
   font-weight: 500;
   color: var(--text-h);
   margin-bottom: 6px;
 }
 
 .custom-color-hex {
-  font-size: 11px;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 10px;
   font-family: monospace;
   color: var(--text-mid);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .custom-color-swatch {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);

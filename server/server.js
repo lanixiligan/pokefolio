@@ -233,8 +233,15 @@ app.post("/api/binder/initialize", requireAnonId, async (req, res) => {
 
     await client.query(
       `
-        INSERT INTO user_preferences (anon_id)
-        VALUES ($1)
+        INSERT INTO user_preferences (
+          anon_id,
+          background,
+          binder_color,
+          accent_color,
+          theme,
+          grid_size
+        )
+        VALUES ($1, '#0B1220', '#172235', '#3368A0', 'midnight', 3)
         ON CONFLICT (anon_id) DO NOTHING;
       `,
       [req.anonId]

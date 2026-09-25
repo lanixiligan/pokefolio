@@ -6,12 +6,6 @@
   position: relative;
   isolation: isolate;
 
-  /* Each card is exactly one-third of the flex row (two 24px gaps).
-     All five cards share this formula — the bottom two center via
-     the parent justify-content: center. */
-  flex: 0 0 calc((100% - 48px) / 3);
-  max-width: calc((100% - 48px) / 3);
-
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   background: var(--surface);
@@ -74,6 +68,17 @@
   box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.4),
     0 12px 32px rgba(102, 163, 191, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .set-card,
+  .set-card::before,
+  .set-card-artwork,
+  .set-card-cta,
+  .set-card-arrow {
+    animation: none;
+    transition: none;
+  }
 }
 
 .set-card:focus-visible {
@@ -213,20 +218,12 @@
 /* ── Responsive ────────────────────────────────────────────────── */
 
 @media (max-width: 1024px) {
-  .set-card {
-    flex: 0 0 calc((100% - 24px) / 2);
-    max-width: calc((100% - 24px) / 2);
-  }
+  .set-card-image-zone { height: 176px; }
 }
 
 @media (max-width: 768px) {
-  .set-card {
-    flex: 0 0 calc((100% - 16px) / 2);
-    max-width: calc((100% - 16px) / 2);
-  }
-  
   .set-card-image-zone {
-    height: 170px;
+    height: 160px;
   }
   
   .set-card-name {
@@ -235,8 +232,7 @@
 }
 
 @media (max-width: 480px) {
-  .set-card {
-    flex: 0 0 100%;
-    max-width: 100%;
+  .set-card-image-zone {
+    height: 180px;
   }
 }

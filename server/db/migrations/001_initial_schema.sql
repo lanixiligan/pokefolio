@@ -26,10 +26,10 @@ CREATE INDEX IF NOT EXISTS idx_cards_set_id_name ON cards (set_id, name);
 
 CREATE TABLE IF NOT EXISTS user_preferences (
   anon_id UUID PRIMARY KEY,
-  background TEXT NOT NULL DEFAULT '#f6f3ee',
-  binder_color TEXT NOT NULL DEFAULT '#ffffff',
-  accent_color TEXT NOT NULL DEFAULT '#d62828',
-  theme TEXT NOT NULL DEFAULT 'classic',
+  background TEXT NOT NULL DEFAULT '#0B1220',
+  binder_color TEXT NOT NULL DEFAULT '#172235',
+  accent_color TEXT NOT NULL DEFAULT '#3368A0',
+  theme TEXT NOT NULL DEFAULT 'midnight',
   grid_size SMALLINT NOT NULL DEFAULT 3 CHECK (grid_size IN (2, 3, 4))
 );
 

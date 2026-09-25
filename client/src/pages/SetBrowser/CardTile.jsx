@@ -7,7 +7,9 @@ import "./CardTile.css";
 // cards never replay. Remounting on search-key changes gives new cards
 // their own fresh reveal cycle.
 function CardTile({ card, onSelect }) {
-  const [isRevealed, setIsRevealed] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(() =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
   const ref = useRef(null);
 
   useEffect(() => {
@@ -16,7 +18,6 @@ function CardTile({ card, onSelect }) {
 
     // Reduced motion: reveal immediately, no transition or observer needed.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setIsRevealed(true);
       return;
     }
 

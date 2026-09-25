@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 import { getSets, getCards, addCardToBinder, createBinderSpread } from "../../lib/api";
+import { getNextAvailableSlot } from "./getNextAvailableSlot";
 import "./AddCardPicker.css";
 
 // Simple Fisher-Yates shuffle
@@ -10,64 +11,6 @@ function shuffleArray(array) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
-}
-
-function getPageCapacity(binder) {
-  const gridDimension = binder.preferences?.gridSize || 3;
-  return gridDimension * gridDimension;
-}
-
-export function getNextAvailableSlot(binder, currentTarget) {
-  if (!binder || !currentTarget) return null;
-
-  const pageCapacity = getPageCapacity(binder);
-  const spreads = binder.spreads;
-
-  const currentSpreadIdx = spreads.findIndex(s => s.id === currentTarget.spreadId);
-  if (currentSpreadIdx === -1) return null;
-
-  // Cache occupied positions for fast lookup
-  const occupiedSets = new Map();
-  const isOccupied = (sIdx, side, pos) => {
-    const key = `${sIdx}-${side}`;
-    if (!occupiedSets.has(key)) {
-      const page = spreads[sIdx].pages.find(p => p.side === side);
-      occupiedSets.set(key, new Set((page?.cards || []).map(c => c.position)));
-    }
-    return occupiedSets.get(key).has(pos);
-  };
-
-  let sIdx = currentSpreadIdx;
-  let side = currentTarget.pageSide;
-  let pos = currentTarget.position + 1;
-
-  let totalSlotsChecked = 0;
-  const maxSlots = spreads.length * 2 * pageCapacity;
-
-  while (totalSlotsChecked < maxSlots) {
-    if (pos >= pageCapacity) {
-      pos = 0;
-      side++;
-    }
-
-    if (side > 2) {
-      side = 1;
-      sIdx++;
-    }
-
-    if (sIdx >= spreads.length) {
-      sIdx = 0;
-    }
-
-    if (!isOccupied(sIdx, side, pos)) {
-      return { spreadId: spreads[sIdx].id, pageSide: side, position: pos };
-    }
-
-    pos++;
-    totalSlotsChecked++;
-  }
-
-  return "NEW_SPREAD";
 }
 
 function AddCardPicker({ binder, activeAddSlot, onClose, onAddSuccess, refreshBinder }) {
@@ -120,9 +63,6 @@ function AddCardPicker({ binder, activeAddSlot, onClose, onAddSuccess, refreshBi
   // Feedback state: { type: 'success' | 'error', message: string, cardId?: string } | null
   const [feedback, setFeedback] = useState(null);
   const [addingCardId, setAddingCardId] = useState(null);
-
-  // Track if we have successfully added at least one card in this session
-  const [hasAddedCard, setHasAddedCard] = useState(false);
 
   const searchTimeoutRef = useRef(null);
 
@@ -183,12 +123,14 @@ function AddCardPicker({ binder, activeAddSlot, onClose, onAddSuccess, refreshBi
   }, [activeSetId, searchQuery]);
 
   // Clear feedback when search or set filter changes
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setFeedback(null);
     if (activeAddSlot === "NEW_SPREAD") {
       setShowNewSpreadPrompt(true);
     }
   }, [activeSetId, searchQuery, activeAddSlot]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   async function handleCardClick(card) {
     if (addingCardId) return; // Prevent concurrent additions
@@ -237,7 +179,6 @@ function AddCardPicker({ binder, activeAddSlot, onClose, onAddSuccess, refreshBi
         setShowNewSpreadPrompt(true);
         setFeedback({ type: 'success', message: `Added ${card.name}` });
       } else {
-        setHasAddedCard(true);
         setFeedback({ type: 'success', message: `Added ${card.name}` });
         onAddSuccess(nextSlot);
       }
@@ -256,7 +197,6 @@ function AddCardPicker({ binder, activeAddSlot, onClose, onAddSuccess, refreshBi
       await refreshBinder();
 
       setShowNewSpreadPrompt(false);
-      setHasAddedCard(true);
       setFeedback({ type: 'success', message: `New spread created` });
 
       const nextSlot = { spreadId: result.spread.id, pageSide: 1, position: 0 };
@@ -409,4 +349,3 @@ function AddCardPicker({ binder, activeAddSlot, onClose, onAddSuccess, refreshBi
 }
 
 export default AddCardPicker;
-

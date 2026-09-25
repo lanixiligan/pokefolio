@@ -73,6 +73,18 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.binder-action-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .binder-settings-btn:hover,
 .binder-settings-btn[aria-expanded="true"] {
   background: rgba(102, 163, 191, 0.1);
@@ -165,6 +177,15 @@
   box-sizing: border-box;
   /* Ensure folio always fills the canvas width so empty spreads don't collapse */
   width: 100%;
+}
+
+/* Keep the two-page folio within the vertical space available on desktop
+   and tablet screens. The 5:7 page ratio makes the spread about 70% as tall
+   as its outer width, so this height-based cap prevents page-level scrolling. */
+@media (min-width: 641px) {
+  .binder-folio {
+    max-width: min(100%, calc(142.86svh - 294px));
+  }
 }
 
 /* Scoped theme token presets: applies to folio elements */
@@ -438,7 +459,41 @@
   }
   
   .binder-workspace-header {
-    padding: 16px 20px;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .binder-title-group {
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .binder-subtitle {
+    max-width: 150px;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .binder-settings-wrapper {
+    flex: 0 0 auto;
+    gap: 8px;
+  }
+
+  .binder-settings-btn {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+  }
+
+  .binder-action-label {
+    display: none;
+  }
+
+  .binder-action-icon {
+    width: 18px;
+    height: 18px;
   }
 
   .binder-canvas {

@@ -105,8 +105,9 @@ Open the URL Vite prints, normally `http://localhost:5173`. You should land on t
 | Scarlet & Violet—151 | `sv3pt5` |
 | Scarlet & Violet—Paldean Fates | `sv4pt5` |
 | Scarlet & Violet—Prismatic Evolutions | `sv8pt5` |
+| Sword & Shield Crown Zenith | `swsh12pt5` |
 
-The imported catalog currently contains 817 cards across these five sets.
+The imported catalog currently contains 977 cards across these six sets.
 
 ### Out of scope (by design)
 
@@ -217,8 +218,27 @@ Historical phase planning and architecture decisions — including what was test
 - [`docs/proposal.md`](docs/proposal.md) — course-facing project proposal and definition
 - [`docs/local-development.md`](docs/local-development.md) — local development scripts and guide
 
-## Attribution & License
+## Pokémon TCG API Attribution
 
-PokeFolio uses the [Pokémon TCG API](https://pokemontcg.io/) as its external data source for card and set metadata, and is not affiliated with or endorsed by The Pokémon Company, Nintendo, Game Freak, or Creatures Inc.
+PokeFolio uses the [Pokémon TCG API Developer Portal](https://dev.pokemontcg.io/)
+as its external data source for card and set metadata.
+
+> **API Deprecation Notice:** The Pokémon TCG API is currently deprecated.
+> New account registrations are no longer available, and existing API keys
+> will continue to function through **March 1, 2027**. The API provider
+> recommends migrating applications to [Scrydex](https://scrydex.com/).
+
+PokeFolio currently uses an existing Pokémon TCG API key obtained through the
+official developer portal. The API is used during catalog import; imported
+card and set data is stored in PostgreSQL so normal PokeFolio browsing does
+not depend on making requests to the external API.
+
+PokeFolio is not affiliated with or endorsed by The Pokémon Company, Nintendo,
+Game Freak, or Creatures Inc.
+
+For future maintenance, migration to Scrydex may be required before the
+existing Pokémon TCG API keys cease functioning after March 1, 2027.
+
+## License
 
 PokeFolio is a student project created for academic purposes. Pokémon and Pokémon TCG-related names, trademarks, artwork, and other intellectual property belong to their respective owners; PokeFolio is an independent educational project and is not an official Pokémon product.

@@ -3,8 +3,8 @@ import { closePool, pool } from "../db.js";
 const API_BASE_URL = "https://api.pokemontcg.io/v2";
 const PAGE_SIZE = 250;
 const MAX_ATTEMPTS = 4;
-const SUPPORTED_SET_IDS = ["base1", "base5", "sv3pt5", "sv4pt5", "sv8pt5"];
-
+const SUPPORTED_SET_IDS = [
+  "base1", "base5", "sv3pt5", "sv4pt5", "sv8pt5", "swsh12pt5",];
 function getApiKey() {
   const apiKey = process.env.POKEMON_TCG_API_KEY;
 

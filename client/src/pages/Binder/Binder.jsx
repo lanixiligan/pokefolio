@@ -9,7 +9,8 @@ import {
 } from "../../lib/api";
 import BinderPage from "./BinderPage";
 import Customize from "./Customize";
-import AddCardPicker, { getNextAvailableSlot } from "./AddCardPicker";
+import AddCardPicker from "./AddCardPicker";
+import { getNextAvailableSlot } from "./getNextAvailableSlot";
 import { useLocation } from "react-router-dom";
 import "./Binder.css";
 
@@ -99,6 +100,7 @@ function Binder() {
     loadBinder();
   }, []);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (binder) {
       const searchParams = new URLSearchParams(location.search);
@@ -111,6 +113,7 @@ function Binder() {
       }
     }
   }, [location.search, binder]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
     if (!isDeleteConfirmOpen) return;
@@ -328,11 +331,17 @@ function Binder() {
         {binder && (
           <div className="binder-settings-wrapper">
             <button
-              className="binder-settings-btn"
+              className="binder-settings-btn binder-add-card-btn"
               onClick={handleAddCardToggle}
               aria-expanded={!!activeAddSlot}
+              aria-label="Add card"
+              title="Add card"
             >
-              + Add Card
+              <svg className="binder-action-icon" viewBox="0 0 20 20" aria-hidden="true">
+                <rect x="2.5" y="4" width="12" height="12" rx="2" />
+                <path d="M8.5 7v6M5.5 10h6M15 6h3M16.5 4.5v3" />
+              </svg>
+              <span className="binder-action-label">Add Card</span>
             </button>
             <button
               className="binder-settings-btn"
@@ -347,8 +356,13 @@ function Binder() {
               }}
               aria-expanded={isCustomizeOpen}
               aria-label="Customize Binder"
+              title="Customize Binder"
             >
-              ⚙ Customize
+              <svg className="binder-action-icon" viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M8.3 2.8h3.4l.5 2a5.7 5.7 0 0 1 1.2.7l1.9-.7 1.7 2.9-1.4 1.5a5.5 5.5 0 0 1 0 1.5l1.4 1.5-1.7 2.9-1.9-.7a5.7 5.7 0 0 1-1.2.7l-.5 2H8.3l-.5-2a5.7 5.7 0 0 1-1.2-.7l-1.9.7L3 12.2l1.4-1.5a5.5 5.5 0 0 1 0-1.5L3 7.7l1.7-2.9 1.9.7a5.7 5.7 0 0 1 1.2-.7z" />
+                <circle cx="10" cy="10" r="2.2" />
+              </svg>
+              <span className="binder-action-label">Customize</span>
             </button>
 
             {isCustomizeOpen && (
@@ -554,5 +568,3 @@ function Binder() {
 }
 
 export default Binder;
-
-

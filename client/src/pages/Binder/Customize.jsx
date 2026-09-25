@@ -99,7 +99,6 @@ function Customize({
     setActivePicker(pickerName);
     if (!isCustomPalette) {
       setForceCustomMode(true);
-      onDraftChange({ ...draft, accentColor: "#3368A0" });
     }
   }
 
@@ -260,6 +259,38 @@ function Customize({
                   <div className="custom-picker-input">
                     <span className="custom-picker-prefix">HEX</span>
                     <HexColorInput color={draft.binderColor} onChange={(val) => updateDraft("binderColor", val)} prefixed />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="custom-color-col">
+              <span className="custom-color-label">Accent Color</span>
+              <button
+                type="button"
+                className={`custom-color-btn ${activePicker === "accentColor" ? "active" : ""}`}
+                onClick={() => handleOpenPicker("accentColor")}
+                aria-label={`Change accent color, currently ${draft.accentColor}`}
+              >
+                <span className="custom-color-swatch" style={{ backgroundColor: draft.accentColor }} />
+                <span className="custom-color-hex">{draft.accentColor.toUpperCase()}</span>
+              </button>
+
+              {activePicker === "accentColor" && (
+                <div className="custom-picker-popover">
+                  <div className="custom-picker-header">
+                    <h4 className="custom-picker-title">CHOOSE ACCENT COLOR</h4>
+                    <button
+                      type="button"
+                      className="custom-picker-close-btn"
+                      onClick={() => setActivePicker(null)}
+                      aria-label="Close color picker"
+                    >✕</button>
+                  </div>
+                  <HexColorPicker color={draft.accentColor} onChange={(val) => updateDraft("accentColor", val)} />
+                  <div className="custom-picker-input">
+                    <span className="custom-picker-prefix">HEX</span>
+                    <HexColorInput color={draft.accentColor} onChange={(val) => updateDraft("accentColor", val)} prefixed />
                   </div>
                 </div>
               )}

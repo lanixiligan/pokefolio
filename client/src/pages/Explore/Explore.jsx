@@ -133,7 +133,7 @@ function Explore() {
       <section className="explore">
         <div className="explore-intro">
           <p className="explore-kicker">Pok&eacute;mon TCG &middot; Set Catalog</p>
-          <h1 className="explore-heading">Explore Your Collection</h1>
+          <h1 className="explore-heading">Explore Sets</h1>
           <p className="explore-subheading">
             Discover sets and build your personal binder.
           </p>
