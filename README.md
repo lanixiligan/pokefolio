@@ -81,13 +81,13 @@ Start the frontend, in a second terminal (from `client\`):
 npm run dev
 ```
 
-Open the URL Vite prints, normally `http://localhost:5173`. You should land on the **Explore** page listing the five supported sets — that's confirmation the frontend is talking to the backend and the database is seeded.
+Open the URL Vite prints, normally `http://localhost:5173`. You should land on the **Explore** page listing the six supported sets — that's confirmation the frontend is talking to the backend and the database is seeded.
 
 ## 4. Features and usage
 
 **Primary flow:** Explore → choose a set → browse/search cards → view card details → add to binder → organize the binder → customize the binder.
 
-- Explore five curated English Pokémon TCG sets (see table below)
+- Explore six curated English Pokémon TCG sets (see table below)
 - Browse and search cards by name within a set
 - View detailed card information
 - Add cards to a personal digital binder — no account required, identity is a browser-scoped anonymous ID
@@ -117,7 +117,7 @@ Card market pricing, trading, deck building, competitive gameplay, and user acco
 
 | Route | Purpose |
 | --- | --- |
-| `/explore` | Browse the five supported sets |
+| `/explore` | Browse the six supported sets |
 | `/explore/:setId` | Browse and search cards in a selected set |
 | `/card/:cardId` | View a card's details and add it to the binder |
 | `/binder` | View, organize, and customize the digital binder |
@@ -241,4 +241,6 @@ existing Pokémon TCG API keys cease functioning after March 1, 2027.
 
 ## License
 
-PokeFolio is a student project created for academic purposes. Pokémon and Pokémon TCG-related names, trademarks, artwork, and other intellectual property belong to their respective owners; PokeFolio is an independent educational project and is not an official Pokémon product.
+PokeFolio is a student project created for academic purposes. The PokeFolio source code is licensed under the [MIT License](LICENSE).
+
+Pokémon and Pokémon TCG-related names, trademarks, artwork, and other intellectual property belong to their respective owners; PokeFolio is an independent educational project and is not an official Pokémon product.

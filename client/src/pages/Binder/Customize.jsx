@@ -33,6 +33,21 @@ const PALETTES = [
     accentColor: "#BA5635",
     theme: "midnight",
   },
+  {
+    name: "Aurora",
+    background: "#0A1820",
+    binderColor: "#102B32",
+    accentColor: "#57C7C0",
+    theme: "midnight",
+  },
+
+  {
+    name: "Crimson",
+    background: "#1B0D12",
+    binderColor: "#2D161E",
+    accentColor: "#C45A6A",
+    theme: "midnight",
+  },
 ];
 
 const GRID_SIZES = [2, 3, 4];
@@ -65,9 +80,9 @@ function Customize({
       if (folio) {
         const rect = folio.getBoundingClientRect();
         // Check if there is enough room to the right of the folio for the panel.
-        // We want at least 320px for the panel + 24px gap = 344px.
+        // Keep enough room for the 440px panel and its 24px gap.
         const availableSpace = window.innerWidth - rect.right;
-        if (availableSpace >= 344) {
+        if (availableSpace >= 464) {
           setLayoutState({ mode: 'desktop', rect });
         } else {
           setLayoutState({ mode: 'tablet', rect: null });
@@ -165,9 +180,10 @@ function Customize({
       position: 'fixed',
       top: `${layoutState.rect.top}px`,
       left: `${layoutState.rect.right + 24}px`,
-      height: `${layoutState.rect.height}px`,
+      height: 'auto',
+      maxHeight: `calc(100svh - ${layoutState.rect.top}px - 12px)`,
       width: 'auto',
-      maxWidth: '360px',
+      maxWidth: '440px',
       right: '24px' // Ensure it doesn't overflow right edge
     };
   } else if (layoutState.mode === 'tablet') {
@@ -177,9 +193,9 @@ function Customize({
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: '90%',
-      maxWidth: '400px',
+      maxWidth: '440px',
       height: 'auto',
-      maxHeight: '80vh',
+      maxHeight: '80svh',
       right: 'auto',
       bottom: 'auto'
     };
@@ -201,11 +217,11 @@ function Customize({
 
       <div className="customize-scroll-area">
         <div className="customize-field">
-          <span className="customize-label">Colors</span>
+          <span className="customize-label">Binder Colors</span>
 
           <div className="custom-color-grid">
             <div className="custom-color-col">
-              <span className="custom-color-label">Folio Background</span>
+              <span className="custom-color-label">Background</span>
               <button
                 className={`custom-color-btn ${activePicker === "background" ? "active" : ""}`}
                 onClick={() => handleOpenPicker("background")}
@@ -235,7 +251,7 @@ function Customize({
             </div>
 
             <div className="custom-color-col">
-              <span className="custom-color-label">Binder Surface</span>
+              <span className="custom-color-label">Surface</span>
               <button
                 className={`custom-color-btn ${activePicker === "binderColor" ? "active" : ""}`}
                 onClick={() => handleOpenPicker("binderColor")}
@@ -265,7 +281,7 @@ function Customize({
             </div>
 
             <div className="custom-color-col">
-              <span className="custom-color-label">Accent Color</span>
+              <span className="custom-color-label">Accent</span>
               <button
                 type="button"
                 className={`custom-color-btn ${activePicker === "accentColor" ? "active" : ""}`}
@@ -359,7 +375,7 @@ function Customize({
             ))}
           </div>
           <p className="customize-reflow-bottom-notice">
-            Changing grid size will arrange your cards to fit the layout.<br />
+            Changing grid size will arrange your cards to fit the layout.
           </p>
         </div>
 
@@ -386,36 +402,36 @@ function Customize({
           </div>
         </div>
 
-        <div className="customize-actions">
-          <div className="customize-actions-primary">
-            <button
-              className="customize-save"
-              onClick={handleSave}
-              disabled={isSaving}
-            >
-              {isSaving
-                ? isGridSizeChanging
-                  ? "Rearranging binder..."
-                  : "Saving..."
-                : "Save Changes"}
-            </button>
-            <button
-              className="customize-cancel"
-              onClick={onClose}
-              disabled={isSaving}
-            >
-              Cancel Changes
-            </button>
-          </div>
+      </div>
+
+      <div className="customize-footer">
+        <div className="customize-actions-primary">
           <button
-            className="customize-reset"
-            onClick={handleResetToDefault}
+            className="customize-save"
+            onClick={handleSave}
             disabled={isSaving}
           >
-            Reset to Default
+            {isSaving
+              ? isGridSizeChanging
+                ? "Rearranging binder..."
+                : "Saving..."
+              : "Save Changes"}
+          </button>
+          <button
+            className="customize-cancel"
+            onClick={onClose}
+            disabled={isSaving}
+          >
+            Cancel Changes
           </button>
         </div>
-
+        <button
+          className="customize-reset"
+          onClick={handleResetToDefault}
+          disabled={isSaving}
+        >
+          Reset to Default
+        </button>
         {saveError && <p className="customize-error">{saveError}</p>}
       </div>
     </div>

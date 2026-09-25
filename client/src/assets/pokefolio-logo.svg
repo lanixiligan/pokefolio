@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="40" height="40" viewBox="0 0 40 40"
+     fill="none">
+  <title>PokeFolio Logo</title>
+  <desc>Rounded card-binder icon inspired by the provided PokeFolio mark.</desc>
+
+  <!-- Main rounded body -->
+  <rect x="2.5" y="2.5" width="35" height="35" rx="9.5"
+        fill="#19304D"
+        stroke="#66A3BF"
+        stroke-width="4"/>
+
+  <!-- Center divider -->
+  <path d="M4.5 20H35.5"
+        stroke="#66A3BF"
+        stroke-width="4"
+        stroke-linecap="round"/>
+
+  <!-- Center binder ring -->
+  <circle cx="20" cy="20" r="7.5"
+          fill="#19304D"
+          stroke="#F2EFE7"
+          stroke-width="4"/>
+</svg>

@@ -35,8 +35,9 @@
   position: fixed;
   right: 24px;
   width: auto;
-  max-width: 360px;
-  /* top, left, and height are driven by JS inline styles on desktop */
+  max-width: 440px;
+  max-height: 100svh;
+  /* Positioning is driven by JS inline styles on desktop. */
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface);
@@ -50,7 +51,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 20px 12px;
+  padding: 12px 20px 10px;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
@@ -58,9 +59,11 @@
 .customize-scroll-area {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px 20px 20px;
-  overflow-y: auto;
+  flex: 0 1 auto;
+  min-height: 0;
+  gap: 6px;
+  padding: 10px 20px 8px;
+  overflow: visible;
 }
 
 .customize-title {
@@ -101,8 +104,8 @@
 .customize-field {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding-bottom: 12px;
+  gap: 6px;
+  padding-bottom: 6px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -122,22 +125,23 @@
 .customize-palettes {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  padding-bottom: 8px;
+  justify-content: center;
+  gap: 8px;
+  padding-bottom: 2px;
 }
 
 .customize-palette-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   background: transparent;
   border: none;
-  padding: 4px;
+  padding: 2px;
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.15s ease;
-  min-width: 60px;
+  min-width: 50px;
 }
 
 .customize-palette-btn:hover {
@@ -150,8 +154,8 @@
 }
 
 .palette-preview-bg {
-  width: 52px;
-  height: 52px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -165,8 +169,8 @@
 }
 
 .palette-preview-binder {
-  width: 32px;
-  height: 24px;
+  width: 28px;
+  height: 21px;
   border-radius: 3px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
@@ -444,10 +448,10 @@
 }
 
 .customize-reflow-bottom-notice {
-  margin: 8px 0 0;
+  margin: 0;
   font-size: 11px;
   color: var(--color-warning);
-  line-height: 1.4;
+  line-height: 1.25;
   text-align: center;
 }
 
@@ -465,6 +469,12 @@
   width: 100%;
 }
 
+.customize-footer {
+  flex: 0 0 auto;
+  padding: 10px 20px 12px;
+  border-top: 1px solid var(--border);
+}
+
 .customize-save,
 .customize-cancel,
 .customize-reset {
@@ -478,7 +488,8 @@
 
 .customize-save {
   flex: 1;
-  padding: 10px 16px;
+  min-height: 40px;
+  padding: 8px 12px;
   background: var(--color-primary);
   color: #ffffff;
   border: 1px solid var(--accent-border);
@@ -493,7 +504,8 @@
 
 .customize-cancel {
   flex: 1;
-  padding: 10px 16px;
+  min-height: 40px;
+  padding: 8px 12px;
   background: var(--bg);
   color: var(--text-h);
   border: 1px solid var(--border);
@@ -504,6 +516,8 @@
 }
 
 .customize-reset {
+  display: block;
+  margin: 4px auto 0;
   padding: 4px 12px;
   background: transparent;
   color: var(--text-mid);
@@ -552,7 +566,7 @@
     right: 0;
     width: 100vw;
     max-width: 100vw;
-    max-height: 85vh;
+    max-height: 85svh;
     border-radius: 20px 20px 0 0;
     border-bottom: none;
     border-left: none;
@@ -561,12 +575,15 @@
   }
 
   .customize-header {
-    padding-top: 24px;
+    padding: 12px 16px 10px;
   }
 
   .customize-scroll-area {
-    padding-bottom: 40px;
-    /* Extra bottom padding for safe area */
+    padding: 10px 16px 8px;
+  }
+
+  .customize-footer {
+    padding: 8px 16px max(10px, env(safe-area-inset-bottom));
   }
 
   .custom-picker-popover {
@@ -578,6 +595,48 @@
   }
 
 
+}
+
+@media (max-height: 700px) {
+  .customize-header {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .customize-scroll-area {
+    gap: 6px;
+    padding-top: 8px;
+    padding-bottom: 6px;
+  }
+
+  .customize-field {
+    gap: 4px;
+    padding-bottom: 6px;
+  }
+
+  .palette-preview-bg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .customize-grid-option {
+    padding: 5px;
+  }
+
+  .customize-reflow-bottom-notice {
+    margin-top: 0;
+    line-height: 1.25;
+  }
+
+  .customize-footer {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .customize-save,
+  .customize-cancel {
+    min-height: 36px;
+  }
 }
 
 .customize-spread-actions {
