@@ -12,7 +12,7 @@ PokeFolio is a digital Pokémon TCG binder that recreates the experience of a ph
 
 - Node.js
 - PostgreSQL
-- A [Pokémon TCG API](https://pokemontcg.io/) key
+- A [Pokémon TCG API Developer Portal](https://dev.pokemontcg.io/) API key
 - Git
 
 ### Clone the repository
@@ -186,12 +186,33 @@ More detail on how these pieces fit together is in [`docs/architecture.md`](docs
 
 ## 6. Screenshots
 
-_Screenshots to be added._
+### Explore
 
-<!-- Add screenshots of Explore, Set Browser, Card Details, and Binder views here, e.g.:
-![Explore page](docs/screenshots/explore.png)
-![Binder page](docs/screenshots/binder.png)
--->
+![PokeFolio Explore page](docs/screenshots/explore.png)
+
+### Set Browser
+
+![PokeFolio Set Browser](docs/screenshots/set-browser.png)
+
+### Card Details
+
+![PokeFolio Card Details](docs/screenshots/card-details.png)
+
+### Binder
+
+![PokeFolio Binder](docs/screenshots/binder.png)
+
+### Binder Add Card Panel
+![PokeFolio Add Card Panel](docs/screenshots/binder-add-card.png)
+
+
+### Binder Customization Panel
+
+![PokeFolio Binder Customization Panel](docs/screenshots/binder-customization.png)
+
+### Mobile View Screenshots
+![PokeFolio Mobile View](docs/screenshots/pokefolio-mobile-view.png)
+
 
 ## 7. Known issues and next steps
 
