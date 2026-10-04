@@ -1,4 +1,9 @@
 # PokeFolio
+[![Made with AI](https://img.shields.io/badge/Made_with-AI_assistance-blue)](docs/AI-USAGE.md)
+
+**AI-assisted development:** OpenAI Codex, Claude, and Antigravity were used extensively throughout the project for code generation, debugging, UI/UX iteration, and documentation, with all AI-generated code reviewed, tested, and modified by the developer.
+
+For the complete record of AI usage, corrections, and code ownership, see [`AI-USAGE.md`](AI-USAGE.md).
 
 > Student Project — APSI Final Project
 
