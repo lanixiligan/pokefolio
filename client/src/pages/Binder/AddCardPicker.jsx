@@ -130,6 +130,14 @@ function AddCardPicker({ binder, activeAddSlot, onClose, onAddSuccess, refreshBi
       setShowNewSpreadPrompt(true);
     }
   }, [activeSetId, searchQuery, activeAddSlot]);
+
+  // Hide the new-spread prompt once the target moves to a real slot, e.g.
+  // when the user navigates from a full spread to one with space.
+  useEffect(() => {
+    if (activeAddSlot !== "NEW_SPREAD") {
+      setShowNewSpreadPrompt(false);
+    }
+  }, [activeAddSlot]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   async function handleCardClick(card) {

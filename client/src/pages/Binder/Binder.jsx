@@ -238,15 +238,30 @@ function Binder() {
     });
   }
 
+  // Changes the visible spread. If the Add Card picker is open, its target
+  // follows, so the next card goes onto the spread the user is looking at.
+  function goToSpread(spreadId) {
+    setSelectedSpreadId(spreadId);
+
+    if (activeAddSlot) {
+      const slot = getNextAvailableSlot(binder, {
+        spreadId,
+        pageSide: 1,
+        position: -1,
+      });
+      setActiveAddSlot(slot || "NEW_SPREAD");
+    }
+  }
+
   function handlePreviousSpread() {
     if (currentSpreadIndex > 0) {
-      setSelectedSpreadId(spreads[currentSpreadIndex - 1].id);
+      goToSpread(spreads[currentSpreadIndex - 1].id);
     }
   }
 
   function handleNextSpread() {
     if (currentSpreadIndex < spreads.length - 1) {
-      setSelectedSpreadId(spreads[currentSpreadIndex + 1].id);
+      goToSpread(spreads[currentSpreadIndex + 1].id);
     }
   }
 

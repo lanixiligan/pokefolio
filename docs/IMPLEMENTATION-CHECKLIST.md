@@ -8,7 +8,7 @@ Nothing has been changed in the repo. You do every step yourself, or hand an ite
 
 0. [Before you start](#0-before-you-start)
 1. [README: R1, R2, R3](#batch-1-readme)
-2. [Small fixes: S1, S2, S3, S4, C1, X2, D1](#batch-2-small-fixes)
+2. [Small fixes: S1, S2, S3, S4, C1, C2, X2, D1](#batch-2-small-fixes)
 3. [Deployment: H1, H2, H3](#batch-3-deployment)
 4. [Security checklist: X1](#batch-4-security-checklist)
 5. [REPORT.md: P1 to P7](#batch-5-reportmd)
@@ -240,6 +240,23 @@ Run the [smoke test](#appendix-b-smoke-test) after each item, and commit each on
   3. Open `/binder?spreadId=<that id>`. The indicator shows "2 / 2".
   4. The ← / → buttons still work. In `client/`, `npm run lint` and `npm run build` pass.
 - [x] **Commit:** `fix: match spreadId deep link against string ids`
+
+### C2 · Keep Add Card on the spread being viewed · S
+
+Found while testing C1. Not in the professor's feedback.
+
+- [x] **Steps**
+  1. `client/src/pages/Binder/getNextAvailableSlot.js`: search the spread being viewed first (the slots after the target, then earlier gaps on the same spread), then later spreads only. Never wrap back to an earlier spread. Return `"NEW_SPREAD"` when nothing is left.
+  2. `client/src/pages/Binder/Binder.jsx`: send ← / → through a `goToSpread` helper that also moves the open Add Card target to the new spread.
+  3. `client/src/pages/Binder/AddCardPicker.jsx`: hide the new-spread prompt when the target moves to a real slot.
+- [ ] **Verify**
+  1. On the last spread, open Add Card and add several cards in a row. They all land on that spread.
+  2. Open Add Card on 1 / 3, press → twice with the picker open, and add a card. It lands on 3 / 3 and the view stays there.
+  3. Leave a gap early on a spread and add cards after it. The gap is filled before the picker moves to the next spread.
+  4. Fill the last spread, then add one more card. The new-spread prompt appears; nothing lands on 1 / 3.
+  5. In `client/`, `npm run lint` and `npm run build` pass.
+- [x] **Commit:** `fix: keep Add Card on the spread being viewed`
+- Good P6 candidate: symptom (cards added while viewing one spread landed on another), cause (the picker's target was set once when it opened, and the slot search wrapped back to spread 1), change, and this commit.
 
 ### X2 · Show set icons in the Add Card filters · S
 

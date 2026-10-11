@@ -27,6 +27,7 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 | S4 | Use `rowCount` for deletes | S | Open |
 | S5 | Stricter request-body validation | M | Open (reproduced) |
 | C1 | Fix the `/binder?spreadId=` deep link | S | Done |
+| C2 | Keep Add Card on the spread being viewed | S | Done (found while testing C1) |
 | D1 | Clear the `npm audit` advisories | S | Open: `npm audit fix` alone doesn't clear the server |
 | A1 | 2027 API cutoff: back up the catalog now, Scrydex later | S now / L later | Open |
 | T1 | Server tests | L | Open |
@@ -255,6 +256,14 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
     - Copy the second spread's id from the `/api/binder` response in DevTools → Network.
     - Open `/binder?spreadId=<id>`; the indicator shows "2 / 2".
     - The ← / → buttons still work, and `npm run lint` and `npm run build` pass.
+
+- [x] **C2 · Keep Add Card on the spread being viewed** · S (found while testing C1)
+  - **Where:** `client/src/pages/Binder/getNextAvailableSlot.js`, the ← / → handlers in `Binder.jsx`, and `AddCardPicker.jsx`.
+  - **Problem:** a card added while viewing one spread could land on another:
+    - The Add Card target was set once, when the picker opened. Using ← / → afterwards didn't move it, so the card went to the old spread and the view jumped back there.
+    - When the spread was full, the slot search continued past the last spread and wrapped back to spread 1.
+  - **Change:** fill the spread being viewed first (after the target, then earlier gaps), then move forward only, then offer a new spread. ← / → move the open picker's target to the new spread.
+  - **Verify:** the C2 steps in `docs/IMPLEMENTATION-CHECKLIST.md`.
 
 ## Dependencies
 
