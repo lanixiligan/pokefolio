@@ -487,18 +487,24 @@ Done on 2026-10-11. Beyond steps 1–4:
 
 Do this last, so you can link this week's commits and "What is left" is accurate. Before starting, run `git log --oneline --date=short --format="%h %ad %s"` and keep the output open.
 
+Done together on 2026-10-11, in one commit. Results:
+- **P1:** same 2188 words before and after the reorder; weeks are `##` and their sections `###`.
+- **P3:** beyond the table, every older bullet with a clear matching commit got a link: 53 commit links across six weeks, every commit dated inside its week, and every link returns 200 on GitHub.
+- **P5:** re-ran `npm run seed` twice. Every set succeeded at least once with all checks true; in each run one set failed with an HTTP 500/502 from the Pokémon TCG API (Crown Zenith, then Team Rocket). The catalog checksum was identical before and after.
+- **P6:** two examples in the new entry (the deployed app's first load, H1/H2; the `/api/cards` sort, S2), and the September auto-advance note rewritten the same way.
+
 ### P1 · Newest week first · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. Record the word count first: `(Get-Content REPORT.md | Measure-Object -Word).Words`.
   2. Reverse the week sections. The headings are at lines 3, 43, 89, 133 and 169. Cut each "## Week of: …" block (from its heading to just before the next one) and paste them in reverse order. September 21–27 ends up first and August 10–16 last.
   3. Optional: make each "Week of" heading `##` and its subsections (`My goal this week`, `What I did`, …) `###`, so the outline isn't flat.
-- [ ] **Verify:** the Markdown preview reads newest → oldest. The word count matches step 1 (plus or minus any heading changes).
-- [ ] **Commit:** `docs: order REPORT newest week first`
+- [x] **Verify:** the Markdown preview reads newest → oldest. The word count matches step 1 (plus or minus any heading changes).
+- [x] **Commit:** combined into one P1–P7 commit, `docs: bring REPORT up to date with commit links (P1–P7)`
 
 ### P2 · Entry for the latest week · M
 
-- [ ] **Steps**
+- [x] **Steps**
   1. Add a new section at the top, for example `## Week of: September 28 – October 11, 2026`. Pick dates that cover your newest commits.
   2. The first line under it: `Since my last report: …` in one or two sentences.
   3. Use these subsections: My goal this week, What I did, What blocked me (P6), What I checked (P5), What is left (P7).
@@ -508,12 +514,12 @@ Do this last, so you can link this week's commits and "What is left" is accurate
      - Each item from this checklist that you finished this week, with its own commit
      - H3 if you set up the pinger (no commit; say what you set up)
   5. Check the dates. The palettes/logo commit (`2b86a85`) is from 09-26 and the screenshots commit (`9756257`) is from 09-27, so they belong to September 21–27. Add the screenshots to that week, which already mentions the palettes (line 195).
-- [ ] **Verify:** every bullet has a commit link, and each commit's date falls inside its week heading.
-- [ ] **Commit:** `docs: add latest week to REPORT`
+- [x] **Verify:** every bullet has a commit link, and each commit's date falls inside its week heading.
+- [x] **Commit:** combined into one P1–P7 commit, `docs: bring REPORT up to date with commit links (P1–P7)`
 
 ### P3 · Link commits · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. Link format: `[2b86a85](https://github.com/lanixiligan/pokefolio/commit/2b86a85)`
   2. Add links where the report already describes the work:
 
@@ -528,12 +534,12 @@ Do this last, so you can link this week's commits and "What is left" is accurate
      | Set Browser grid and debounced search | `98ebe68` | 143 |
      | Vercel rewrites; server listens on all interfaces | `508aca0`, `2388c1f` | 67 |
      | Screenshots | `9756257` | add to Sept 21–27 (see P2) |
-- [ ] **Verify:** after pushing, click every link on GitHub.
-- [ ] **Commit:** `docs: link commits in REPORT`
+- [x] **Verify:** after pushing, click every link on GitHub.
+- [x] **Commit:** combined into one P1–P7 commit, `docs: bring REPORT up to date with commit links (P1–P7)`
 
 ### P4 · Replace "polish" with named changes · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. Line 185 ("Continued frontend cleanup and polish…"): replace it with two or three real changes, each linked. Pick from:
      - Customize got its own Accent colour picker (`29c28e7`)
      - The Binder toolbar's text buttons became icon buttons with labels and tooltips (`29c28e7`)
@@ -541,30 +547,30 @@ Do this last, so you can link this week's commits and "What is left" is accurate
      - New Quick Styles Aurora and Crimson, the new logo as favicon, and unused template images removed (`2b86a85`)
      - The Add Card slot logic moved into `getNextAvailableSlot.js` (`29c28e7`)
   2. Give line 147 the same treatment.
-- [ ] **Verify:** open each linked commit on GitHub and check that the change is in its diff.
-- [ ] **Commit:** `docs: name specific frontend changes in REPORT`
+- [x] **Verify:** open each linked commit on GitHub and check that the change is in its diff.
+- [x] **Commit:** combined into one P1–P7 commit, `docs: bring REPORT up to date with commit links (P1–P7)`
 
 ### P5 · What you checked after the re-import · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. If you remember what you checked, write it after line 189. If not, re-run it at home (it needs your API key) and record the results:
      1. `npm run seed`: one JSON line per set, each with `"status":"succeeded"` and `"countsMatch":true`.
      2. `npm run db:check`: all six set ids, with counts adding up to 977.
      3. Crown Zenith shows on Explore. Open it, search for a card, and add it to the binder.
   2. Write it as: the commands, the numbers they showed, and what you looked at in the browser.
-- [ ] **Commit:** `docs: record re-import checks in REPORT`
+- [x] **Commit:** combined into one P1–P7 commit, `docs: bring REPORT up to date with commit links (P1–P7)`
 
 ### P6 · One concrete build problem and what you did · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. Pick one. The easiest is S2 (you just did it) or H1/H2 (the deployed app needing several refreshes).
   2. Write it in four short parts: **symptom** → **cause** → **change** → **commit link**. For example, for S2: "`/api/cards` returned 500 when a card was numbered TG01 → the SQL cast every number to an integer → sort by prefix, then number → `<commit>`".
   3. Expand the existing Add Card auto-advance note (line 157) the same way if you want a second example.
-- [ ] **Commit:** can go in with P2.
+- [x] **Commit:** combined into one P1–P7 commit, `docs: bring REPORT up to date with commit links (P1–P7)`
 
 ### P7 · "What is left", including the 2027 cutoff · M
 
-- [ ] **Steps**
+- [x] **Steps**
   1. At the end of the new entry, add `### What is left` with three short parts:
      1. **Known problems:** everything from this checklist that's still unticked when you write it. For example:
         - no automated tests or CI (T1, T2)
@@ -573,8 +579,8 @@ Do this last, so you can link this week's commits and "What is left" is accurate
         - the cold start on the free Render plan (if you skipped H3)
      2. **Before the demo:** what you commit to finishing.
      3. **2027 cutoff:** two or three sentences from A1. For example: the app reads its catalog from PostgreSQL, so it keeps working after March 1, 2027; you've backed up the catalog; re-importing or adding sets would need the importer ported to Scrydex.
-- [ ] **Verify:** nothing listed is already fixed, and everything open is listed.
-- [ ] **Commit:** with P2, or `docs: add What is left to REPORT`
+- [x] **Verify:** nothing listed is already fixed, and everything open is listed.
+- [x] **Commit:** combined into one P1–P7 commit, `docs: bring REPORT up to date with commit links (P1–P7)`
 
 ---
 

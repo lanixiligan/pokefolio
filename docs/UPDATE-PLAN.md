@@ -14,13 +14,13 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 | R1 | README: name the Node and PostgreSQL versions | S | Done |
 | R2 | README: create the `pokefolio` database before migrating | S | Done |
 | R3 | README: fix the AI-USAGE badge link and the API-key prerequisite | S | Done |
-| P1 | REPORT: newest week first, with a "since last report" line | S | Open |
-| P2 | REPORT: entry for the latest week | M | Open |
-| P3 | REPORT: link commits | S | Open |
-| P4 | REPORT: replace "polish" with named changes | S | Open |
-| P5 | REPORT: what was checked after the re-import | S | Open |
-| P6 | REPORT: one concrete build problem and the fix | S | Partly done |
-| P7 | REPORT: "What is left", including the 2027 API cutoff | M | Open |
+| P1 | REPORT: newest week first, with a "since last report" line | S | Done |
+| P2 | REPORT: entry for the latest week | M | Done |
+| P3 | REPORT: link commits | S | Done |
+| P4 | REPORT: replace "polish" with named changes | S | Done |
+| P5 | REPORT: what was checked after the re-import | S | Done |
+| P6 | REPORT: one concrete build problem and the fix | S | Done |
+| P7 | REPORT: "What is left", including the 2027 API cutoff | M | Done |
 | S1 | Remove the leftover comment in `server.js` | S | Done |
 | S2 | Fix the `/api/cards` sort for numbers like `TG01` | S | Done |
 | S3 | JSON 404 fallback and error handler | S | Done |
@@ -82,14 +82,14 @@ The professor raised both of the first two points twice. The rest of the README 
 
 Already done: the empty template weeks are gone (m8a1). Commit links will resolve because `main` is pushed.
 
-- [ ] **P1 · Newest week first** · S
+- [x] **P1 · Newest week first** · S
   - **Where:** week headings at `REPORT.md:3, 43, 89, 133, 169`.
   - **Change:** reverse the order, so the new entry (P2) comes first, then September 21–27. Open the new entry with one line: "Since my last report: …".
   - **Optional:** make each week a `##` heading and its subsections `###`. Today they are all `##`, so the outline is flat.
   - **Why:** m8a4.
   - **Verify:** the Markdown preview shows newest → oldest. Check that no text was lost: the word count from `(Get-Content REPORT.md | Measure-Object -Word).Words`, or `wc -w REPORT.md`, is the same before and after the reorder.
 
-- [ ] **P2 · Entry for the latest week** · M
+- [x] **P2 · Entry for the latest week** · M
   - **Where:** new section at the top.
   - **Change:** cover the work since the last entry, with links (P3):
     - AI-USAGE.md moved to the repo root and expanded: `c1e1178` (2026-10-04)
@@ -101,7 +101,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
   - **Why:** m8a4, m8a6.
   - **Verify:** every bullet has a commit link, and each commit's date (`git log --date=short`) falls inside the week heading.
 
-- [ ] **P3 · Link commits** · S
+- [x] **P3 · Link commits** · S
   - **Change:** use the format `[2b86a85](https://github.com/lanixiligan/pokefolio/commit/2b86a85)`. These commits cover work the report already describes:
 
     | Work | Commit | REPORT line |
@@ -118,7 +118,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
   - **Why:** m8a1, m8a4.
   - **Verify:** after pushing, click each link on GitHub.
 
-- [ ] **P4 · Replace "polish" with named changes** · S
+- [x] **P4 · Replace "polish" with named changes** · S
   - **Where:** `REPORT.md:185` ("Continued frontend cleanup and polish…"). Give `REPORT.md:147` the same treatment.
   - **Change:** name two or three changes that were actually made. Candidates from the September 26 commits:
     - Customize got its own Accent colour picker (`29c28e7`).
@@ -129,7 +129,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
   - **Why:** m8a6.
   - **Verify:** each named change is visible in the linked commit's diff.
 
-- [ ] **P5 · What was checked after the re-import** · S
+- [x] **P5 · What was checked after the re-import** · S
   - **Where:** after `REPORT.md:189`.
   - **Change:** state what was actually checked. If that isn't remembered, re-run it at home (it needs the API key) and record the results:
     1. `npm run seed` prints one JSON line per set, each with `"status":"succeeded"` and `"countsMatch":true`.
@@ -138,7 +138,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
   - **Why:** m8a6.
   - **Verify:** the report names the commands and the numbers they showed.
 
-- [ ] **P6 · One concrete build problem and what was done** · S (partly done)
+- [x] **P6 · One concrete build problem and what was done** · S (partly done)
   - **Status:**
     - `REPORT.md:157` names the Add Card auto-advance issue but not its cause or the fix.
     - `REPORT.md:33` describes the wrong-directory problem from week 1.
@@ -148,7 +148,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
     - **This week's option:** do S2 and write it up. `/api/cards` returned 500 for a card numbered `TG01`; the sort was changed and then checked with a test card.
   - **Why:** m8a3.
 
-- [ ] **P7 · "What is left", including the 2027 cutoff** · M
+- [x] **P7 · "What is left", including the 2027 cutoff** · M
   - **Where:** at the end of the new entry. Today "What is left" only exists in the oldest week (`REPORT.md:37`).
   - **Change:** write three short parts:
     1. **Known problems:** whatever in this plan is still open when the entry is written. For example:
