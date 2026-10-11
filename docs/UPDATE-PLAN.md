@@ -11,7 +11,7 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 
 | ID | Change | Effort | Status |
 | --- | --- | --- | --- |
-| R1 | README: name the Node and PostgreSQL versions | S | Open |
+| R1 | README: name the Node and PostgreSQL versions | S | Done |
 | R2 | README: create the `pokefolio` database before migrating | S | Open |
 | R3 | README: fix the AI-USAGE badge link and the API-key prerequisite | S | Open (found in review) |
 | P1 | REPORT: newest week first, with a "since last report" line | S | Open |
@@ -41,7 +41,7 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 
 The professor raised both of the first two points twice. The rest of the README was praised. Keep setup in the README and link `docs/local-development.md` for detail.
 
-- [ ] **R1 · Name the Node and PostgreSQL versions** · S
+- [x] **R1 · Name the Node and PostgreSQL versions** · S
   - **Where:** `README.md:18-19` (Prerequisites). The same bare "Node.js" is in `docs/local-development.md:25` and `docs/architecture.md:48`.
   - **Change:** e.g. `Node.js 24 (Vite 8 and ESLint 10 need at least 20.19, or 22.13 on the 22 line)` and `PostgreSQL 18`, which is what `docs/local-development.md` uses. Version 16 also ran fine in Codespaces. Use the `node -v` output from the machine PokeFolio was built on. The Codespace reports v24.21.0, which may differ.
   - **Optional:** add `"engines": { "node": "^20.19.0 || ^22.13.0 || >=24" }` to both `package.json` files, so npm warns on an older Node.

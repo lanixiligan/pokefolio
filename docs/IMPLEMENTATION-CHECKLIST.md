@@ -49,7 +49,7 @@ Appendix: [smoke test](#appendix-b-smoke-test), [test data](#appendix-a-test-dat
 
 ### R1 · Name the Node and PostgreSQL versions · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. Open `README.md`. Find the Prerequisites list (lines 18-19):
      ```md
      - Node.js
@@ -72,7 +72,7 @@ Appendix: [smoke test](#appendix-b-smoke-test), [test data](#appendix-a-test-dat
 - [ ] **Verify**
   1. Preview `README.md` (in VS Code: Ctrl+Shift+V). The versions show under Prerequisites.
   2. If you did step 4: run `npm install` in both folders. There should be no new errors.
-- [ ] **Commit:** `docs: name Node and PostgreSQL versions in prerequisites`
+- [x] **Commit:** `docs: name Node and PostgreSQL versions in prerequisites`
 
 ### R2 · Create the database before `npm run migrate` · S
 

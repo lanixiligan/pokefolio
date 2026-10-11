@@ -15,8 +15,8 @@ PokeFolio is a digital Pokémon TCG binder that recreates the experience of a ph
 
 ### Prerequisites
 
-- Node.js
-- PostgreSQL
+- Node.js 22.13 or newer (tested with v22.23.1; Node 24 also works)
+- PostgreSQL 18 (tested with 18.6)
 - A [Pokémon TCG API Developer Portal](https://dev.pokemontcg.io/) API key
 - Git
 
