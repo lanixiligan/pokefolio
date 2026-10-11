@@ -26,7 +26,7 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 | S3 | JSON 404 fallback and error handler | S | Open (reproduced) |
 | S4 | Use `rowCount` for deletes | S | Open |
 | S5 | Stricter request-body validation | M | Open (reproduced) |
-| C1 | Fix the `/binder?spreadId=` deep link | S | Open (reproduced) |
+| C1 | Fix the `/binder?spreadId=` deep link | S | Done |
 | D1 | Clear the `npm audit` advisories | S | Open: `npm audit fix` alone doesn't clear the server |
 | A1 | 2027 API cutoff: back up the catalog now, Scrydex later | S now / L later | Open |
 | T1 | Server tests | L | Open |
@@ -238,7 +238,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
 
 ## Client
 
-- [ ] **C1 · Fix the `/binder?spreadId=` deep link** · S
+- [x] **C1 · Fix the `/binder?spreadId=` deep link** · S
   - **Where:** `client/src/pages/Binder/Binder.jsx:107-111`.
   - **Change:**
     ```js

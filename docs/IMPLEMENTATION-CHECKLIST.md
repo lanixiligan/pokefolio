@@ -218,7 +218,7 @@ Run the [smoke test](#appendix-b-smoke-test) after each item, and commit each on
 
 ### C1 · Fix the `/binder?spreadId=` deep link · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. `client/src/pages/Binder/Binder.jsx` lines 108-112. Replace
      ```js
      const spreadIdNum = Number(spreadParam);
@@ -234,12 +234,12 @@ Run the [smoke test](#appendix-b-smoke-test) after each item, and commit each on
      }
      ```
      Spread ids come from Postgres as strings (`"2"`), so comparing with `Number(...)` never matched.
-- [ ] **Verify**
+- [x] **Verify**
   1. In Customize, click "+ Add Spread".
   2. DevTools → Network → the `binder` request → copy the second spread's `id`.
   3. Open `/binder?spreadId=<that id>`. The indicator shows "2 / 2".
   4. The ← / → buttons still work. In `client/`, `npm run lint` and `npm run build` pass.
-- [ ] **Commit:** `fix: match spreadId deep link against string ids`
+- [x] **Commit:** `fix: match spreadId deep link against string ids`
 
 ### X2 · Show set icons in the Add Card filters · S
 

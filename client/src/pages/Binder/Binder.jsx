@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   createBinderSpread,
   deleteBinderSpread,
@@ -75,6 +75,10 @@ function Binder() {
 
   const location = useLocation();
 
+  // The URL that the ?spreadId= deep link was last applied for. Keeps
+  // binder refreshes (add, move, remove) from jumping back to that spread.
+  const appliedSearchRef = useRef(null);
+
   useEffect(() => {
     document.title = "Binder — PokeFolio";
   }, []);
@@ -102,13 +106,14 @@ function Binder() {
 
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    if (binder) {
+    if (binder && appliedSearchRef.current !== location.search) {
+      appliedSearchRef.current = location.search;
       const searchParams = new URLSearchParams(location.search);
       const spreadParam = searchParams.get("spreadId");
       if (spreadParam) {
-        const spreadIdNum = Number(spreadParam);
-        if (binder.spreads.some(s => s.id === spreadIdNum)) {
-          setSelectedSpreadId(spreadIdNum);
+        const match = binder.spreads.find((spread) => String(spread.id) === spreadParam);
+        if (match) {
+          setSelectedSpreadId(match.id);
         }
       }
     }
