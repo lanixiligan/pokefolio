@@ -102,7 +102,7 @@ Appendix: [smoke test](#appendix-b-smoke-test), [test data](#appendix-a-test-dat
 
 ### R3 · Fix the AI badge link and the API-key prerequisite · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. `README.md` line 2: change `(docs/AI-USAGE.md)` to `(AI-USAGE.md)`. The file lives in the repo root.
   2. `README.md` line 20: replace
      ```md
@@ -114,7 +114,7 @@ Appendix: [smoke test](#appendix-b-smoke-test), [test data](#appendix-a-test-dat
      ```
   3. The deprecation notice sits under the "## Pokémon TCG API Attribution" heading (line 247), so the link points at that heading's anchor.
 - [ ] **Verify:** after pushing, click the badge and the new link on GitHub. Both land in the right place.
-- [ ] **Commit:** `docs: fix AI-USAGE badge link and API key prerequisite`
+- [x] **Commit:** `docs: fix AI-USAGE badge link and API key prerequisite`
 
 ---
 

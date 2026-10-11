@@ -13,7 +13,7 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 | --- | --- | --- | --- |
 | R1 | README: name the Node and PostgreSQL versions | S | Done |
 | R2 | README: create the `pokefolio` database before migrating | S | Done |
-| R3 | README: fix the AI-USAGE badge link and the API-key prerequisite | S | Open (found in review) |
+| R3 | README: fix the AI-USAGE badge link and the API-key prerequisite | S | Done |
 | P1 | REPORT: newest week first, with a "since last report" line | S | Open |
 | P2 | REPORT: entry for the latest week | M | Open |
 | P3 | REPORT: link commits | S | Open |
@@ -65,7 +65,7 @@ The professor raised both of the first two points twice. The rest of the README 
     3. Run `Remove-Item Env:PGDATABASE`, then drop the test database.
     4. Click the §3 link on GitHub.
 
-- [ ] **R3 · Fix the badge link and the API-key prerequisite** · S (found in review)
+- [x] **R3 · Fix the badge link and the API-key prerequisite** · S (found in review)
   - **Where:** `README.md:2` and `README.md:20`.
   - **Change:**
     - Line 2 links `docs/AI-USAGE.md`, which commit `c1e1178` moved to the repo root. Point it to `AI-USAGE.md`.
