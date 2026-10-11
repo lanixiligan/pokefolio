@@ -21,10 +21,10 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 | P5 | REPORT: what was checked after the re-import | S | Open |
 | P6 | REPORT: one concrete build problem and the fix | S | Partly done |
 | P7 | REPORT: "What is left", including the 2027 API cutoff | M | Open |
-| S1 | Remove the leftover comment in `server.js` | S | Open |
-| S2 | Fix the `/api/cards` sort for numbers like `TG01` | S | Open (reproduced) |
-| S3 | JSON 404 fallback and error handler | S | Open (reproduced) |
-| S4 | Use `rowCount` for deletes | S | Open |
+| S1 | Remove the leftover comment in `server.js` | S | Done |
+| S2 | Fix the `/api/cards` sort for numbers like `TG01` | S | Done |
+| S3 | JSON 404 fallback and error handler | S | Done |
+| S4 | Use `rowCount` for deletes | S | Done |
 | S5 | Stricter request-body validation | M | Open (reproduced) |
 | C1 | Fix the `/binder?spreadId=` deep link | S | Done |
 | C2 | Keep Add Card on the spread being viewed | S | Done (found while testing C1) |
@@ -159,12 +159,12 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
 
 ## Server habits (m5a2–m5a4)
 
-- [ ] **S1 · Remove the leftover comment** · S
+- [x] **S1 · Remove the leftover comment** · S
   - **Where:** `server/server.js:146` (`// REPLACE THE EXISTING QUERY HERE`). A search for REPLACE, TODO and FIXME found no other leftovers.
   - **Why:** issue 5. This is also the prelim feedback about tidying leftover instructional comments.
   - **Verify:** the server starts, and a set page still lists cards.
 
-- [ ] **S2 · Fix the `/api/cards` sort** · S
+- [x] **S2 · Fix the `/api/cards` sort** · S
   - **Where:** `server/server.js:162`: `ORDER BY set_id, number::integer;`
   - **Change:**
     ```sql
@@ -181,7 +181,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
     - `curl "localhost:5000/api/cards?set=zztest"` returns 200 in the order above, and `/api/cards` returns 200.
     - With the real catalog, Base Set still lists 1, 2, 3 … and search still works.
 
-- [ ] **S3 · JSON 404 fallback and error handler** · S
+- [x] **S3 · JSON 404 fallback and error handler** · S
   - **Where:** `server/server.js`, after the last route and before `app.listen` (line 1487).
   - **Change:**
     ```js
@@ -210,7 +210,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
     - The Appendix B smoke test still passes.
     - In Windows PowerShell, type `curl.exe` instead of `curl`.
 
-- [ ] **S4 · Use `rowCount` for deletes** · S
+- [x] **S4 · Use `rowCount` for deletes** · S
   - **Where:** `server/server.js:654-664`. The card-removal route runs `DELETE … RETURNING id`, then checks `result.rows.length === 0`.
   - **Change:** drop `RETURNING id` and check `result.rowCount === 0`. The spread delete (lines 1044–1153) checks existence with a `SELECT` first and can stay as it is.
   - **Why:** m5a2.

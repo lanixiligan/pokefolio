@@ -39,7 +39,7 @@ Appendix: [smoke test](#appendix-b-smoke-test), [test data](#appendix-a-test-dat
   1. `git checkout -b feedback-updates`.
   2. Commit after each item, so each fix has its own commit link for REPORT.md.
   3. When a batch is done, push (`git push -u origin feedback-updates`), open a pull request on GitHub, and merge it into `main`. Render and Vercel normally redeploy from `main`, so merging is what ships the fixes.
-- [ ] **0.3 Make sure the app runs before changing anything**
+- [x] **0.3 Make sure the app runs before changing anything**
   1. Run the [smoke test](#appendix-b-smoke-test) once. If it fails now, fix that first, or you won't know which change broke it.
   2. Write down `node -v` and `psql --version`. You need both for R1.
 
@@ -69,7 +69,7 @@ Appendix: [smoke test](#appendix-b-smoke-test), [test data](#appendix-a-test-dat
      },
      ```
      npm then warns anyone installing with an older Node.
-- [ ] **Verify**
+- [x] **Verify**
   1. Preview `README.md` (in VS Code: Ctrl+Shift+V). The versions show under Prerequisites.
   2. If you did step 4: run `npm install` in both folders. There should be no new errors.
 - [x] **Commit:** `docs: name Node and PostgreSQL versions in prerequisites`
@@ -92,7 +92,7 @@ Appendix: [smoke test](#appendix-b-smoke-test), [test data](#appendix-a-test-dat
      Then, from `server\`:
      ````
   3. Remove the old "From `server\`:" line above the block if it's now duplicated.
-- [ ] **Verify** (uses a throwaway database, so your real one is untouched)
+- [x] **Verify** (uses a throwaway database, so your real one is untouched)
   1. `psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE pokefolio_readme_test;"`
   2. In PowerShell, from `server\`: `$env:PGDATABASE="pokefolio_readme_test"; npm run migrate`. Expect `Database schema is ready.`
   3. `Remove-Item Env:PGDATABASE`
@@ -113,25 +113,25 @@ Appendix: [smoke test](#appendix-b-smoke-test), [test data](#appendix-a-test-dat
      - An existing Pokémon TCG API key, only needed for `npm run seed` (new registrations are closed; see [Pokémon TCG API Attribution](#pokémon-tcg-api-attribution) below)
      ```
   3. The deprecation notice sits under the "## Pokémon TCG API Attribution" heading (line 247), so the link points at that heading's anchor.
-- [ ] **Verify:** after pushing, click the badge and the new link on GitHub. Both land in the right place.
+- [x] **Verify:** after pushing, click the badge and the new link on GitHub. Both land in the right place.
 - [x] **Commit:** `docs: fix AI-USAGE badge link and API key prerequisite`
 
 ---
 
 ## Batch 2: Small fixes
 
-Run the [smoke test](#appendix-b-smoke-test) after each item, and commit each one separately.
+Run the [smoke test](#appendix-b-smoke-test) after each item, and commit each one separately. (S1–S4 were combined into one commit.)
 
 ### S1 · Remove the leftover comment · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. `server/server.js` line 146: delete `    // REPLACE THE EXISTING QUERY HERE`.
-- [ ] **Verify:** `npm run dev` in `server/` starts, and a set page still lists cards.
-- [ ] **Commit:** `chore: remove leftover instruction comment`
+- [x] **Verify:** `npm run dev` in `server/` starts, and a set page still lists cards.
+- [x] **Commit:** combined into one S1–S4 commit, `fix: card sort, JSON error responses and delete check (S1–S4)`
 
 ### S2 · Fix the `/api/cards` sort for numbers like `TG01` · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. Load the [test data](#appendix-a-test-data) and reproduce the bug first: `curl.exe -i "localhost:5000/api/cards?set=zztest"` returns `500`.
   2. `server/server.js` line 162: replace
      ```sql
@@ -146,17 +146,17 @@ Run the [smoke test](#appendix-b-smoke-test) after each item, and commit each on
      ```
      Type `[0-9]`, not `\d`. Inside a JavaScript template string, `\d` becomes a plain `d`.
   3. Restart the server.
-- [ ] **Verify**
+- [x] **Verify**
   1. `curl.exe "localhost:5000/api/cards?set=zztest"` returns 200, ordered `1, 2, 10, TG01`.
   2. `curl.exe -i localhost:5000/api/cards` returns 200.
   3. In the browser, Base Set still lists 1, 2, 3 …, and search still works.
   4. Remove the test data ([Appendix A](#appendix-a-test-data)).
-- [ ] **Commit:** `fix: sort cards with non-numeric numbers without crashing`
+- [x] **Commit:** combined into one S1–S4 commit, `fix: card sort, JSON error responses and delete check (S1–S4)`
 - Note this one down for P6: symptom (500 on a `TG01` card), cause (`number::integer` cast), fix, and this commit.
 
 ### S3 · JSON 404 fallback and error handler · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. Reproduce first: `curl.exe -i localhost:5000/api/nope` returns HTML ("Cannot GET /api/nope").
   2. In `server/server.js`, find the "Start Server" comment block (line 1481). Directly **above** it, add:
      ```js
@@ -179,19 +179,20 @@ Run the [smoke test](#appendix-b-smoke-test) after each item, and commit each on
      });
      ```
      Express only treats it as an error handler if it has all four parameters, so keep `next` even though it's unused.
+     Done without the `eslint-disable` line: the server has no ESLint setup, so the comment would have no effect.
   3. Restart the server.
-- [ ] **Verify**
+- [x] **Verify**
   1. `curl.exe -i localhost:5000/api/nope` returns `404` with `{"error":"Not found"}`.
   2. Bad JSON returns a JSON 400 with no stack trace:
      ```powershell
      curl.exe -i -X POST localhost:5000/api/binder/cards -H "X-Anon-Id: 11111111-1111-4111-8111-111111111111" -H "Content-Type: application/json" -d "{bad"
      ```
   3. Run the smoke test.
-- [ ] **Commit:** `feat: return JSON for unknown routes and unhandled errors`
+- [x] **Commit:** combined into one S1–S4 commit, `fix: card sort, JSON error responses and delete check (S1–S4)`
 
 ### S4 · Use `rowCount` for deletes · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. `server/server.js` lines 654-664, in `app.delete("/api/binder/cards/:cardId", …)`. Change the query from
      ```sql
      DELETE FROM binder_cards
@@ -207,14 +208,14 @@ Run the [smoke test](#appendix-b-smoke-test) after each item, and commit each on
      ```
   2. Change `if (result.rows.length === 0) {` (line 664) to `if (result.rowCount === 0) {`.
   3. Leave the spread delete (lines 1044-1153) as it is. It checks with a `SELECT` first.
-- [ ] **Verify**
+- [x] **Verify**
   1. In the browser, remove a card from the binder. It disappears.
   2. Send the same delete again; it returns 404 "Card is not in the binder":
      ```powershell
      curl.exe -i -X DELETE localhost:5000/api/binder/cards/<cardId> -H "X-Anon-Id: <your anon id>"
      ```
      Your anon id is in DevTools → Application → Local Storage.
-- [ ] **Commit:** `refactor: use rowCount to detect a missing binder card`
+- [x] **Commit:** combined into one S1–S4 commit, `fix: card sort, JSON error responses and delete check (S1–S4)`
 
 ### C1 · Fix the `/binder?spreadId=` deep link · S
 
@@ -249,7 +250,7 @@ Found while testing C1. Not in the professor's feedback.
   1. `client/src/pages/Binder/getNextAvailableSlot.js`: search the spread being viewed first (the slots after the target, then earlier gaps on the same spread), then later spreads only. Never wrap back to an earlier spread. Return `"NEW_SPREAD"` when nothing is left.
   2. `client/src/pages/Binder/Binder.jsx`: send ← / → through a `goToSpread` helper that also moves the open Add Card target to the new spread.
   3. `client/src/pages/Binder/AddCardPicker.jsx`: hide the new-spread prompt when the target moves to a real slot.
-- [ ] **Verify**
+- [x] **Verify**
   1. On the last spread, open Add Card and add several cards in a row. They all land on that spread.
   2. Open Add Card on 1 / 3, press → twice with the picker open, and add a card. It lands on 3 / 3 and the view stays there.
   3. Leave a gap early on a spread and add cards after it. The gap is filled before the picker moves to the next spread.
