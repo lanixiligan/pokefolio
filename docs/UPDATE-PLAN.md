@@ -28,12 +28,12 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 | S5 | Stricter request-body validation | M | Open (reproduced) |
 | C1 | Fix the `/binder?spreadId=` deep link | S | Done |
 | C2 | Keep Add Card on the spread being viewed | S | Done (found while testing C1) |
-| D1 | Clear the `npm audit` advisories | S | Open: `npm audit fix` alone doesn't clear the server |
+| D1 | Clear the `npm audit` advisories | S | Done |
 | A1 | 2027 API cutoff: back up the catalog now, Scrydex later | S now / L later | Open |
 | T1 | Server tests | L | Open |
 | T2 | GitHub Actions CI | M | Open |
 | X1 | Correct `docs/SECURITY-CHECKLIST.md` | S | Open (found in review) |
-| X2 | Show set icons in the Add Card filters | S | Open (found in review) |
+| X2 | Show set icons in the Add Card filters | S | Done |
 | O1 | Move SQL into a repository layer (optional) | L | Open, only after T1 |
 
 ---
@@ -267,7 +267,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
 
 ## Dependencies
 
-- [ ] **D1 · Clear the `npm audit` advisories** · S
+- [x] **D1 · Clear the `npm audit` advisories** · S
   - **Client:** `npm audit fix` leaves **0 vulnerabilities** (tested on a copy of the lockfile). Both advisories (`brace-expansion`, `source-map-js`) are in build tooling.
   - **Server:** `npm audit fix` **leaves all 3 high advisories**.
     - They come from `nodemon 3.1.14 → chokidar 3.6.0 → braces 3.0.3`.
@@ -341,7 +341,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
   - **Why:** a submitted document shouldn't claim fixes that aren't there.
   - **Verify:** re-check every "Yes" against the code.
 
-- [ ] **X2 · Show set icons in the Add Card filters** · S
+- [x] **X2 · Show set icons in the Add Card filters** · S
   - **Where:** `client/src/pages/Binder/AddCardPicker.jsx:295-296` reads `set.logo`, which the API doesn't return, so no icon ever shows.
   - **Change:** use `set.symbol_url`. The `.add-card-filter-icon` style is a 14 × 14 px icon (`AddCardPicker.css:184-188`), which fits the small set symbol better than the wide logo.
   - **Verify:** in the Binder, open Add Card; each set filter button shows its symbol.

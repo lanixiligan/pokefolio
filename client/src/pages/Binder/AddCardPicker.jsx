@@ -300,8 +300,8 @@ function AddCardPicker({ binder, activeAddSlot, onClose, onAddSuccess, refreshBi
                   className={`add-card-filter-pill ${activeSetId === set.id ? "active" : ""}`}
                   onClick={() => setActiveSetId(set.id)}
                 >
-                  {set.logo ? (
-                    <img src={set.logo} alt="" className="add-card-filter-icon" />
+                  {set.symbol_url ? (
+                    <img src={set.symbol_url} alt="" className="add-card-filter-icon" />
                   ) : null}
                   {set.name}
                 </button>

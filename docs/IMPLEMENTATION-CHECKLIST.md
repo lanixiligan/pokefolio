@@ -120,7 +120,7 @@ Appendix: [smoke test](#appendix-b-smoke-test), [test data](#appendix-a-test-dat
 
 ## Batch 2: Small fixes
 
-Run the [smoke test](#appendix-b-smoke-test) after each item, and commit each one separately. (S1–S4 were combined into one commit.)
+Run the [smoke test](#appendix-b-smoke-test) after each item, and commit each one separately. (S1–S4 were combined into one commit, and so were X2 and D1.)
 
 ### S1 · Remove the leftover comment · S
 
@@ -261,7 +261,7 @@ Found while testing C1. Not in the professor's feedback.
 
 ### X2 · Show set icons in the Add Card filters · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. `client/src/pages/Binder/AddCardPicker.jsx` lines 295-297. Replace
      ```jsx
      {set.logo ? (
@@ -274,26 +274,26 @@ Found while testing C1. Not in the professor's feedback.
        <img src={set.symbol_url} alt="" className="add-card-filter-icon" />
      ) : null}
      ```
-- [ ] **Verify:** in the Binder, open Add Card. Each set filter button shows a small set symbol. `npm run lint` passes.
-- [ ] **Commit:** `fix: show set symbols in Add Card filters`
+- [x] **Verify:** in the Binder, open Add Card. Each set filter button shows a small set symbol. `npm run lint` passes.
+- [x] **Commit:** combined into one X2 + D1 commit, `fix: Add Card set symbols and npm audit advisories (X2, D1)`
 
 ### D1 · Clear the `npm audit` advisories · S
 
-- [ ] **Steps: client**
+- [x] **Steps: client**
   1. In `client/`: `npm audit fix` (without `--force`).
   2. `npm audit` should print "found 0 vulnerabilities".
-- [ ] **Steps: server** (`npm audit fix` won't clear these; they come from nodemon)
+- [x] **Steps: server** (`npm audit fix` won't clear these; they come from nodemon)
   1. In `server/`: `npm uninstall nodemon`.
   2. In `server/package.json`, change `"dev": "nodemon server.js"` to `"dev": "node --watch server.js"`.
   3. `npm audit fix`, then `npm audit`. It should print "found 0 vulnerabilities".
   4. Update the docs that mention Nodemon:
      - `docs/local-development.md` line 540: change the heading "### Start Express with Nodemon" to "### Start Express in watch mode", and update the text under it.
      - `docs/architecture.md` line 58: change "- Nodemon" to "- Node's built-in `--watch` mode".
-- [ ] **Verify**
+- [x] **Verify**
   1. In `client/`, `npm run lint` and `npm run build` pass.
   2. In `server/`, run `npm run dev`, save `server.js` without changes, and check that it restarts.
   3. Run the smoke test.
-- [ ] **Commit:** `chore: clear npm audit advisories; replace nodemon with node --watch`
+- [x] **Commit:** combined into one X2 + D1 commit, `fix: Add Card set symbols and npm audit advisories (X2, D1)`
 
 ---
 

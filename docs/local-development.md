@@ -537,7 +537,9 @@ This changes how the client communicates with/displays text; it does not change 
 npm start
 ```
 
-### Start Express with Nodemon
+### Start Express in watch mode
+
+Restarts the server whenever a file it loads changes, using Node's built-in `--watch` mode:
 
 ```powershell
 npm run dev
