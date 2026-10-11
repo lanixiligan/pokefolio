@@ -51,6 +51,7 @@ function CardTile({ card, onSelect }) {
         className="card-tile-image"
         src={card.image_small_url}
         alt={card.name}
+        loading="lazy"
       />
       <h3 className="card-tile-name">{card.name}</h3>
       <p className="card-tile-meta">

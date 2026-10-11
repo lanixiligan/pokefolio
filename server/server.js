@@ -56,6 +56,12 @@ app.get("/api/health", async (req, res) => {
   }
 });
 
+// For an uptime pinger that keeps the Render server awake. It doesn't touch
+// the database, so Neon can still suspend and stay inside its free compute.
+app.get("/api/ping", (req, res) => {
+  res.json({ status: "ok" });
+});
+
 // -----------------------------------------------------------------------------
 // Catalog Routes
 // -----------------------------------------------------------------------------

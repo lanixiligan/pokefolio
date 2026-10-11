@@ -301,11 +301,13 @@ Found while testing C1. Not in the professor's feedback.
 
 These fix the deployed app needing several refreshes on its first load. H1 is the important one.
 
+H1, H2 and H4, and the `/api/ping` route for H3, were combined into one commit: `fix: keep the API usable through Render and Neon sleeps (H1–H4)`. Three things were done differently from the steps below, each noted under its item.
+
 **Checked 2026-10-10 against a local PostgreSQL 16:** with the current `server/db.js`, restarting the database while the server was idle crashed the Node process (exit 1). With the H1 change it logged `Idle database client error: terminating connection…`, kept running, and `/api/health` returned ok right after. Neon suspending has the same effect as that restart. The S2 sort, the S3 handlers and the T1 test file below were also run there: the sort gave `1, 2, 10, GG01, GG10, TG01`, the handlers returned JSON 404/400, and all three tests passed.
 
 ### H1 · Stop the server crashing when Neon drops idle connections · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. Optional, to confirm the cause first: in the Render dashboard, open the service → **Logs**. Look for `Connection terminated unexpectedly` (or another `pg` error) followed by the server starting again.
   2. In `server/db.js`, replace
      ```js
@@ -326,19 +328,22 @@ These fix the deployed app needing several refreshes on its first load. H1 is th
        console.error("Idle database client error:", error.message);
      });
      ```
-- [ ] **Verify locally**
+     **Done differently:** without `idleTimeoutMillis: 30_000`. pg already closes idle connections after 10 seconds by default, so 30 seconds would keep them open longer, not shorter.
+- [x] **Verify locally**
   1. Start the server with `npm run dev` and call `curl.exe localhost:5000/api/health` once.
   2. Restart PostgreSQL. On Windows, use the Services app → `postgresql-x64-18` → Restart. In Codespaces/Docker, use `docker restart pokefolio-db`.
   3. Check the server terminal. It logs "Idle database client error" (or nothing), and it does **not** exit.
   4. `curl.exe localhost:5000/api/health` returns `"status":"ok"` again.
+
+  Checked 2026-10-11 by ending the server's idle connection from the database side (`pg_terminate_backend`): the old `db.js` crashed the process (exit 1), the new one logged `Idle database client error` and kept serving. An unreachable database now gives a 503 after 10 seconds instead of hanging.
 - [ ] **Verify on Render** (after merging to `main` and Render redeploying)
   1. Leave the app alone for 20+ minutes, then open it.
   2. The first load is still slow while the server wakes up, but the logs show no crash and restart.
-- [ ] **Commit:** `fix: keep the server alive when idle database connections drop`
+- [x] **Commit:** combined into one H1–H4 commit, `fix: keep the API usable through Render and Neon sleeps (H1–H4)`
 
 ### H2 · Client retries the first load while the server wakes up · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. In `client/src/lib/api.js`, replace the whole `apiRequest` function (lines 6-39) with:
      ```js
      // Render's free tier sleeps when idle, so the first request after a pause
@@ -425,24 +430,32 @@ These fix the deployed app needing several refreshes on its first load. H1 is th
         </p>
         ```
      4. Find the "Loading sets..." line (line 143) and make it `{isWakingUp ? "Waking up the server…" : "Loading sets..."}`, so later visits to Explore show it too.
+
+     **Done differently:**
+     - `RETRY_DELAYS_MS` is `[2000, 4000, 8000, 16000, 30000]`, about 60 seconds in total, because Render says waking a free service takes about a minute.
+     - Explore also shows "Waking up the server…" when the request takes longer than 4 seconds, because Render may hold the first request open while it wakes instead of failing it.
 - [ ] **Verify**
-  1. Stop the local server. Open `localhost:5173/explore`, then start the server within about 20 seconds. The loader says "Waking up the server…" and the page loads on its own, without a refresh.
-  2. With the server down the whole time, the error message appears after about 30 seconds (2 + 4 + 8 + 16).
+  1. Stop the local server. Open `localhost:5173/explore`, then start the server within about 40 seconds. The loader says "Waking up the server…" and the page loads on its own, without a refresh.
+  2. With the server down the whole time, the error message appears after about 60 seconds (2 + 4 + 8 + 16 + 30).
   3. With the server running normally, nothing looks different.
   4. `npm run lint` and `npm run build` pass. Then run the smoke test.
   5. After deploying: open the live site after 20+ minutes idle. It should load without a refresh, just slowly.
-- [ ] **Commit:** `feat: retry while the API wakes up and tell the user`
+
+  Steps 1–4 passed locally on 2026-10-11, plus: the Binder recovers on its own once the server is back, and card writes fail at once instead of retrying. Tick this box after step 5.
+- [x] **Commit:** combined into one H1–H4 commit, `fix: keep the API usable through Render and Neon sleeps (H1–H4)`
 
 ### H3 · Keep Render and Neon awake (optional, no code) · S
 
+**Done differently:** ping the new `GET /api/ping`, not `/api/health`. `/api/health` runs `SELECT 1`, so pinging it every 10 minutes would also keep Neon awake about half of every hour: roughly 91 of the free plan's 100 CU-hours a month before any real use, and hitting the cap suspends the database. `/api/ping` keeps only Render awake. Neon still sleeps, wakes in about a second, and H1 stops its dropped connections from crashing the server.
+
 - [ ] **Steps**
-  1. Check Render's and Neon's free-tier terms and usage limits first. A pinger uses your monthly free hours on both.
+  1. Check Render's and Neon's free-tier terms and usage limits first. Render's 750 free hours a month are shared by every free service in the workspace, and one always-on service uses about 730 of them. Only set this up if PokeFolio is your only free Render service.
   2. Create a free monitor at UptimeRobot or cron-job.org:
-     - URL: `https://<your-render-app>.onrender.com/api/health`
-     - Method: GET, every 10 minutes
-  3. `/api/health` runs `SELECT 1`, so the same ping keeps Neon awake too.
+     - URL: `https://<your-render-app>.onrender.com/api/ping`
+     - Method: GET, every 10 minutes (Render spins a free service down after 15 minutes without traffic)
+  3. After a few days, check Render's free-hour usage and Neon's compute usage. Neon's should stay low.
 - [ ] **Verify:** after an hour without visitors, the first load is fast. The monitor shows "up".
-- No commit. Mention it in REPORT.md's latest week instead.
+- The `/api/ping` route is in the H1–H4 commit. The monitor itself needs no commit; mention it in REPORT.md's latest week.
 
 ---
 
@@ -638,10 +651,10 @@ Do this last, so you can link this week's commits and "What is left" is accurate
 
 ### H4 · Lazy-load card images in the Set Browser · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. `client/src/pages/SetBrowser/CardTile.jsx`, the `<img className="card-tile-image" …>` (around line 50). Add `loading="lazy"` after `alt={card.name}`.
-- [ ] **Verify:** DevTools → Network → Img, then open a big set (Base Set or Paldean Fates). Images load as you scroll, not all at once. The reveal animation still plays.
-- [ ] **Commit:** `perf: lazy-load card images in the set browser`
+- [x] **Verify:** DevTools → Network → Img, then open a big set (Base Set or Paldean Fates). Images load as you scroll, not all at once. The reveal animation still plays.
+- [x] **Commit:** combined into one H1–H4 commit, `fix: keep the API usable through Render and Neon sleeps (H1–H4)`
 
 ### T1 · Server tests · L
 

@@ -29,6 +29,10 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 | C1 | Fix the `/binder?spreadId=` deep link | S | Done |
 | C2 | Keep Add Card on the spread being viewed | S | Done (found while testing C1) |
 | D1 | Clear the `npm audit` advisories | S | Done |
+| H1 | Keep the server alive when Neon drops idle connections | S | Done; check on Render after merging |
+| H2 | Client retries while the server wakes up, and says so | S | Done; check on the live site after merging |
+| H3 | Keep Render awake with an uptime pinger | S | Partly done: `/api/ping` added, monitor not set up |
+| H4 | Lazy-load card images in the Set Browser | S | Done |
 | A1 | 2027 API cutoff: back up the catalog now, Scrydex later | S now / L later | Open |
 | T1 | Server tests | L | Open |
 | T2 | GitHub Actions CI | M | Open |
@@ -280,6 +284,29 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
     - `npm audit` prints "found 0 vulnerabilities" in both folders.
     - In `client/`, `npm run lint` and `npm run build` pass.
     - In `server/`, `npm run dev` restarts when `server.js` is saved.
+
+## Deployment (found in review)
+
+The deployed app needed several refreshes on its first load. Steps and results are in `docs/IMPLEMENTATION-CHECKLIST.md`, Batch 3 and H4.
+
+- [x] **H1 · Keep the server alive when Neon drops idle connections** · S
+  - **Where:** `server/db.js`.
+  - **Problem:** the pg pool had no `error` listener, so when the database dropped an idle connection (as Neon does when it suspends), the whole Node process crashed and Render had to cold-start it. Reproduced locally with `pg_terminate_backend`: exit code 1.
+  - **Change:** a pool `error` listener that logs instead of crashing, and a 10-second connect timeout (pg waits forever by default).
+  - **Still to check:** Render's logs after the merge.
+
+- [x] **H2 · Client retries while the server wakes up** · S
+  - **Where:** `client/src/lib/api.js`, `client/src/pages/Explore/Explore.jsx`.
+  - **Change:** GET requests, and `initializeBinder` (safe to repeat), retry network errors and 502/503/504 for about 60 seconds. Card writes never retry. Explore shows "Waking up the server…" on a retry or when the request takes over 4 seconds.
+  - **Still to check:** the live site after 20+ minutes idle, once merged.
+
+- [ ] **H3 · Keep Render awake with an uptime pinger** · S (partly done)
+  - **Done:** `GET /api/ping`, which doesn't touch the database.
+  - **Why not `/api/health`:** it runs `SELECT 1`, so a 10-minute pinger would keep Neon awake about half the time, roughly 91 of its 100 free CU-hours a month.
+  - **Left:** set up the monitor (UptimeRobot or cron-job.org) after the merge, if PokeFolio is the only free Render service. Render's 750 free hours a month are shared across the workspace.
+
+- [x] **H4 · Lazy-load card images in the Set Browser** · S
+  - **Where:** `client/src/pages/SetBrowser/CardTile.jsx`. The Add Card picker already used `loading="lazy"`.
 
 ## 2027 API cutoff
 
