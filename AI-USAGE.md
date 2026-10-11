@@ -68,6 +68,58 @@ This project was built with AI assistance. This file is the record of it. It doc
 - **What I kept, what I changed, and why:** I kept the parts that matched the actual application, ran the client lint/build, fixed reported issues, added Crown Zenith (`swsh12pt5`), and re-imported the expanded catalog into PostgreSQL.
 - **Commit:** [https://github.com/lanixiligan/pokefolio/commit/29c28e7dc8430b7869444c3c8ec297f3e1428c47](https://github.com/lanixiligan/pokefolio/commit/29c28e7dc8430b7869444c3c8ec297f3e1428c47)
 
+### 2026-10-10 - Reviewing my professor's feedback
+
+- **Tool:** Claude Code
+- **What I asked for:** A review of the code against my professor's feedback (m5a2–m5a4, m8a1–m8a6), turned into a prioritized list of fixes I could work through before the demo.
+- **What it gave back:** `docs/UPDATE-PLAN.md`: each item checked against the code at `6f64651`, with the bugs it could reproduce marked as reproduced (for example the `/api/cards` sort and the HTML error pages). Its step-by-step instructions became `docs/IMPLEMENTATION-CHECKLIST.md`.
+- **What I kept, what I changed, and why:** I used the plan as my working list for the next day, and chose which items to do before the demo and which to leave optional (Batches 6–8 of the checklist).
+- **Commit:** [https://github.com/lanixiligan/pokefolio/commit/b6e77ff77f6442f4531f1f47b77330dbf1c20782](https://github.com/lanixiligan/pokefolio/commit/b6e77ff77f6442f4531f1f47b77330dbf1c20782)
+
+### 2026-10-11 - README setup steps
+
+- **Tool:** Claude Code
+- **What I asked for:** Fix the README points my professor raised twice: name the Node.js and PostgreSQL versions, add the missing step of creating the database, and fix the AI-USAGE badge link and the API-key prerequisite.
+- **What it gave back:** The README edits, and a test of the new database steps on a throwaway database.
+- **What I kept, what I changed, and why:** It recommended naming the version I actually tested with (Node.js 22.13 or newer, tested with 22.23.1) instead of the plan's Node 24, and leaving out the `engines` field so Render and Vercel wouldn't switch the deployed Node version before the demo. I agreed, and checked the new links on GitHub myself after pushing.
+- **Commits:**
+  - [https://github.com/lanixiligan/pokefolio/commit/096a9515ef4121fbe49214b7c70ab0086161a39c](https://github.com/lanixiligan/pokefolio/commit/096a9515ef4121fbe49214b7c70ab0086161a39c)
+  - [https://github.com/lanixiligan/pokefolio/commit/e0aa7ca50d1114fc70cd78742d3783940d907cb5](https://github.com/lanixiligan/pokefolio/commit/e0aa7ca50d1114fc70cd78742d3783940d907cb5)
+  - [https://github.com/lanixiligan/pokefolio/commit/7087c1cc1d224d3c1bafdf10dfad8cc1f238f4a0](https://github.com/lanixiligan/pokefolio/commit/7087c1cc1d224d3c1bafdf10dfad8cc1f238f4a0)
+
+### 2026-10-11 - Binder link and Add Card placement
+
+- **Tool:** Claude Code
+- **What I asked for:** Fix the `/binder?spreadId=` link, which never opened the requested spread. While testing it, I also asked for cards added with Add Card to stay on the spread I was viewing, because some landed on a different spread.
+- **What it gave back:** A string comparison for the spread id (PostgreSQL `BIGINT` ids arrive in JavaScript as strings), a guard so the link is applied once per URL, and a rewritten `getNextAvailableSlot()` with eight test scenarios.
+- **What I kept, what I changed, and why:** I chose to fix the link rather than delete it, and chose the rule for a full spread: fill the spread being viewed first, then move forward, and never wrap back to spread 1. I ran the browser checks for both fixes myself.
+- **Commits:**
+  - [https://github.com/lanixiligan/pokefolio/commit/4db153a3f28a697319b03c228f0c1839ded8d62e](https://github.com/lanixiligan/pokefolio/commit/4db153a3f28a697319b03c228f0c1839ded8d62e)
+  - [https://github.com/lanixiligan/pokefolio/commit/6683cd5e188382a0ff926742021df3adc0b86e3a](https://github.com/lanixiligan/pokefolio/commit/6683cd5e188382a0ff926742021df3adc0b86e3a)
+
+### 2026-10-11 - Server fixes, dependencies, and deployment
+
+- **Tool:** Claude Code
+- **What I asked for:** The server fixes from the plan, clearing the `npm audit` advisories, and stopping the deployed app needing several refreshes on its first load.
+- **What it gave back:** A reproduction of each bug before fixing it (a test card numbered `TG01`, HTML error pages with a stack trace, the server crashing when the database drops an idle connection), the fixes, and automated checks it ran against my local database.
+- **What I kept, what I changed, and why:** It changed three things from the plan and explained why, and I agreed: no 30-second idle timeout (pg already closes idle connections after 10 seconds), retries for about 60 seconds (Render says waking a free service takes about a minute), and a database-free `/api/ping` route for an uptime monitor, because pinging `/api/health` would use most of Neon's free compute. I ran the browser tests myself, asked for related fixes to be combined into single commits, merged them through pull request #2, and checked the live app afterwards.
+- **Commits:**
+  - [https://github.com/lanixiligan/pokefolio/commit/9847a540c97a40614ee14f8d8056015c61896731](https://github.com/lanixiligan/pokefolio/commit/9847a540c97a40614ee14f8d8056015c61896731)
+  - [https://github.com/lanixiligan/pokefolio/commit/78eb7348214cdc211d0d743f1030c7bbb14b14bc](https://github.com/lanixiligan/pokefolio/commit/78eb7348214cdc211d0d743f1030c7bbb14b14bc)
+  - [https://github.com/lanixiligan/pokefolio/commit/dbe7e9b620b3bb97e6e716954f9be83a64c16e3d](https://github.com/lanixiligan/pokefolio/commit/dbe7e9b620b3bb97e6e716954f9be83a64c16e3d)
+  - Pull request: [https://github.com/lanixiligan/pokefolio/pull/2](https://github.com/lanixiligan/pokefolio/pull/2)
+
+### 2026-10-11 - Report, security checklist, and verification
+
+- **Tool:** Claude Code
+- **What I asked for:** Bring `REPORT.md` up to date with commit links, re-run the checks after the catalog import, and correct `docs/SECURITY-CHECKLIST.md` so it matches the code.
+- **What it gave back:** The reordered report with a new entry and 54 commit links, each checked against its week's dates; a re-run of the catalog import (the Pokémon TCG API returned intermittent 500/502 errors, and the catalog was unchanged); and a row-by-row check of the security checklist against the code, the Git history and the GitHub settings.
+- **What I kept, what I changed, and why:** I decided to keep my email address in the existing Git history for now rather than rewrite every commit (security checklist item 27), and asked for Batches 6–8 to be marked optional in the checklist.
+- **Commits:**
+  - [https://github.com/lanixiligan/pokefolio/commit/8fc3cc7895a77f86304be28ee1ceb826598a1d3e](https://github.com/lanixiligan/pokefolio/commit/8fc3cc7895a77f86304be28ee1ceb826598a1d3e)
+  - [https://github.com/lanixiligan/pokefolio/commit/602dddfac978486c1631f0d1877084115d904dfd](https://github.com/lanixiligan/pokefolio/commit/602dddfac978486c1631f0d1877084115d904dfd)
+  - [https://github.com/lanixiligan/pokefolio/commit/ecde227bb57612d6ac0b0e8122088b97012e188b](https://github.com/lanixiligan/pokefolio/commit/ecde227bb57612d6ac0b0e8122088b97012e188b)
+
 ## 2. Where the AI got it wrong
 
 ### Case 1 - Backend server binding worked locally but failed as a deployable server
@@ -80,8 +132,8 @@ This project was built with AI assistance. This file is the record of it. It doc
 ### Case 2 - Add Card auto-advance did not correctly handle the next spread
 
 - **What it gave me:** The first Add Card implementation included `getNextAvailableSlot()` and automatically continued adding cards after a successful add.
-- **What was wrong with it:** The first implementation did not correctly handle the UI state transition when the calculated next slot moved to another spread. The binder could remain on the wrong spread even though the next slot belonged to a different one.
-- **What I did instead:** I corrected the `onAddSuccess` flow so that when the next slot belongs to another spread, the Binder changes its current spread index before continuing the add sequence.
+- **What was wrong with it:** The first implementation did not correctly handle the UI state transition when the calculated next slot moved to another spread. After the Binder switched to tracking the open spread by its id, the auto-advance code still called `setCurrentSpreadIndex`, a function that no longer existed. When a card filled the last slot of a spread, the card was saved, but the Add Card panel showed the error "setCurrentSpreadIndex is not defined" and the binder stayed on the full spread.
+- **What I did instead:** I corrected the `onAddSuccess` flow so that when the next slot belongs to another spread, the Binder selects that spread by its id (`setSelectedSpreadId`) before continuing the add sequence. The same flow had two more problems later (see Case 5).
 - **Commit:** [https://github.com/lanixiligan/pokefolio/commit/9981bdf8e264583bef33252c7d0d401969facc8a](https://github.com/lanixiligan/pokefolio/commit/9981bdf8e264583bef33252c7d0d401969facc8a)
 
 ### Case 3 - Initial Add Card / Customize panel positioning was too dependent on the binder canvas
@@ -90,6 +142,34 @@ This project was built with AI assistance. This file is the record of it. It doc
 - **What was wrong with it:** That approach tied the panel's size and placement to the binder container and became unreliable when the available viewport space changed, particularly across desktop/tablet layouts.
 - **What I did instead:** I changed the panels to use viewport-aware fixed positioning, measured the binder folio with `getBoundingClientRect()`, and added resize handling so the panel can switch between desktop and centered tablet/mobile layouts.
 - **Commit:** [https://github.com/lanixiligan/pokefolio/commit/b831a672a1a2bb5883694eb656dadaf4c5257289](https://github.com/lanixiligan/pokefolio/commit/b831a672a1a2bb5883694eb656dadaf4c5257289)
+
+### Case 4 - The binder link fix made every binder refresh jump back (Claude Code)
+
+- **What it gave me:** A fix for the `/binder?spreadId=` link that compared spread ids as strings.
+- **What was wrong with it:** Once the comparison matched, the code ran again on every binder refresh. Adding or moving a card on another spread, or adding a new spread, jumped the view back to the linked spread. Claude Code found this when I asked about the link while testing it in the browser, before the change was committed.
+- **What I did instead:** The link is now applied only once per URL. I re-tested opening a linked spread, adding cards on a different spread, adding a spread, and an unknown id.
+- **Commit:** [https://github.com/lanixiligan/pokefolio/commit/4db153a3f28a697319b03c228f0c1839ded8d62e](https://github.com/lanixiligan/pokefolio/commit/4db153a3f28a697319b03c228f0c1839ded8d62e)
+
+### Case 5 - Add Card could still place cards on the wrong spread
+
+- **What it gave me:** The AI-generated `getNextAvailableSlot()` from the Add Card picker (see Case 2), which picks the slot for the next card.
+- **What was wrong with it:** The target slot was worked out once, when the picker opened, so using the ← / → buttons afterwards didn't move it, and the card went to the old spread. And when the spread was full, the search continued past the last spread and wrapped back to spread 1.
+- **What I did instead:** With Claude Code, the search now fills the spread being viewed first, then moves forward only, and otherwise offers a new spread; the arrows move the picker's target. I chose that rule, and tested the cases in the browser.
+- **Commit:** [https://github.com/lanixiligan/pokefolio/commit/6683cd5e188382a0ff926742021df3adc0b86e3a](https://github.com/lanixiligan/pokefolio/commit/6683cd5e188382a0ff926742021df3adc0b86e3a)
+
+### Case 6 - Replacing nodemon with `node --watch` had a side effect (Claude Code)
+
+- **What it gave me:** To clear the `npm audit` advisories that came through nodemon, `npm run dev` now uses Node's built-in `--watch` mode.
+- **What was wrong with it:** `node --watch` stops watching a file once Git replaces it, which is what `git checkout` and `git pull` do. After a branch switch, my dev server kept serving the old code. While looking into it, Claude Code first ran its tests in the wrong folder: they left two stray files in the repository root and three test servers running, and led to a wrong conclusion. It found the mistake, removed the files and stopped the servers before anything was committed, and re-ran the test properly.
+- **What I did instead:** For now, I restart `npm run dev` after switching branches or pulling. Watching the folder (`node --watch-path=.`) survived repeated replacements in a test, so it is a possible fix later.
+- **Commit:** [https://github.com/lanixiligan/pokefolio/commit/78eb7348214cdc211d0d743f1030c7bbb14b14bc](https://github.com/lanixiligan/pokefolio/commit/78eb7348214cdc211d0d743f1030c7bbb14b14bc)
+
+### Case 7 - The generated security checklist claimed fixes that were never made
+
+- **What it gave me:** The first version of `docs/SECURITY-CHECKLIST.md`, filled in with AI help during the September cleanup.
+- **What was wrong with it:** It ended with generated text saying CORS had been fixed and an access layer added, and neither was true. Item 30 still named `hero.png` after that file was deleted, and item 25 was marked (no stack traces in error responses) as Yes while malformed JSON still returned a stack trace.
+- **What I did instead:** I re-checked every row against the code, the Git history and the GitHub settings, and replaced that text with only the changes that were actually made.
+- **Commits:** added in [https://github.com/lanixiligan/pokefolio/commit/29c28e7dc8430b7869444c3c8ec297f3e1428c47](https://github.com/lanixiligan/pokefolio/commit/29c28e7dc8430b7869444c3c8ec297f3e1428c47), corrected in [https://github.com/lanixiligan/pokefolio/commit/8fc3cc7895a77f86304be28ee1ceb826598a1d3e](https://github.com/lanixiligan/pokefolio/commit/8fc3cc7895a77f86304be28ee1ceb826598a1d3e)
 
 ## 3. Who wrote what
 
@@ -128,6 +208,7 @@ The following tools were used during development:
 - **ChatGPT** – programming assistance, debugging, technical explanations, documentation, project planning, and evaluating implementation approaches.
 - **OpenAI Codex** – extensive backend and server-side implementation assistance.
 - **Claude** – frontend development assistance, code review, UI/UX feedback, and refactoring.
+- **Claude Code** – I invested in Claude Code for my projects. Since October 10, 2026, I have used it as a coding agent working directly in the repository: reviewing the code against my professor's feedback, writing the update plan, fixing bugs, running checks against my local database, and committing only after I approved each change. Every commit made with it ends with a `Co-Authored-By: Claude` line.
 - **Google AI Studio** – exploration of AI-assisted development ideas and implementation approaches.
 - **Base44** – application concepts and prototyping.
 - **Antigravity** – AI-assisted implementation, debugging, and iterative development.
@@ -135,5 +216,7 @@ The following tools were used during development:
 ## Final validation
 
 AI-generated or AI-assisted code was not treated as automatically correct. I tested the application, inspected database behavior, verified the API/data pipeline, ran the client lint/build, and made changes when the generated implementation did not match the actual behavior or deployment requirements.
+
+The latest changes, from October 10–11, 2026, were made with Claude Code. Claude Code reproduced each bug before fixing it and ran the automated checks: requests against a local copy of the API, test data it added and then removed, and `npm run lint` and `npm run build`. I chose which items to do and how (for example, fixing the binder link instead of deleting it, and how Add Card handles a full spread), ran the browser checks myself, approved each commit before it was made, and checked the deployed app after merging.
 
 The final functionality and technical decisions in PokeFolio remain my responsibility.
