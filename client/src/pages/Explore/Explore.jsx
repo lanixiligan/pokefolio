@@ -15,6 +15,7 @@ function Explore() {
   const [error, setError] = useState(null);
   const [showInitialLoader, setShowInitialLoader] = useState(!hasInitialAppLoaded);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const [isWakingUp, setIsWakingUp] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,12 +33,23 @@ function Explore() {
         setTimeout(resolve, minDuration)
       );
 
+      // A sleeping server either holds the request open while it wakes up
+      // or fails it until it's ready (then getSets retries). Either way,
+      // tell the user what's happening.
+      const showWakingUp = () => {
+        if (!unmounted) setIsWakingUp(true);
+      };
+      const slowTimerId = setTimeout(showWakingUp, 4000);
+
       try {
         setIsLoading(true);
         setError(null);
 
         // Run data fetching alongside minimum duration timer on initial load
-        const [data] = await Promise.all([getSets(), minTimerPromise]);
+        const [data] = await Promise.all([
+          getSets({ onRetry: showWakingUp }),
+          minTimerPromise,
+        ]);
 
         if (!unmounted) {
           setSets(data);
@@ -49,6 +61,7 @@ function Explore() {
           setError(err.message);
         }
       } finally {
+        clearTimeout(slowTimerId);
         if (!unmounted) {
           setIsLoading(false);
           if (isFirstAppLoad) {
@@ -120,7 +133,7 @@ function Explore() {
             </div>
 
             <p className="poke-initial-loader-subtitle">
-              Your Digital Pokémon TCG Binder
+              {isWakingUp ? "Waking up the server…" : "Your Digital Pokémon TCG Binder"}
             </p>
 
             <div className="poke-initial-loader-line" aria-hidden="true">
@@ -140,7 +153,9 @@ function Explore() {
         </div>
 
         {isLoading && !showInitialLoader && (
-          <p className="explore-status">Loading sets...</p>
+          <p className="explore-status">
+            {isWakingUp ? "Waking up the server…" : "Loading sets..."}
+          </p>
         )}
 
         {!isLoading && error && (

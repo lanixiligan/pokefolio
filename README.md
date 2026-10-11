@@ -1,5 +1,5 @@
 # PokeFolio
-[![Made with AI](https://img.shields.io/badge/Made_with-AI_assistance-blue)](docs/AI-USAGE.md)
+[![Made with AI](https://img.shields.io/badge/Made_with-AI_assistance-blue)](AI-USAGE.md)
 
 **AI-assisted development:** OpenAI Codex, Claude, and Antigravity were used extensively throughout the project for code generation, debugging, UI/UX iteration, and documentation, with all AI-generated code reviewed, tested, and modified by the developer.
 
@@ -15,9 +15,9 @@ PokeFolio is a digital Pokémon TCG binder that recreates the experience of a ph
 
 ### Prerequisites
 
-- Node.js
-- PostgreSQL
-- A [Pokémon TCG API Developer Portal](https://dev.pokemontcg.io/) API key
+- Node.js 22.13 or newer (tested with v22.23.1; Node 24 also works)
+- PostgreSQL 18 (tested with 18.6)
+- An existing Pokémon TCG API key, only needed for `npm run seed` (new registrations are closed; see [Pokémon TCG API Attribution](#pokémon-tcg-api-attribution) below)
 - Git
 
 ### Clone the repository
@@ -62,7 +62,16 @@ Then fill in `server/.env` with your own values:
 
 ### Set up and seed the database
 
-From `server\`:
+First create an empty database. The name must match `PGDATABASE` in `server/.env`:
+
+```powershell
+psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE pokefolio;"
+```
+
+If `npm run migrate` later prints `database "pokefolio" does not exist`, this step was skipped.
+For the full walkthrough with checks, see [docs/local-development.md §3](docs/local-development.md#3-create-the-local-postgresql-database).
+
+Then, from `server\`:
 
 ```powershell
 npm run migrate   # apply schema migrations

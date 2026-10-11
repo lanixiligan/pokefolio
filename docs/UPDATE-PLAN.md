@@ -11,9 +11,9 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 
 | ID | Change | Effort | Status |
 | --- | --- | --- | --- |
-| R1 | README: name the Node and PostgreSQL versions | S | Open |
-| R2 | README: create the `pokefolio` database before migrating | S | Open |
-| R3 | README: fix the AI-USAGE badge link and the API-key prerequisite | S | Open (found in review) |
+| R1 | README: name the Node and PostgreSQL versions | S | Done |
+| R2 | README: create the `pokefolio` database before migrating | S | Done |
+| R3 | README: fix the AI-USAGE badge link and the API-key prerequisite | S | Done |
 | P1 | REPORT: newest week first, with a "since last report" line | S | Open |
 | P2 | REPORT: entry for the latest week | M | Open |
 | P3 | REPORT: link commits | S | Open |
@@ -21,18 +21,23 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 | P5 | REPORT: what was checked after the re-import | S | Open |
 | P6 | REPORT: one concrete build problem and the fix | S | Partly done |
 | P7 | REPORT: "What is left", including the 2027 API cutoff | M | Open |
-| S1 | Remove the leftover comment in `server.js` | S | Open |
-| S2 | Fix the `/api/cards` sort for numbers like `TG01` | S | Open (reproduced) |
-| S3 | JSON 404 fallback and error handler | S | Open (reproduced) |
-| S4 | Use `rowCount` for deletes | S | Open |
+| S1 | Remove the leftover comment in `server.js` | S | Done |
+| S2 | Fix the `/api/cards` sort for numbers like `TG01` | S | Done |
+| S3 | JSON 404 fallback and error handler | S | Done |
+| S4 | Use `rowCount` for deletes | S | Done |
 | S5 | Stricter request-body validation | M | Open (reproduced) |
-| C1 | Fix the `/binder?spreadId=` deep link | S | Open (reproduced) |
-| D1 | Clear the `npm audit` advisories | S | Open: `npm audit fix` alone doesn't clear the server |
+| C1 | Fix the `/binder?spreadId=` deep link | S | Done |
+| C2 | Keep Add Card on the spread being viewed | S | Done (found while testing C1) |
+| D1 | Clear the `npm audit` advisories | S | Done |
+| H1 | Keep the server alive when Neon drops idle connections | S | Done; check on Render after merging |
+| H2 | Client retries while the server wakes up, and says so | S | Done; check on the live site after merging |
+| H3 | Keep Render awake with an uptime pinger | S | Partly done: `/api/ping` added, monitor not set up |
+| H4 | Lazy-load card images in the Set Browser | S | Done |
 | A1 | 2027 API cutoff: back up the catalog now, Scrydex later | S now / L later | Open |
 | T1 | Server tests | L | Open |
 | T2 | GitHub Actions CI | M | Open |
 | X1 | Correct `docs/SECURITY-CHECKLIST.md` | S | Open (found in review) |
-| X2 | Show set icons in the Add Card filters | S | Open (found in review) |
+| X2 | Show set icons in the Add Card filters | S | Done |
 | O1 | Move SQL into a repository layer (optional) | L | Open, only after T1 |
 
 ---
@@ -41,14 +46,14 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 
 The professor raised both of the first two points twice. The rest of the README was praised. Keep setup in the README and link `docs/local-development.md` for detail.
 
-- [ ] **R1 · Name the Node and PostgreSQL versions** · S
+- [x] **R1 · Name the Node and PostgreSQL versions** · S
   - **Where:** `README.md:18-19` (Prerequisites). The same bare "Node.js" is in `docs/local-development.md:25` and `docs/architecture.md:48`.
   - **Change:** e.g. `Node.js 24 (Vite 8 and ESLint 10 need at least 20.19, or 22.13 on the 22 line)` and `PostgreSQL 18`, which is what `docs/local-development.md` uses. Version 16 also ran fine in Codespaces. Use the `node -v` output from the machine PokeFolio was built on. The Codespace reports v24.21.0, which may differ.
   - **Optional:** add `"engines": { "node": "^20.19.0 || ^22.13.0 || >=24" }` to both `package.json` files, so npm warns on an older Node.
   - **Why:** m8a2, m8a5.
   - **Verify:** `node -v` on the build machine matches the README; preview the README.
 
-- [ ] **R2 · Create the database before `npm run migrate`** · S
+- [x] **R2 · Create the database before `npm run migrate`** · S
   - **Where:** `README.md:63-71` ("Set up and seed the database"), before `npm run migrate` on line 68.
   - **Change:** add a first step that matches `docs/local-development.md` §3:
     ```powershell
@@ -65,7 +70,7 @@ The professor raised both of the first two points twice. The rest of the README 
     3. Run `Remove-Item Env:PGDATABASE`, then drop the test database.
     4. Click the §3 link on GitHub.
 
-- [ ] **R3 · Fix the badge link and the API-key prerequisite** · S (found in review)
+- [x] **R3 · Fix the badge link and the API-key prerequisite** · S (found in review)
   - **Where:** `README.md:2` and `README.md:20`.
   - **Change:**
     - Line 2 links `docs/AI-USAGE.md`, which commit `c1e1178` moved to the repo root. Point it to `AI-USAGE.md`.
@@ -158,12 +163,12 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
 
 ## Server habits (m5a2–m5a4)
 
-- [ ] **S1 · Remove the leftover comment** · S
+- [x] **S1 · Remove the leftover comment** · S
   - **Where:** `server/server.js:146` (`// REPLACE THE EXISTING QUERY HERE`). A search for REPLACE, TODO and FIXME found no other leftovers.
   - **Why:** issue 5. This is also the prelim feedback about tidying leftover instructional comments.
   - **Verify:** the server starts, and a set page still lists cards.
 
-- [ ] **S2 · Fix the `/api/cards` sort** · S
+- [x] **S2 · Fix the `/api/cards` sort** · S
   - **Where:** `server/server.js:162`: `ORDER BY set_id, number::integer;`
   - **Change:**
     ```sql
@@ -180,7 +185,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
     - `curl "localhost:5000/api/cards?set=zztest"` returns 200 in the order above, and `/api/cards` returns 200.
     - With the real catalog, Base Set still lists 1, 2, 3 … and search still works.
 
-- [ ] **S3 · JSON 404 fallback and error handler** · S
+- [x] **S3 · JSON 404 fallback and error handler** · S
   - **Where:** `server/server.js`, after the last route and before `app.listen` (line 1487).
   - **Change:**
     ```js
@@ -209,7 +214,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
     - The Appendix B smoke test still passes.
     - In Windows PowerShell, type `curl.exe` instead of `curl`.
 
-- [ ] **S4 · Use `rowCount` for deletes** · S
+- [x] **S4 · Use `rowCount` for deletes** · S
   - **Where:** `server/server.js:654-664`. The card-removal route runs `DELETE … RETURNING id`, then checks `result.rows.length === 0`.
   - **Change:** drop `RETURNING id` and check `result.rowCount === 0`. The spread delete (lines 1044–1153) checks existence with a `SELECT` first and can stay as it is.
   - **Why:** m5a2.
@@ -238,7 +243,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
 
 ## Client
 
-- [ ] **C1 · Fix the `/binder?spreadId=` deep link** · S
+- [x] **C1 · Fix the `/binder?spreadId=` deep link** · S
   - **Where:** `client/src/pages/Binder/Binder.jsx:107-111`.
   - **Change:**
     ```js
@@ -256,9 +261,17 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
     - Open `/binder?spreadId=<id>`; the indicator shows "2 / 2".
     - The ← / → buttons still work, and `npm run lint` and `npm run build` pass.
 
+- [x] **C2 · Keep Add Card on the spread being viewed** · S (found while testing C1)
+  - **Where:** `client/src/pages/Binder/getNextAvailableSlot.js`, the ← / → handlers in `Binder.jsx`, and `AddCardPicker.jsx`.
+  - **Problem:** a card added while viewing one spread could land on another:
+    - The Add Card target was set once, when the picker opened. Using ← / → afterwards didn't move it, so the card went to the old spread and the view jumped back there.
+    - When the spread was full, the slot search continued past the last spread and wrapped back to spread 1.
+  - **Change:** fill the spread being viewed first (after the target, then earlier gaps), then move forward only, then offer a new spread. ← / → move the open picker's target to the new spread.
+  - **Verify:** the C2 steps in `docs/IMPLEMENTATION-CHECKLIST.md`.
+
 ## Dependencies
 
-- [ ] **D1 · Clear the `npm audit` advisories** · S
+- [x] **D1 · Clear the `npm audit` advisories** · S
   - **Client:** `npm audit fix` leaves **0 vulnerabilities** (tested on a copy of the lockfile). Both advisories (`brace-expansion`, `source-map-js`) are in build tooling.
   - **Server:** `npm audit fix` **leaves all 3 high advisories**.
     - They come from `nodemon 3.1.14 → chokidar 3.6.0 → braces 3.0.3`.
@@ -271,6 +284,29 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
     - `npm audit` prints "found 0 vulnerabilities" in both folders.
     - In `client/`, `npm run lint` and `npm run build` pass.
     - In `server/`, `npm run dev` restarts when `server.js` is saved.
+
+## Deployment (found in review)
+
+The deployed app needed several refreshes on its first load. Steps and results are in `docs/IMPLEMENTATION-CHECKLIST.md`, Batch 3 and H4.
+
+- [x] **H1 · Keep the server alive when Neon drops idle connections** · S
+  - **Where:** `server/db.js`.
+  - **Problem:** the pg pool had no `error` listener, so when the database dropped an idle connection (as Neon does when it suspends), the whole Node process crashed and Render had to cold-start it. Reproduced locally with `pg_terminate_backend`: exit code 1.
+  - **Change:** a pool `error` listener that logs instead of crashing, and a 10-second connect timeout (pg waits forever by default).
+  - **Still to check:** Render's logs after the merge.
+
+- [x] **H2 · Client retries while the server wakes up** · S
+  - **Where:** `client/src/lib/api.js`, `client/src/pages/Explore/Explore.jsx`.
+  - **Change:** GET requests, and `initializeBinder` (safe to repeat), retry network errors and 502/503/504 for about 60 seconds. Card writes never retry. Explore shows "Waking up the server…" on a retry or when the request takes over 4 seconds.
+  - **Still to check:** the live site after 20+ minutes idle, once merged.
+
+- [ ] **H3 · Keep Render awake with an uptime pinger** · S (partly done)
+  - **Done:** `GET /api/ping`, which doesn't touch the database.
+  - **Why not `/api/health`:** it runs `SELECT 1`, so a 10-minute pinger would keep Neon awake about half the time, roughly 91 of its 100 free CU-hours a month.
+  - **Left:** set up the monitor (UptimeRobot or cron-job.org) after the merge, if PokeFolio is the only free Render service. Render's 750 free hours a month are shared across the workspace.
+
+- [x] **H4 · Lazy-load card images in the Set Browser** · S
+  - **Where:** `client/src/pages/SetBrowser/CardTile.jsx`. The Add Card picker already used `loading="lazy"`.
 
 ## 2027 API cutoff
 
@@ -332,7 +368,7 @@ Already done: the empty template weeks are gone (m8a1). Commit links will resolv
   - **Why:** a submitted document shouldn't claim fixes that aren't there.
   - **Verify:** re-check every "Yes" against the code.
 
-- [ ] **X2 · Show set icons in the Add Card filters** · S
+- [x] **X2 · Show set icons in the Add Card filters** · S
   - **Where:** `client/src/pages/Binder/AddCardPicker.jsx:295-296` reads `set.logo`, which the API doesn't return, so no icon ever shows.
   - **Change:** use `set.symbol_url`. The `.add-card-filter-icon` style is a 14 × 14 px icon (`AddCardPicker.css:184-188`), which fits the small set symbol better than the wide logo.
   - **Verify:** in the Binder, open Add Card; each set filter button shows its symbol.

@@ -56,6 +56,12 @@ app.get("/api/health", async (req, res) => {
   }
 });
 
+// For an uptime pinger that keeps the Render server awake. It doesn't touch
+// the database, so Neon can still suspend and stay inside its free compute.
+app.get("/api/ping", (req, res) => {
+  res.json({ status: "ok" });
+});
+
 // -----------------------------------------------------------------------------
 // Catalog Routes
 // -----------------------------------------------------------------------------
@@ -143,7 +149,6 @@ app.get("/api/cards", async (req, res) => {
         ? `WHERE ${conditions.join(" AND ")}`
         : "";
 
-    // REPLACE THE EXISTING QUERY HERE
     const result = await pool.query(
       `
         SELECT
@@ -159,7 +164,10 @@ app.get("/api/cards", async (req, res) => {
           image_large_url
         FROM cards
         ${whereClause}
-        ORDER BY set_id, number::integer;
+        ORDER BY set_id,
+          substring(number from '^[^0-9]*'),
+          substring(number from '[0-9]+')::int,
+          number;
       `,
       values
     );
@@ -655,13 +663,12 @@ app.delete(
         `
           DELETE FROM binder_cards
           WHERE anon_id = $1
-            AND card_id = $2
-          RETURNING id;
+            AND card_id = $2;
         `,
         [req.anonId, req.params.cardId]
       );
 
-      if (result.rows.length === 0) {
+      if (result.rowCount === 0) {
         await client.query("ROLLBACK");
 
         return res.status(404).json({
@@ -1478,6 +1485,25 @@ app.put("/api/preferences", requireAnonId, async (req, res) => {
   } finally {
     client.release();
   }
+});
+
+// -----------------------------------------------------------------------------
+// Fallbacks
+// -----------------------------------------------------------------------------
+
+app.use((req, res) => {
+  res.status(404).json({ error: "Not found" });
+});
+
+// Express only treats this as an error handler because it takes four
+// arguments, so `next` stays even though it isn't used.
+app.use((error, req, res, next) => {
+  if (error.type === "entity.parse.failed") {
+    return res.status(400).json({ error: "Request body must be valid JSON" });
+  }
+
+  console.error("Unhandled error:", error);
+  res.status(500).json({ error: "Something went wrong" });
 });
 
 // -----------------------------------------------------------------------------

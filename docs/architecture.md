@@ -45,9 +45,9 @@ The Pokémon TCG API is the external source for set and card metadata during cat
 
 ### Backend
 
-- Node.js
+- Node.js 22
 - Express 5
-- PostgreSQL
+- PostgreSQL 18
 - `pg`
 - `cors`
 - `dotenv`
@@ -55,7 +55,7 @@ The Pokémon TCG API is the external source for set and card metadata during cat
 ### Development & Tooling
 
 - ESLint
-- Nodemon
+- Node's built-in `--watch` mode
 - Git / GitHub
 - Pokémon TCG API
 

@@ -22,9 +22,9 @@ It covers:
 
 PokeFolio currently uses:
 
-- Node.js
+- Node.js 22.13 or newer (tested with v22.23.1; Node 24 also works)
 - npm
-- PostgreSQL 18
+- PostgreSQL 18 (tested with 18.6)
 - `psql`
 - the Express backend in `server/`
 
@@ -537,7 +537,9 @@ This changes how the client communicates with/displays text; it does not change 
 npm start
 ```
 
-### Start Express with Nodemon
+### Start Express in watch mode
+
+Restarts the server whenever a file it loads changes, using Node's built-in `--watch` mode:
 
 ```powershell
 npm run dev

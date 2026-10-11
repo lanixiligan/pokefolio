@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "node --watch server.js",
     "start": "node server.js",
     "migrate": "node scripts/migrate.js",
     "seed": "node scripts/import-cards.js",
@@ -19,8 +19,5 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "pg": "^8.23.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.14"
   }
 }
