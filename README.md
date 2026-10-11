@@ -266,7 +266,8 @@ as its external data source for card and set metadata.
 PokeFolio currently uses an existing Pokémon TCG API key obtained through the
 official developer portal. The API is used during catalog import; imported
 card and set data is stored in PostgreSQL so normal PokeFolio browsing does
-not depend on making requests to the external API.
+not depend on making requests to the external API. Card images and set
+symbols are still loaded from the API's image host, `images.pokemontcg.io`.
 
 PokeFolio is not affiliated with or endorsed by The Pokémon Company, Nintendo,
 Game Freak, or Creatures Inc.
@@ -279,3 +280,5 @@ existing Pokémon TCG API keys cease functioning after March 1, 2027.
 PokeFolio is a student project created for academic purposes. The PokeFolio source code is licensed under the [MIT License](LICENSE).
 
 Pokémon and Pokémon TCG-related names, trademarks, artwork, and other intellectual property belong to their respective owners; PokeFolio is an independent educational project and is not an official Pokémon product.
+
+Other assets: the PokeFolio logo (`client/src/assets/pokefolio-logo.svg`) and the screenshots in `docs/screenshots/` were made for this project. Headings use the [Outfit](https://fonts.google.com/specimen/Outfit) typeface, loaded from Google Fonts under the [SIL Open Font License](https://openfontlicense.org/). Card images and set symbols come from the Pokémon TCG API, as described above.

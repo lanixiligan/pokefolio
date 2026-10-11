@@ -36,7 +36,7 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 | A1 | 2027 API cutoff: back up the catalog now, Scrydex later | S now / L later | Open |
 | T1 | Server tests | L | Open |
 | T2 | GitHub Actions CI | M | Open |
-| X1 | Correct `docs/SECURITY-CHECKLIST.md` | S | Open (found in review) |
+| X1 | Correct `docs/SECURITY-CHECKLIST.md` | S | Done |
 | X2 | Show set icons in the Add Card filters | S | Done |
 | O1 | Move SQL into a repository layer (optional) | L | Open, only after T1 |
 
@@ -361,7 +361,7 @@ The deployed app needed several refreshes on its first load. Steps and results a
 
 ## Found in review (not in the feedback)
 
-- [ ] **X1 · Correct `docs/SECURITY-CHECKLIST.md`** · S
+- [x] **X1 · Correct `docs/SECURITY-CHECKLIST.md`** · S
   - **Line 51, item 25** says errors never expose stack traces. That isn't true until S3 is done.
   - **Line 61, item 30** mentions `client/src/assets/hero.png`, which commit `2b86a85` deleted.
   - **Lines 66–70**, "📝 To complete your assignment", are leftover generated text. They say CORS was fixed and an access layer was added. Neither is in the code: `server/server.js:12` is still `app.use(cors())`. Remove the section or rewrite it to match what was actually done.

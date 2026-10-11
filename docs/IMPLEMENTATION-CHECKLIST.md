@@ -465,13 +465,21 @@ H1, H2 and H4, and the `/api/ping` route for H3, were combined into one commit: 
 
 Do this after S3, so item 25 is true.
 
-- [ ] **Steps**
+- [x] **Steps**
   1. **Item 25** (line 51): its evidence only mentions the route `catch` blocks. Add that malformed JSON and unknown routes now also return generic JSON, from the fallback handlers added in S3, and link that commit.
   2. **Item 30** (line 61): `client/src/assets/hero.png` no longer exists (deleted in `2b86a85`). Replace it with the assets that do exist, such as `client/public/icons.svg` and `client/src/assets/pokefolio-logo.svg`. Either add their credits to the README and mark the item "Yes", or keep it "No" with an accurate reason.
   3. **"📝 To complete your assignment"** (lines 66-70): this is leftover generated text. It claims CORS was fixed and an access layer added, and neither is true (`server/server.js:12` is still `app.use(cors())`). Delete the section, or rewrite it in your own words to say only what you actually changed.
   4. Re-read every "Yes" row and check it against the code.
-- [ ] **Verify:** every claim in the file matches the code at your latest commit.
-- [ ] **Commit:** `docs: correct security checklist to match the code`
+- [x] **Verify:** every claim in the file matches the code at your latest commit.
+
+Done on 2026-10-11. Beyond steps 1–4:
+- Item 30: the last two Vite template icons (`client/public/favicon.svg`, `icons.svg`) were unused, so they were removed rather than credited. The README now credits the Outfit font (SIL Open Font License) and says card images still load from `images.pokemontcg.io`.
+- Item 23 is now **Partly**: `PUT /api/preferences` still accepts any colour or theme string, and a `null` position is stored as 0 (S5).
+- Items 12 and 31 were answered with the GitHub API: secret scanning and push protection are on, and the repository is public.
+- Item 27 no longer prints the email address it is about. Decided on 2026-10-11 to keep the address in the existing history for now: removing it would mean rewriting every commit and breaking the commit links in `REPORT.md`.
+- Item 1's `.gitignore` line numbers were corrected (69–71).
+- The leftover section was replaced with "Anything I found and fixed", listing only real changes and what is still open.
+- [x] **Commit:** `docs: correct security checklist to match the code`
 
 ---
 
