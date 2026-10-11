@@ -12,8 +12,11 @@ Nothing has been changed in the repo. You do every step yourself, or hand an ite
 3. [Deployment: H1, H2, H3](#batch-3-deployment)
 4. [Security checklist: X1](#batch-4-security-checklist)
 5. [REPORT.md: P1 to P7](#batch-5-reportmd)
-6. [Catalog backup: A1](#batch-6-catalog-backup)
-7. [If there's time before the demo: S5, H4, T1, T2](#batch-7-if-theres-time-before-the-demo)
+
+[Optional work](#optional-work):
+
+6. [Catalog backup: A1](#batch-6-catalog-backup) (recommended: REPORT.md lists it before the demo)
+7. [If there's time before the demo: S5, H4, T1, T2](#batch-7-if-theres-time-before-the-demo) (H4 is already done)
 8. [After the course: O1 and the Scrydex importer](#batch-8-after-the-course)
 
 Appendix: [smoke test](#appendix-b-smoke-test), [test data](#appendix-a-test-data)
@@ -336,7 +339,7 @@ H1, H2 and H4, and the `/api/ping` route for H3, were combined into one commit: 
   4. `curl.exe localhost:5000/api/health` returns `"status":"ok"` again.
 
   Checked 2026-10-11 by ending the server's idle connection from the database side (`pg_terminate_backend`): the old `db.js` crashed the process (exit 1), the new one logged `Idle database client error` and kept serving. An unreachable database now gives a 503 after 10 seconds instead of hanging.
-- [ ] **Verify on Render** (after merging to `main` and Render redeploying)
+- [x] **Verify on Render** (after merging to `main` and Render redeploying)
   1. Leave the app alone for 20+ minutes, then open it.
   2. The first load is still slow while the server wakes up, but the logs show no crash and restart.
 - [x] **Commit:** combined into one H1–H4 commit, `fix: keep the API usable through Render and Neon sleeps (H1–H4)`
@@ -434,14 +437,14 @@ H1, H2 and H4, and the `/api/ping` route for H3, were combined into one commit: 
      **Done differently:**
      - `RETRY_DELAYS_MS` is `[2000, 4000, 8000, 16000, 30000]`, about 60 seconds in total, because Render says waking a free service takes about a minute.
      - Explore also shows "Waking up the server…" when the request takes longer than 4 seconds, because Render may hold the first request open while it wakes instead of failing it.
-- [ ] **Verify**
+- [x] **Verify**
   1. Stop the local server. Open `localhost:5173/explore`, then start the server within about 40 seconds. The loader says "Waking up the server…" and the page loads on its own, without a refresh.
   2. With the server down the whole time, the error message appears after about 60 seconds (2 + 4 + 8 + 16 + 30).
   3. With the server running normally, nothing looks different.
   4. `npm run lint` and `npm run build` pass. Then run the smoke test.
   5. After deploying: open the live site after 20+ minutes idle. It should load without a refresh, just slowly.
 
-  Steps 1–4 passed locally on 2026-10-11, plus: the Binder recovers on its own once the server is back, and card writes fail at once instead of retrying. Tick this box after step 5.
+  Steps 1–4 passed locally on 2026-10-11, plus: the Binder recovers on its own once the server is back, and card writes fail at once instead of retrying. Step 5 passed on the live site after the PR #2 deploy.
 - [x] **Commit:** combined into one H1–H4 commit, `fix: keep the API usable through Render and Neon sleeps (H1–H4)`
 
 ### H3 · Keep Render and Neon awake (optional, no code) · S
@@ -581,6 +584,16 @@ Done together on 2026-10-11, in one commit. Results:
      3. **2027 cutoff:** two or three sentences from A1. For example: the app reads its catalog from PostgreSQL, so it keeps working after March 1, 2027; you've backed up the catalog; re-importing or adding sets would need the importer ported to Scrydex.
 - [x] **Verify:** nothing listed is already fixed, and everything open is listed.
 - [x] **Commit:** combined into one P1–P7 commit, `docs: bring REPORT up to date with commit links (P1–P7)`
+
+---
+
+## Optional work
+
+Batches 1–5 cover everything in the professor's feedback, and they are done (only the optional H3 uptime monitor is left). Everything from here on is optional:
+
+- **Batch 6, the catalog backup,** isn't required by the feedback, but `REPORT.md` lists it under "Before the demo". Do it (about 10 minutes), or remove that line from the report.
+- **Batch 7** is for spare time before the demo. H4 is already done, in the H1–H4 commit; S5, T1 and T2 are open.
+- **Batch 8** is for after the course, and only if the project continues.
 
 ---
 

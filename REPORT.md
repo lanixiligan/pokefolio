@@ -63,6 +63,8 @@ Two problems took the most work. Both only showed up under conditions that norma
 
 **The fixes.** I reproduced each bug before fixing it, then checked the fix with requests against a local copy of the API and in the browser: the main flow (Explore, Set Browser search, Add to Binder, dragging, changing the grid size, removing a card), the binder link, the Add Card cases, and stopping and restarting the server while the app was loading. `npm run lint` and `npm run build` pass, and `npm audit` reports 0 vulnerabilities in both `client/` and `server/`.
 
+**The deployed app.** After merging, I checked the live site: `/api/ping` answers, and after 20+ idle minutes the app loaded without a refresh while Render's logs showed no crash and restart.
+
 ### What I learned
 
 Reproducing a bug before fixing it made the fixes smaller and easier to trust. Several of this week's bugs only appeared with data or timing the app hadn't met yet, such as a lettered card number or a dropped database connection.
@@ -84,7 +86,6 @@ I also learned that a value's type can change on its way through the stack: Post
 **Before the demo**
 
 * Back up the card catalog with `pg_dump`.
-* Check the deployed app after 20+ idle minutes: it should load without a refresh, and Render's logs should show no crash.
 * If there's time: stricter validation of request bodies, then server tests and continuous integration.
 
 **The March 1, 2027 API cutoff**

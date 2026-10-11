@@ -29,8 +29,8 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 | C1 | Fix the `/binder?spreadId=` deep link | S | Done |
 | C2 | Keep Add Card on the spread being viewed | S | Done (found while testing C1) |
 | D1 | Clear the `npm audit` advisories | S | Done |
-| H1 | Keep the server alive when Neon drops idle connections | S | Done; check on Render after merging |
-| H2 | Client retries while the server wakes up, and says so | S | Done; check on the live site after merging |
+| H1 | Keep the server alive when Neon drops idle connections | S | Done |
+| H2 | Client retries while the server wakes up, and says so | S | Done |
 | H3 | Keep Render awake with an uptime pinger | S | Partly done: `/api/ping` added, monitor not set up |
 | H4 | Lazy-load card images in the Set Browser | S | Done |
 | A1 | 2027 API cutoff: back up the catalog now, Scrydex later | S now / L later | Open |
@@ -293,12 +293,12 @@ The deployed app needed several refreshes on its first load. Steps and results a
   - **Where:** `server/db.js`.
   - **Problem:** the pg pool had no `error` listener, so when the database dropped an idle connection (as Neon does when it suspends), the whole Node process crashed and Render had to cold-start it. Reproduced locally with `pg_terminate_backend`: exit code 1.
   - **Change:** a pool `error` listener that logs instead of crashing, and a 10-second connect timeout (pg waits forever by default).
-  - **Still to check:** Render's logs after the merge.
+  - **Checked after deploying (2026-10-11):** after 20+ idle minutes, Render's logs showed no crash and restart.
 
 - [x] **H2 · Client retries while the server wakes up** · S
   - **Where:** `client/src/lib/api.js`, `client/src/pages/Explore/Explore.jsx`.
   - **Change:** GET requests, and `initializeBinder` (safe to repeat), retry network errors and 502/503/504 for about 60 seconds. Card writes never retry. Explore shows "Waking up the server…" on a retry or when the request takes over 4 seconds.
-  - **Still to check:** the live site after 20+ minutes idle, once merged.
+  - **Checked after deploying (2026-10-11):** after 20+ idle minutes, the live site loaded without a refresh.
 
 - [ ] **H3 · Keep Render awake with an uptime pinger** · S (partly done)
   - **Done:** `GET /api/ping`, which doesn't touch the database.
