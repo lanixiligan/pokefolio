@@ -62,7 +62,16 @@ Then fill in `server/.env` with your own values:
 
 ### Set up and seed the database
 
-From `server\`:
+First create an empty database. The name must match `PGDATABASE` in `server/.env`:
+
+```powershell
+psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE pokefolio;"
+```
+
+If `npm run migrate` later prints `database "pokefolio" does not exist`, this step was skipped.
+For the full walkthrough with checks, see [docs/local-development.md §3](docs/local-development.md#3-create-the-local-postgresql-database).
+
+Then, from `server\`:
 
 ```powershell
 npm run migrate   # apply schema migrations

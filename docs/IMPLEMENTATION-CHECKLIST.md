@@ -76,7 +76,7 @@ Appendix: [smoke test](#appendix-b-smoke-test), [test data](#appendix-a-test-dat
 
 ### R2 · Create the database before `npm run migrate` · S
 
-- [ ] **Steps**
+- [x] **Steps**
   1. In `README.md`, find "### Set up and seed the database" (around line 63). The code block starts with `npm run migrate`.
   2. Above that code block, add:
      ````md
@@ -98,7 +98,7 @@ Appendix: [smoke test](#appendix-b-smoke-test), [test data](#appendix-a-test-dat
   3. `Remove-Item Env:PGDATABASE`
   4. `psql -U postgres -h localhost -p 5432 -c "DROP DATABASE pokefolio_readme_test;"`
   5. After pushing, click the §3 link on GitHub. It should jump to "3. Create the Local PostgreSQL Database".
-- [ ] **Commit:** `docs: explain creating the pokefolio database before migrating`
+- [x] **Commit:** `docs: explain creating the pokefolio database before migrating`
 
 ### R3 · Fix the AI badge link and the API-key prerequisite · S
 

@@ -12,7 +12,7 @@ This plan turns the professor's feedback (m5a2–m5a4, m8a1–m8a6) and the code
 | ID | Change | Effort | Status |
 | --- | --- | --- | --- |
 | R1 | README: name the Node and PostgreSQL versions | S | Done |
-| R2 | README: create the `pokefolio` database before migrating | S | Open |
+| R2 | README: create the `pokefolio` database before migrating | S | Done |
 | R3 | README: fix the AI-USAGE badge link and the API-key prerequisite | S | Open (found in review) |
 | P1 | REPORT: newest week first, with a "since last report" line | S | Open |
 | P2 | REPORT: entry for the latest week | M | Open |
@@ -48,7 +48,7 @@ The professor raised both of the first two points twice. The rest of the README 
   - **Why:** m8a2, m8a5.
   - **Verify:** `node -v` on the build machine matches the README; preview the README.
 
-- [ ] **R2 · Create the database before `npm run migrate`** · S
+- [x] **R2 · Create the database before `npm run migrate`** · S
   - **Where:** `README.md:63-71` ("Set up and seed the database"), before `npm run migrate` on line 68.
   - **Change:** add a first step that matches `docs/local-development.md` §3:
     ```powershell
